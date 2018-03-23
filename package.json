@@ -1,11 +1,13 @@
 {
-  "name": "platformio-frontend",
+  "name": "platformio_frontend",
   "version": "0.1.0",
   "scripts": {
     "eslint": "eslint main.js",
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "nonce": "^1.0.4",
     "three": "^0.91.0"
   },
   "devDependencies": {

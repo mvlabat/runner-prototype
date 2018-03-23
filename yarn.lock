@@ -445,6 +445,10 @@ cryptiles@3.x.x:
   dependencies:
     boom "5.x.x"
 
+crypto-js@^3.1.9-1:
+  version "3.1.9-1"
+  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.1.9-1.tgz#fda19e761fc077e01ffbfdc6e9fdfc59e8806cd8"
+
 cssom@0.3.x, "cssom@>= 0.3.2 < 0.4.0":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.3.2.tgz#b8036170c79f07a90ff2f16e22284027a243848b"
@@ -1839,6 +1843,10 @@ nanomatch@^1.2.9:
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
+
+nonce@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/nonce/-/nonce-1.0.4.tgz#ee7302ade8c1bef476f301b8c91f5cc51a487612"
 
 normalize-package-data@^2.3.2:
   version "2.4.0"
