@@ -2,9 +2,9 @@ import nonce from 'nonce';
 import sha256 from 'crypto-js/sha256';
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
 
-function HashableIdInterface(entity, interfaceImplementation) {
+function HashableIdInterface(entity, predefinedHashId, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, interfaceImplementation);
-  let hashId = '';
+  let hashId = predefinedHashId;
 
   this.calculateHashId = () => {
     const hashedContent = implementation.defaultUnlessCall('', 'getHashedContent', entity);

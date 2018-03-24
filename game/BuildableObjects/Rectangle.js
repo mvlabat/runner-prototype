@@ -1,7 +1,7 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import BuildableObjectInterface from '../Interfaces/BuildableObjectInterface';
 
-function Rectangle(position, size, color) {
+function Rectangle(position, size, color, predefinedHashid = '') {
   const parameters = {
     position,
     size,
@@ -9,7 +9,7 @@ function Rectangle(position, size, color) {
   };
 
   // INTERFACES IMPLEMENTATION.
-  this.hashableIdInterface = new HashableIdInterface(this, {
+  this.hashableIdInterface = new HashableIdInterface(this, predefinedHashid, {
     getHashedContent: () =>
       this.buildableObjectInterface.getScene().hashableIdInterface.getHashId(),
   });
