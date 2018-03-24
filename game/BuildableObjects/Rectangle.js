@@ -1,6 +1,13 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import BuildableObjectInterface from '../Interfaces/BuildableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
+import SerializableInterface from '../Interfaces/SerializableInterface';
+import {
+  vector2Serialize,
+  vector2Deserialize,
+  colorSerialize,
+  colorDeserialize,
+} from '../Utils/ThreeSerializers';
 
 function Rectangle(position, size, color, predefinedHashid = '') {
   const parameters = {};
@@ -42,5 +49,21 @@ function Rectangle(position, size, color, predefinedHashid = '') {
   this.setSize(size);
   this.buildableObjectInterface.setColor(color);
 }
+
+Rectangle.serializableInterface = new SerializableInterface(this, {
+  serialize: object => ({
+    hashId: object.hashableIdInterface.getHashId(),
+    position: vector2Serialize(object.buildableObjectInterface.getPosition()),
+    size: vector2Serialize(object.getSize()),
+    color: colorSerialize(object.buildableObjectInterface.getColor()),
+  }),
+
+  deserialize: json => new Rectangle(
+    vector2Deserialize(json.position),
+    vector2Deserialize(json.size),
+    colorDeserialize(json.color),
+    json.hashId,
+  ),
+});
 
 export default Rectangle;
