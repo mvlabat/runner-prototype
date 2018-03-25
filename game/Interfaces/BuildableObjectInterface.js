@@ -24,7 +24,7 @@ function BuildableObjectInterface(object, interfaceImplementation) {
     return this;
   };
 
-  BuildableObjectsTypeMap.registerType(this.getType(), this.constructor);
+  BuildableObjectsTypeMap.registerType(this.getType(), object.constructor);
 }
 
 export default BuildableObjectInterface;

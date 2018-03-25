@@ -5,18 +5,18 @@ import BuildableObjectsTypeMap from '../Utils/BuildableObjectsTypeMap';
  * @constructor
  */
 function NetworkController(sceneObjectManager) {
-  const websocket = new WebSocket('ws://0.0.0.0');
+  const websocket = new WebSocket('ws://localhost:9292');
 
   this.update = () => {};
 
   this.sendAddObjectMessage = (object) => {
-    websocket.send({
+    websocket.send(JSON.stringify({
       messageType: 'addObject',
       payload: {
         objectType: object.buildableObjectInterface.getType(),
         object: object.constructor.serializableInterface.serialize(object),
       },
-    });
+    }));
   };
 
   websocket.addEventListener('open', (event) => {
