@@ -15,6 +15,10 @@ export default function Game() {
   const renderer = new Renderer(sceneObjectManager);
   BuilderController(renderer.getCanvas(), renderer.getCamera(), sceneObjectManager);
 
+  if (Game.config.debugIsEnabled()) {
+    window.THREE = THREE;
+    window.sceneObjectmanager = sceneObjectManager;
+  }
   renderer.startRendering();
 }
 
