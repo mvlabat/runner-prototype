@@ -4,11 +4,11 @@ import Renderer from './Renderer';
 import Scene from './Models/Scene';
 import SceneBuildableObjectManager from './SceneBuildableObjectManager';
 import Sandbox from './Sandbox';
-import BuilderController from './Controllers/BuilderController';
 import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
 import CameraController from './Controllers/CameraController';
 import MainUiController from './Controllers/MainUiController';
+import BuilderController from './Controllers/BuilderController';
 import NetworkController from './Controllers/NetworkController';
 
 export default function Game() {
@@ -19,9 +19,14 @@ export default function Game() {
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(sceneObjectManager);
 
-  const networkController = new NetworkController();
+  const networkController = new NetworkController(sceneObjectManager);
   const cameraController = new CameraController(cameraWrapper, canvasWrapper);
-  const builderController = new BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager);
+  const builderController = new BuilderController(
+    canvasWrapper,
+    cameraWrapper,
+    sceneObjectManager,
+    networkController,
+  );
   MainUiController(canvasWrapper, builderController);
 
   if (Game.config.debugIsEnabled()) {
