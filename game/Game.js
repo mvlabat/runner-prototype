@@ -19,7 +19,20 @@ export default function Game() {
     window.THREE = THREE;
     window.sceneObjectmanager = sceneObjectManager;
   }
-  renderer.startRendering();
+
+  animationTick();
+
+  let crashed = false;
+  function animationTick() {
+    if (crashed) return;
+    try {
+      requestAnimationFrame(animationTick);
+      renderer.render();
+    } catch (error) {
+      crashed = true;
+      throw error;
+    }
+  }
 }
 
 function GameConfig() {
