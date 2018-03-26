@@ -11,11 +11,10 @@ export function RenderedObject(object, mesh) {
 }
 
 export default function Renderer(sceneObjectManager) {
-  this.startRendering = render;
-
   const renderer = new THREE.WebGLRenderer();
   const canvasWrapper = document.getElementById('canvas-wrapper');
   canvasWrapper.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
 
   /**
    * @returns {HTMLCanvasElement}
@@ -28,8 +27,14 @@ export default function Renderer(sceneObjectManager) {
    */
   this.getCamera = () => camera;
 
+  this.render = () => {
+    resizeCanvasToDisplaySize();
+    addNewRenderedObjects();
+    updateRenderedObjects();
+    renderer.render(scene, camera);
+  };
+
   renderer.setClearColor(new THREE.Color(0xEFEFEF));
-  const scene = new THREE.Scene();
   camera.position.z = 0;
 
   /**
@@ -99,20 +104,5 @@ export default function Renderer(sceneObjectManager) {
       height / 2, // top
       -height / 2, // bottom
     ];
-  }
-
-  let crashed = false;
-  function render() {
-    if (crashed) return;
-    try {
-      requestAnimationFrame(render);
-      resizeCanvasToDisplaySize();
-      addNewRenderedObjects();
-      updateRenderedObjects();
-      renderer.render(scene, camera);
-    } catch (error) {
-      crashed = true;
-      throw error;
-    }
   }
 }
