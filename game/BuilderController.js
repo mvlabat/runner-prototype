@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import Rectangle from './BuildableObjects/Rectangle';
+import Circle from './BuildableObjects/Circle';
 
 /**
  * @param {HTMLCanvasElement} canvas
@@ -15,11 +16,19 @@ function BuilderController(canvas, camera, sceneObjectManager) {
   canvas.addEventListener('mousemove', (event) => {
     mouseWorldPosition = getMouseWorldPosition(event);
     if (placedObject === null) {
-      placedObject = new Rectangle(
-        new THREE.Vector2(0, 0),
-        new THREE.Vector2(1, 1),
-        new THREE.Color(Math.random() * 0xffffff),
-      );
+      if (Math.random() >= 0.5) {
+        placedObject = new Rectangle(
+          mouseWorldPosition,
+          new THREE.Vector2(3, 3),
+          new THREE.Color(Math.random() * 0xffffff),
+        );
+      } else {
+        placedObject = new Circle(
+          mouseWorldPosition,
+          1.5,
+          new THREE.Color(Math.random() * 0xffffff),
+        );
+      }
 
       sceneObjectManager.addObject(placedObject);
     }
