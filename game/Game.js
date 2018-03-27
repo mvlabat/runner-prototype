@@ -1,38 +1,51 @@
 import * as THREE from 'three';
 
 import Renderer from './Renderer';
-import Scene from './Scene';
+import Scene from './Models/Scene';
 import SceneBuildableObjectManager from './SceneBuildableObjectManager';
 import Sandbox from './Sandbox';
-import BuilderController from './BuilderController';
+import BuilderController from './Controllers/BuilderController';
+import CanvasWrapper from './Models/CanvasWrapper';
+import CameraWrapper from './Models/CameraWrapper';
+import CameraController from './Controllers/CameraController';
+import MainUiController from './Controllers/MainUiController';
 
 export default function Game() {
-  const canvasWrapper = document.getElementById('canvas-wrapper');
-  const scene = new Scene(THREE.Vector2(canvasWrapper.clientWidth, canvasWrapper.clientHeight));
+  const scene = new Scene();
   const sceneObjectManager = new SceneBuildableObjectManager(scene);
 
   Sandbox(sceneObjectManager);
-  const renderer = new Renderer(sceneObjectManager);
-  BuilderController(renderer.getCanvas(), renderer.getCamera(), sceneObjectManager);
+
+  const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(sceneObjectManager);
+
+  const cameraController = new CameraController(cameraWrapper, canvasWrapper);
+  const builderController = new BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager);
+  MainUiController(canvasWrapper, builderController);
 
   if (Game.config.debugIsEnabled()) {
+    console.log('Debug mode is enabled.');
     window.THREE = THREE;
     window.sceneObjectmanager = sceneObjectManager;
   }
 
-  animationTick();
-
+  let lastAnimationTickDate = new Date();
   let crashed = false;
   function animationTick() {
+    const now = new Date();
+    const timeDelta = (now - lastAnimationTickDate) / 1000;
+    lastAnimationTickDate = now;
     if (crashed) return;
     try {
       requestAnimationFrame(animationTick);
+      cameraController.updateCamera(timeDelta);
       renderer.render();
     } catch (error) {
       crashed = true;
       throw error;
     }
   }
+
+  animationTick();
 }
 
 function GameConfig() {
@@ -46,3 +59,17 @@ function GameConfig() {
 }
 
 Game.config = new GameConfig();
+
+function initializeRenderer(sceneObjectManager) {
+  const renderer = new THREE.WebGLRenderer();
+  const cameraWrapper = new CameraWrapper();
+  const canvasWrapper = new CanvasWrapper(renderer.domElement);
+
+  document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
+
+  return {
+    renderer: new Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper),
+    canvasWrapper,
+    cameraWrapper,
+  };
+}

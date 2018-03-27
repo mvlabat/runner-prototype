@@ -12,53 +12,34 @@ export function RenderedObject(object, mesh) {
   this.mesh = mesh;
 }
 
-export default function Renderer(sceneObjectManager) {
-  const renderer = new THREE.WebGLRenderer();
-  const canvasWrapper = document.getElementById('canvas-wrapper');
-  canvasWrapper.appendChild(renderer.domElement);
+/**
+ * @param {WebGLRenderer} renderer
+ * @param {SceneBuildableObjectManager} sceneObjectManager
+ * @param {CanvasWrapper} canvasWrapper
+ * @param {CameraWrapper} cameraWrapper
+ * @constructor
+ */
+function Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper) {
   const scene = new THREE.Scene();
 
-  /**
-   * @returns {HTMLCanvasElement}
-   */
-  this.getCanvas = () => renderer.domElement;
-
-  const camera = new THREE.OrthographicCamera();
-  /**
-   * @returns {OrthographicCamera}
-   */
-  this.getCamera = () => camera;
-
   this.render = () => {
-    resizeCanvasToDisplaySize();
+    updateRendererSize();
     addNewRenderedObjects();
     updateRenderedObjects();
-    renderer.render(scene, camera);
+    renderer.render(scene, cameraWrapper.getCamera());
   };
 
   renderer.setClearColor(new THREE.Color(0xEFEFEF));
-  camera.position.z = 0;
 
   /**
    * @type {Map<string, RenderedObject>}
    */
   const renderedObjects = new Map();
 
-  function resizeCanvasToDisplaySize() {
-    const width = canvasWrapper.clientWidth;
-    const height = canvasWrapper.clientHeight;
-
-    if (renderer.domElement.width !== width || renderer.domElement.height !== height) {
+  function updateRendererSize() {
+    const { x: width, y: height } = canvasWrapper.getCanvasSize();
+    if (renderer.domElement.width !== width || renderer.domElement.height !== width) {
       renderer.setSize(width, height, false);
-      const [left, right, top, bottom] = cameraBounds();
-      camera.left = left;
-      camera.right = right;
-      camera.top = top;
-      camera.bottom = bottom;
-      camera.near = 0;
-      camera.zoom = 5;
-      camera.far = Math.max(width, height) * 2;
-      camera.updateProjectionMatrix();
     }
   }
 
@@ -95,16 +76,6 @@ export default function Renderer(sceneObjectManager) {
         ')`);
     }
   }
-
-  function cameraBounds() {
-    const width = canvasWrapper.clientWidth;
-    const height = canvasWrapper.clientHeight;
-
-    return [
-      -width / 2, // left
-      width / 2, // right
-      height / 2, // top
-      -height / 2, // bottom
-    ];
-  }
 }
+
+export default Renderer;
