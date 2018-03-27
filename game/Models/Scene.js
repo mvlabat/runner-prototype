@@ -1,4 +1,4 @@
-import HashableIdInterface from './Interfaces/HashableIdInterface';
+import HashableIdInterface from '../Interfaces/HashableIdInterface';
 
 function Scene() {
   // INTERFACES IMPLEMENTATION.

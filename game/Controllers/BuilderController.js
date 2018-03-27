@@ -1,19 +1,19 @@
 import * as THREE from 'three';
 
-import Rectangle from './BuildableObjects/Rectangle';
-import Circle from './BuildableObjects/Circle';
+import Rectangle from '../BuildableObjects/Rectangle';
+import Circle from '../BuildableObjects/Circle';
 
 /**
- * @param {HTMLCanvasElement} canvas
- * @param {OrthographicCamera} camera
+ * @param {CanvasWrapper} canvasWrapper
+ * @param {CameraWrapper} cameraWrapper
  * @param {SceneBuildableObjectManager} sceneObjectManager
  * @constructor
  */
-function BuilderController(canvas, camera, sceneObjectManager) {
+function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
   let placedObject = null;
   let mouseWorldPosition = new THREE.Vector2();
 
-  canvas.addEventListener('mousemove', (event) => {
+  this.onMouseMove = (event) => {
     mouseWorldPosition = getMouseWorldPosition(event);
     if (placedObject === null) {
       if (Math.random() >= 0.5) {
@@ -34,19 +34,19 @@ function BuilderController(canvas, camera, sceneObjectManager) {
     }
 
     placedObject.buildableObjectInterface.setPosition(mouseWorldPosition);
-  });
+  };
 
-  canvas.addEventListener('mouseup', () => {
+  this.onMouseUp = () => {
     placedObject = null;
-  });
+  };
 
   function getMouseWorldPosition(event) {
-    const rect = canvas.getBoundingClientRect();
+    const rect = canvasWrapper.getCanvas().getBoundingClientRect();
     const x = (event.clientX / rect.width) * 2 - 1;
     const y = -(event.clientY / rect.height) * 2 + 1;
 
     const viewportMousePosition = new THREE.Vector3(x, y, 0);
-    const worldPosition = viewportMousePosition.clone().unproject(camera);
+    const worldPosition = viewportMousePosition.clone().unproject(cameraWrapper.getCamera());
     worldPosition.z = 0;
     return worldPosition;
   }
