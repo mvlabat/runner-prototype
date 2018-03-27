@@ -1,7 +1,9 @@
 import * as THREE from 'three';
 import RectangleRenderer from './Renderers/RectangleRenderer';
+import CircleRenderer from './Renderers/CircleRenderer';
 
 const objectRenderers = {
+  circle: new CircleRenderer(),
   rectangle: new RectangleRenderer(),
 };
 
