@@ -7,6 +7,9 @@ import * as THREE from 'three';
 function CanvasWrapper(canvas) {
   const canvasWrapper = document.getElementById('canvas-wrapper');
 
+  /**
+   * @returns {HTMLCanvasElement}
+   */
   this.getCanvas = () => canvas;
 
   /**

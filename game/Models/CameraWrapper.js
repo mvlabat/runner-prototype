@@ -44,6 +44,11 @@ function CameraWrapper() {
     updateCameraPosition();
   };
 
+  /**
+   * @returns {Vector3}
+   */
+  this.getPosition = () => cameraPosition;
+
   function updateCameraPosition() {
     camera.position.copy(cameraPosition).add(positionOffset).setZ(0);
   }

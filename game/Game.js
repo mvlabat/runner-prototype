@@ -28,12 +28,16 @@ export default function Game() {
     window.sceneObjectmanager = sceneObjectManager;
   }
 
+  let lastAnimationTickDate = new Date();
   let crashed = false;
   function animationTick() {
+    const now = new Date();
+    const timeDelta = (now - lastAnimationTickDate) / 1000;
+    lastAnimationTickDate = now;
     if (crashed) return;
     try {
       requestAnimationFrame(animationTick);
-      cameraController.updateCameraSize();
+      cameraController.updateCamera(timeDelta);
       renderer.render();
     } catch (error) {
       crashed = true;
