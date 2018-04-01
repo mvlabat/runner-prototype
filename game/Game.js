@@ -9,6 +9,7 @@ import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
 import CameraController from './Controllers/CameraController';
 import MainUiController from './Controllers/MainUiController';
+import NetworkController from './Controllers/NetworkController';
 
 export default function Game() {
   const scene = new Scene();
@@ -18,6 +19,7 @@ export default function Game() {
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(sceneObjectManager);
 
+  const networkController = new NetworkController();
   const cameraController = new CameraController(cameraWrapper, canvasWrapper);
   const builderController = new BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager);
   MainUiController(canvasWrapper, builderController);
@@ -28,24 +30,45 @@ export default function Game() {
     window.sceneObjectmanager = sceneObjectManager;
   }
 
-  let lastAnimationTickDate = new Date();
+  // Gameloop.
+
+  const GAMEPLAY_UPDATE_INTERVAL = 15;
+  const NETWORK_UPDATE_INTERVAL = 45;
+  const RENDER_UPDATE_INTERVAL = 1000 / 60;
+
+  let lastGameplayUpdate = 0;
+  let lastNetworkUpdate = 0;
+  let lastRenderUpdate = 0;
   let crashed = false;
-  function animationTick() {
-    const now = new Date();
-    const timeDelta = (now - lastAnimationTickDate) / 1000;
-    lastAnimationTickDate = now;
+
+  function tick(now) {
     if (crashed) return;
+    requestAnimationFrame(tick);
+
+    const gameplayTimeDelta = now - lastGameplayUpdate;
+    const renderTimeDelta = now - lastRenderUpdate;
+    const networkTimeDelta = now - lastNetworkUpdate;
+
     try {
-      requestAnimationFrame(animationTick);
-      cameraController.updateCamera(timeDelta);
-      renderer.render();
+      if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
+        lastGameplayUpdate = now;
+        cameraController.updateCamera(gameplayTimeDelta / 1000);
+      }
+      if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
+        lastNetworkUpdate = now;
+        networkController.update();
+      }
+      if (renderTimeDelta >= RENDER_UPDATE_INTERVAL) {
+        lastRenderUpdate = now;
+        renderer.render();
+      }
     } catch (error) {
       crashed = true;
       throw error;
     }
   }
 
-  animationTick();
+  tick(0);
 }
 
 function GameConfig() {
