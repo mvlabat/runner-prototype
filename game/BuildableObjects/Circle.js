@@ -2,7 +2,7 @@ import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import BuildableObjectInterface from '../Interfaces/BuildableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 
-function Cilcle(position, radius, color, predefinedHashid = '') {
+function Circle(position, radius, color, predefinedHashid = '') {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -43,4 +43,4 @@ function Cilcle(position, radius, color, predefinedHashid = '') {
   this.buildableObjectInterface.setColor(color);
 }
 
-export default Cilcle;
+export default Circle;
