@@ -43,7 +43,7 @@ export default function CameraController(cameraWrapper, canvasWrapper) {
 
   function moveCamera(timeDelta) {
     const offsetVector = new THREE.Vector2(CAMERA_SPEED * timeDelta, 0);
-    // console.log(offsetVector);
+
     let angle = 0;
     if (keysPressed.up && keysPressed.right && !keysPressed.down && !keysPressed.left) {
       angle = 45;
