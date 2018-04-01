@@ -7,11 +7,12 @@ import Circle from '../BuildableObjects/Circle';
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
  * @param {SceneBuildableObjectManager} sceneObjectManager
+ * @param {NetworkController} networkController
  * @constructor
  */
-function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
+function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager, networkController) {
   let placedObject = null;
-  let mouseWorldPosition = new THREE.Vector2();
+  let mouseWorldPosition = new THREE.Vector3();
 
   this.onMouseMove = (event) => {
     mouseWorldPosition = getMouseWorldPosition(event);
@@ -37,7 +38,9 @@ function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
   };
 
   this.onMouseUp = () => {
+    const sentObject = placedObject;
     placedObject = null;
+    networkController.sendAddObjectMessage(sentObject);
   };
 
   function getMouseWorldPosition(event) {

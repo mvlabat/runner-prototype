@@ -1,4 +1,5 @@
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import BuildableObjectsTypeMap from '../Utils/BuildableObjectsTypeMap';
 
 function BuildableObjectInterface(object, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, interfaceImplementation);
@@ -22,6 +23,8 @@ function BuildableObjectInterface(object, interfaceImplementation) {
     object.hashableIdInterface.calculateHashId();
     return this;
   };
+
+  BuildableObjectsTypeMap.registerType(this.getType(), object.constructor);
 }
 
 export default BuildableObjectInterface;
