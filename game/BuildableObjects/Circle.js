@@ -1,6 +1,13 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import BuildableObjectInterface from '../Interfaces/BuildableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
+import {
+  colorDeserialize,
+  colorSerialize,
+  vector2Deserialize,
+  vector2Serialize,
+} from '../Utils/ThreeSerializers';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 
 function Circle(position, radius, color, predefinedHashid = '') {
   const parameters = {};
@@ -42,5 +49,21 @@ function Circle(position, radius, color, predefinedHashid = '') {
   this.setRadius(radius);
   this.buildableObjectInterface.setColor(color);
 }
+
+Circle.serializableInterface = new SerializableInterface(this, {
+  serialize: object => ({
+    hashId: object.hashableIdInterface.getHashId(),
+    position: vector2Serialize(object.buildableObjectInterface.getPosition()),
+    radius: object.getRadius(),
+    color: colorSerialize(object.buildableObjectInterface.getColor()),
+  }),
+
+  deserialize: json => new Circle(
+    vector2Deserialize(json.position),
+    json.radius,
+    colorDeserialize(json.color),
+    json.hashId,
+  ),
+});
 
 export default Circle;
