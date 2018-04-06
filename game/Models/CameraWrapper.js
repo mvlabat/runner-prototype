@@ -3,6 +3,9 @@ import * as THREE from 'three';
 function CameraWrapper() {
   const camera = new THREE.OrthographicCamera();
 
+  /**
+   * @returns {OrthographicCamera}
+   */
   this.getCamera = () => camera;
 
   const cameraSize = new THREE.Vector2();

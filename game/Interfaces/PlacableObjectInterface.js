@@ -1,6 +1,6 @@
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
 
-function BuildableObjectInterface(object, interfaceImplementation) {
+function PlacableObjectInterface(object, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, interfaceImplementation);
 
   this.getType = () => implementation.callMethod('getType');
@@ -24,4 +24,4 @@ function BuildableObjectInterface(object, interfaceImplementation) {
   };
 }
 
-export default BuildableObjectInterface;
+export default PlacableObjectInterface;
