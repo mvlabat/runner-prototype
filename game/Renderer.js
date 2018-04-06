@@ -14,7 +14,7 @@ export function RenderedObject(object, mesh) {
 
 /**
  * @param {WebGLRenderer} renderer
- * @param {SceneBuildableObjectManager} sceneObjectManager
+ * @param {SceneObjectManager} sceneObjectManager
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
  * @constructor
@@ -65,12 +65,12 @@ function Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper) {
   }
 
   function useObjectRenderer(object, lambda) {
-    const objectRenderer = objectRenderers[object.buildableObjectInterface.getType()];
+    const objectRenderer = objectRenderers[object.placableObjectInterface.getType()];
     if (typeof objectRenderer !== 'undefined') {
       lambda(objectRenderer);
     } else {
       console.warn(`No renderer available for type '
-        ${object.buildableObjectInterface.getType()}
+        ${object.placableObjectInterface.getType()}
         ': Object("
         ${object.hashableIdInterface.getHashId()}
         ')`);

@@ -1,33 +1,29 @@
 import * as THREE from 'three';
 
 import Renderer from './Renderer';
-import Scene from './Models/Scene';
-import SceneBuildableObjectManager from './SceneBuildableObjectManager';
+import Scene from './Models/GameScene';
 import Sandbox from './Sandbox';
-import BuilderController from './Controllers/BuilderController';
 import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
-import CameraController from './Controllers/CameraController';
 import MainUiController from './Controllers/MainUiController';
 import NetworkController from './Controllers/NetworkController';
+import SceneObjectManager from './SceneObjectManager';
 
-export default function Game() {
+function Game() {
   const scene = new Scene();
-  const sceneObjectManager = new SceneBuildableObjectManager(scene);
+  const sceneObjectManager = new SceneObjectManager(scene);
 
   Sandbox(sceneObjectManager);
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(sceneObjectManager);
 
   const networkController = new NetworkController();
-  const cameraController = new CameraController(cameraWrapper, canvasWrapper);
-  const builderController = new BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager);
-  MainUiController(canvasWrapper, builderController);
+  const mainUiController = new MainUiController(cameraWrapper, canvasWrapper, sceneObjectManager);
 
   if (Game.config.debugIsEnabled()) {
     console.log('Debug mode is enabled.');
     window.THREE = THREE;
-    window.sceneObjectmanager = sceneObjectManager;
+    window.sceneObjectManager = sceneObjectManager;
   }
 
   // Gameloop.
@@ -50,13 +46,14 @@ export default function Game() {
     const networkTimeDelta = now - lastNetworkUpdate;
 
     try {
+      const gameplayTimeDeltaSecs = gameplayTimeDelta / 1000;
       if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
         lastGameplayUpdate = now;
-        cameraController.updateCamera(gameplayTimeDelta / 1000);
+        mainUiController.updatableInterface.update(gameplayTimeDeltaSecs);
       }
       if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
         lastNetworkUpdate = now;
-        networkController.update();
+        networkController.updatableInterface.update(gameplayTimeDeltaSecs);
       }
       if (renderTimeDelta >= RENDER_UPDATE_INTERVAL) {
         lastRenderUpdate = now;
@@ -83,7 +80,7 @@ function GameConfig() {
 
 Game.config = new GameConfig();
 
-function initializeRenderer(sceneObjectManager) {
+function initializeRenderer(sceneObjectmanager) {
   const renderer = new THREE.WebGLRenderer();
   const cameraWrapper = new CameraWrapper();
   const canvasWrapper = new CanvasWrapper(renderer.domElement);
@@ -91,8 +88,10 @@ function initializeRenderer(sceneObjectManager) {
   document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
   return {
-    renderer: new Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper),
+    renderer: new Renderer(renderer, sceneObjectmanager, canvasWrapper, cameraWrapper),
     canvasWrapper,
     cameraWrapper,
   };
 }
+
+export default Game;

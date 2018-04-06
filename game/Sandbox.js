@@ -3,6 +3,10 @@ import * as THREE from 'three';
 
 import Rectangle from './BuildableObjects/Rectangle';
 
+/**
+ * @param {SceneObjectManager} sceneObjectManager
+ * @constructor
+ */
 function Sandbox(sceneObjectManager) {
   console.log('Sandbox is activated. We can do here whatever we want!');
 

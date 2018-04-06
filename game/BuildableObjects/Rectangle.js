@@ -1,5 +1,5 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
-import BuildableObjectInterface from '../Interfaces/BuildableObjectInterface';
+import PlacableObjectInterface from '../Interfaces/PlacableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 
 function Rectangle(position, size, color, predefinedHashid = '') {
@@ -8,10 +8,10 @@ function Rectangle(position, size, color, predefinedHashid = '') {
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashid, {
     getHashedContent: () =>
-      this.buildableObjectInterface.getScene().hashableIdInterface.getHashId(),
+      this.placableObjectInterface.getScene().hashableIdInterface.getHashId(),
   });
 
-  this.buildableObjectInterface = new BuildableObjectInterface(this, {
+  this.placableObjectInterface = new PlacableObjectInterface(this, {
     getType: () => 'rectangle',
 
     getPosition: () => parameters.position,
@@ -38,9 +38,9 @@ function Rectangle(position, size, color, predefinedHashid = '') {
   };
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.buildableObjectInterface.setPosition(position);
+  this.placableObjectInterface.setPosition(position);
   this.setSize(size);
-  this.buildableObjectInterface.setColor(color);
+  this.placableObjectInterface.setColor(color);
 }
 
 export default Rectangle;
