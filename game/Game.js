@@ -9,7 +9,7 @@ import MainUiController from './Controllers/MainUiController';
 import NetworkController from './Controllers/NetworkController';
 import SceneObjectManager from './SceneObjectManager';
 
-export default function Game() {
+function Game() {
   const scene = new Scene();
   const sceneObjectManager = new SceneObjectManager(scene);
 
@@ -93,3 +93,5 @@ function initializeRenderer(sceneObjectmanager) {
     cameraWrapper,
   };
 }
+
+export default Game;
