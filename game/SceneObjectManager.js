@@ -11,6 +11,7 @@ function SceneObjectManager(scene) {
   };
   this.getObject = hashId => scene.getObject(hashId);
   this.getAllObjects = () => scene.getAllObjects();
+  this.removeObject = hashId => scene.removeObject(hashId);
 
   this.addPlayer = (player) => {
     player.placableObjectInterface
@@ -20,6 +21,7 @@ function SceneObjectManager(scene) {
   };
   this.getPlayer = hashId => scene.getPlayer(hashId);
   this.getAllPlayers = () => scene.getAllPlayers();
+  this.removePlayer = hashId => scene.removePlayer(hashId);
 }
 
 export default SceneObjectManager;

@@ -12,14 +12,16 @@ function GameScene() {
   };
   this.getObject = hashId => objects.get(hashId);
   this.getAllObjects = () => objects.values();
+  this.removeObject = hashId => objects.delete(hashId);
 
   const players = new Map();
-  this.addObject = (player) => {
+  this.addPlayer = (player) => {
     players.set(player.hashableIdInterface.getHashId(), player);
     return this;
   };
-  this.getObject = hashId => players.get(hashId);
-  this.getAllObjects = () => players.values();
+  this.getPlayer = hashId => players.get(hashId);
+  this.getAllPlayers = () => players.values();
+  this.removePlayer = hashId => players.delete(hashId);
 }
 
 export default GameScene;
