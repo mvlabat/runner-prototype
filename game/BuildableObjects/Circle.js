@@ -1,9 +1,11 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import PlacableObjectInterface from '../Interfaces/PlacableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
+import CircleRenderer from '../Renderers/CircleRenderer';
 
 function Circle(position, radius, color, predefinedHashId = '') {
   const parameters = {};
+  const renderer = new CircleRenderer();
 
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
@@ -27,6 +29,8 @@ function Circle(position, radius, color, predefinedHashId = '') {
       setDebugProperty(this, 'color', newColor);
       return this;
     },
+
+    getRenderer: () => renderer,
   });
 
   // CLASS IMPLEMENTATION.

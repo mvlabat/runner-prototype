@@ -3,9 +3,11 @@ import InterfaceImplementation from '../Utils/InterfaceImplementation';
 function ObjectRendererInterface(renderer, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, interfaceImplementation);
 
-  this.createMesh = object => implementation.callMethod('createMesh', object);
+  this.initialize = renderedObject => implementation.callMethod('initialize', renderedObject);
 
-  this.renderUpdate = renderedObject => implementation.callMethod('renderUpdate', renderedObject);
+  this.getRootMesh = () => implementation.callMethod('getRootMesh');
+
+  this.renderUpdate = () => implementation.callMethod('renderUpdate');
 }
 
 export default ObjectRendererInterface;

@@ -11,6 +11,8 @@ function PlacableObjectInterface(object, interfaceImplementation) {
   this.setColor = color => implementation.callMethod('setColor', color);
   this.getColor = () => implementation.callMethod('getColor');
 
+  this.getRenderer = () => implementation.callMethod('getRenderer');
+
   let objectScene = null;
   this.setScene = (scene) => {
     objectScene = scene;

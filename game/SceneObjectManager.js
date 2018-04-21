@@ -10,6 +10,7 @@ function SceneObjectManager(scene) {
     scene.addObject(object);
   };
   this.getObject = hashId => scene.getObject(hashId);
+  this.hasObject = hashId => scene.hasObject(hashId);
   this.getAllObjects = () => scene.getAllObjects();
   this.removeObject = hashId => scene.removeObject(hashId);
 

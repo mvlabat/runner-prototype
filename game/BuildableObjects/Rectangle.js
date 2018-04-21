@@ -1,9 +1,11 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import PlacableObjectInterface from '../Interfaces/PlacableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
+import RectangleRenderer from '../Renderers/RectangleRenderer';
 
 function Rectangle(position, size, color, predefinedHashid = '') {
   const parameters = {};
+  const renderer = new RectangleRenderer();
 
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashid, {
@@ -27,6 +29,8 @@ function Rectangle(position, size, color, predefinedHashid = '') {
       setDebugProperty(this, 'color', newColor);
       return this;
     },
+
+    getRenderer: () => renderer,
   });
 
   // CLASS IMPLEMENTATION.

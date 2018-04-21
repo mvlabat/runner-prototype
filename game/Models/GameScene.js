@@ -11,6 +11,7 @@ function GameScene() {
     return this;
   };
   this.getObject = hashId => objects.get(hashId);
+  this.hasObject = hashId => objects.has(hashId);
   this.getAllObjects = () => objects.values();
   this.removeObject = hashId => objects.delete(hashId);
 
