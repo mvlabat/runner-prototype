@@ -21,7 +21,7 @@ const UI_INPUT_ACTIONS = {
     PLAYER_LEFT: Symbol('Player left'),
     PLAYER_DOWN: Symbol('Player down'),
     PLAYER_RIGHT: Symbol('Player right'),
-    SWITCH_MOVE: Symbol('Switch to Builder mode'),
+    SWITCH_MODE: Symbol('Switch to Builder mode'),
   },
 };
 
@@ -116,6 +116,8 @@ function UiInputActions(cameraController, builderController, playerController) {
     action: builderActions.SWITCH_MODE,
     onKeyPress: () => {
       currentUiState = UI_STATES.PLAYER;
+      builderController.deactivateBuilderMode();
+      playerController.activatePlayerMode();
     },
   });
 
@@ -146,9 +148,11 @@ function UiInputActions(cameraController, builderController, playerController) {
   });
 
   defineKeyPressAction(UI_STATES.PLAYER, 'Escape', {
-    action: builderActions.SWITCH_MODE,
+    action: playerActions.SWITCH_MODE,
     onKeyPress: () => {
       currentUiState = UI_STATES.BUILDER;
+      playerController.deactivatePlayerMode();
+      builderController.activateBuilderMode();
     },
   });
 

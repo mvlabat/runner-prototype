@@ -1,38 +1,25 @@
 import * as THREE from 'three';
-import RectangleRenderer from './Renderers/RectangleRenderer';
-import CircleRenderer from './Renderers/CircleRenderer';
-
-const objectRenderers = {
-  circle: new CircleRenderer(),
-  rectangle: new RectangleRenderer(),
-};
-
-export function RenderedObject(object, mesh) {
-  this.object = object;
-  this.mesh = mesh;
-}
 
 /**
  * @param {WebGLRenderer} renderer
- * @param {SceneObjectManager} sceneObjectManager
+ * @param {GameScene} gameScene
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
  * @constructor
  */
-function Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper) {
+function Renderer(renderer, gameScene, canvasWrapper, cameraWrapper) {
   const scene = new THREE.Scene();
 
   this.render = () => {
     updateRendererSize();
-    addNewRenderedObjects();
-    updateRenderedObjects();
+    updateMeshes();
     renderer.render(scene, cameraWrapper.getCamera());
   };
 
   renderer.setClearColor(new THREE.Color(0xEFEFEF));
 
   /**
-   * @type {Map<string, RenderedObject>}
+   * @type {Map<string, Mesh>}
    */
   const renderedObjects = new Map();
 
@@ -43,37 +30,25 @@ function Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper) {
     }
   }
 
-  function addNewRenderedObjects() {
-    for (const object of sceneObjectManager.getAllObjects()) {
-      const objectHashId = object.hashableIdInterface.getHashId();
-      if (!renderedObjects.has(objectHashId)) {
-        useObjectRenderer(object, (objectRenderer) => {
-          const mesh = objectRenderer.objectRendererInterface.createMesh(object);
-          renderedObjects.set(objectHashId, new RenderedObject(object, mesh));
-          scene.add(mesh);
-        });
+  function updateMeshes() {
+    for (const object of gameScene.getAllObjects()) {
+      const hashId = object.hashableIdInterface.getHashId();
+      if (!renderedObjects.has(hashId)) {
+        renderedObjects.set(hashId, object);
+        const objectRenderer = object.placeableObjectInterface.getRenderer();
+        objectRenderer.objectRendererInterface.initialize(object);
+        scene.add(objectRenderer.objectRendererInterface.getRootMesh());
       }
     }
-  }
 
-  function updateRenderedObjects() {
-    for (const [, renderedObject] of renderedObjects) {
-      useObjectRenderer(renderedObject.object, (objectRenderer) => {
-        objectRenderer.objectRendererInterface.renderUpdate(renderedObject);
-      });
-    }
-  }
-
-  function useObjectRenderer(object, lambda) {
-    const objectRenderer = objectRenderers[object.placableObjectInterface.getType()];
-    if (typeof objectRenderer !== 'undefined') {
-      lambda(objectRenderer);
-    } else {
-      console.warn(`No renderer available for type '
-        ${object.placableObjectInterface.getType()}
-        ': Object("
-        ${object.hashableIdInterface.getHashId()}
-        ')`);
+    for (const [hashId, object] of renderedObjects) {
+      const objectRenderer = object.placeableObjectInterface.getRenderer();
+      if (gameScene.hasObject(hashId)) {
+        objectRenderer.objectRendererInterface.renderUpdate();
+      } else {
+        renderedObjects.delete(hashId);
+        scene.remove(objectRenderer.objectRendererInterface.getRootMesh());
+      }
     }
   }
 }

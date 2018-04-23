@@ -11,23 +11,25 @@ import UiInputActions from '../Utils/UiInputActions';
 /**
  * @param {CameraWrapper} cameraWrapper
  * @param {CanvasWrapper} canvasWrapper
- * @param {SceneObjectManager} sceneObjectManager
+ * @param {GameScene} gameScene
  * @constructor
  */
-function MainUiController(cameraWrapper, canvasWrapper, sceneObjectManager) {
+function MainUiController(cameraWrapper, canvasWrapper, gameScene) {
   const canvas = canvasWrapper.getCanvas();
 
   const cameraController = new CameraController(cameraWrapper, canvasWrapper);
   // We define these controllers here, because UI state (may) effects
   // what is updated and what is not.
-  const builderController = new BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager);
-  const playerController = new PlayerController();
+  const builderController = new BuilderController(canvasWrapper, cameraWrapper, gameScene);
+  const playerController = new PlayerController(gameScene, cameraWrapper);
+  builderController.activateBuilderMode();
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: (timeDelta) => {
       cameraController.updatableInterface.update(timeDelta);
       canvasWrapper.updateWorldMousePosition(cameraWrapper);
       builderController.updatableInterface.update(timeDelta);
+      playerController.updatableInterface.update(timeDelta);
     },
   });
 

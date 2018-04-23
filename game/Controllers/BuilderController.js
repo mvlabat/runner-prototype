@@ -3,23 +3,38 @@ import * as THREE from 'three';
 import Rectangle from '../BuildableObjects/Rectangle';
 import Circle from '../BuildableObjects/Circle';
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
+import { log } from '../Utils/Debug';
 
 /**
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
- * @param {SceneObjectManager} sceneObjectManager
+ * @param {GameScene} gameScene
  * @constructor
  */
-function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
+function BuilderController(canvasWrapper, cameraWrapper, gameScene) {
+  let activated = false;
   let placedObject = null;
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: (_timeDelta) => {
+      if (!activated) {
+        return;
+      }
+
       movePlacedObject(canvasWrapper.getMouseWorldPosition());
     },
   });
 
-  this.getPlacedObject = () => placedObject;
+  this.activateBuilderMode = () => {
+    log('Builder mode activated.');
+    activated = true;
+  };
+
+  this.deactivateBuilderMode = () => {
+    activated = false;
+    gameScene.removeBuildableObject(placedObject.hashableIdInterface.getHashId());
+    placedObject = null;
+  };
 
   this.placeObject = () => {
     // We create a new object on update.
@@ -42,9 +57,9 @@ function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
         );
       }
 
-      sceneObjectManager.addObject(placedObject);
+      gameScene.addBuildableObject(placedObject);
     }
-    placedObject.placableObjectInterface.setPosition(position);
+    placedObject.placeableObjectInterface.setPosition(position);
   }
 }
 

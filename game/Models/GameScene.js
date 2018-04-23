@@ -6,20 +6,42 @@ function GameScene() {
 
   // CLASSES IMPLEMENTATION.
   const objects = new Map();
-  this.addObject = (object) => {
+  this.getAllObjects = () => objects.values();
+  this.getObject = hashId => objects.get(hashId);
+  this.hasObject = hashId => objects.has(hashId);
+
+  const buildableObjects = new Map();
+  this.addBuildableObject = (object) => {
+    object.placeableObjectInterface
+      .setScene(this)
+      .calculateHashId();
     objects.set(object.hashableIdInterface.getHashId(), object);
+    buildableObjects.set(object.hashableIdInterface.getHashId(), object);
     return this;
   };
-  this.getObject = hashId => objects.get(hashId);
-  this.getAllObjects = () => objects.values();
+  this.getBuildableObject = hashId => buildableObjects.get(hashId);
+  this.hasBuildableObject = hashId => buildableObjects.has(hashId);
+  this.getAllBuildableObjects = () => buildableObjects.values();
+  this.removeBuildableObject = (hashId) => {
+    objects.delete(hashId);
+    buildableObjects.delete(hashId);
+  };
 
   const players = new Map();
-  this.addObject = (player) => {
+  this.addPlayer = (player) => {
+    player.placeableObjectInterface
+      .setScene(this)
+      .calculateHashId();
+    objects.set(player.hashableIdInterface.getHashId(), player);
     players.set(player.hashableIdInterface.getHashId(), player);
     return this;
   };
-  this.getObject = hashId => players.get(hashId);
-  this.getAllObjects = () => players.values();
+  this.getPlayer = hashId => players.get(hashId);
+  this.getAllPlayers = () => players.values();
+  this.removePlayer = (hashId) => {
+    objects.delete(hashId);
+    players.delete(hashId);
+  };
 }
 
 export default GameScene;

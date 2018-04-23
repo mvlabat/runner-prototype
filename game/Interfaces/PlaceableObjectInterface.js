@@ -1,6 +1,6 @@
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
 
-function PlacableObjectInterface(object, interfaceImplementation) {
+function PlaceableObjectInterface(object, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, interfaceImplementation);
 
   this.getType = () => implementation.callMethod('getType');
@@ -10,6 +10,8 @@ function PlacableObjectInterface(object, interfaceImplementation) {
 
   this.setColor = color => implementation.callMethod('setColor', color);
   this.getColor = () => implementation.callMethod('getColor');
+
+  this.getRenderer = () => implementation.callMethod('getRenderer');
 
   let objectScene = null;
   this.setScene = (scene) => {
@@ -24,4 +26,4 @@ function PlacableObjectInterface(object, interfaceImplementation) {
   };
 }
 
-export default PlacableObjectInterface;
+export default PlaceableObjectInterface;

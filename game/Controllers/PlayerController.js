@@ -1,24 +1,42 @@
 import * as THREE from 'three';
 
-/**
- * @param {GameScene} scene
- * @constructor
- */
 import Player from '../Player';
 import MovingDirections from '../Utils/Movement';
+import { log } from '../Utils/Debug';
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
 
-function PlayerController(scene) {
+/**
+ * @param {GameScene} gameScene
+ * @param {CameraWrapper} cameraWrapper
+ * @constructor
+ */
+function PlayerController(gameScene, cameraWrapper) {
+  let activated = false;
+  let player = null;
+
   // INTERFACES IMPLEMENTATION.
 
   this.updatableInterface = new UpdatableInterface(this, {
-    update: (_timeDelta) => {
+    update: (timeDelta) => {
+      if (!activated) {
+        return;
+      }
 
+      movePlayer(timeDelta);
     },
   });
 
-  this.enable = () => {
+  // CLASS IMPLEMENTATION.
+
+  this.activatePlayerMode = () => {
+    activated = true;
+    log('Player mode activated.');
     addPlayer(new THREE.Vector2());
+  };
+
+  this.deactivatePlayerMode = () => {
+    activated = false;
+    removePlayer();
   };
 
   const movingDirections = new MovingDirections();
@@ -28,11 +46,27 @@ function PlayerController(scene) {
   };
 
   /**
-   * @param position
+   * @param {Vector2} position
    */
   function addPlayer(position) {
-    const player = new Player(position);
-    scene.addPlayer(player);
+    player = new Player(position);
+    gameScene.addPlayer(player);
+  }
+
+  function removePlayer() {
+    gameScene.removePlayer(player.hashableIdInterface.getHashId());
+    player = null;
+  }
+
+  const PLAYER_SPEED = 50;
+
+  function movePlayer(timeDelta) {
+    const offsetVector = movingDirections
+      .getDirectionVector()
+      .multiplyScalar(PLAYER_SPEED * timeDelta);
+    const newPosition = player.placeableObjectInterface.getPosition().add(offsetVector);
+    player.placeableObjectInterface.setPosition(newPosition);
+    cameraWrapper.setPosition(newPosition);
   }
 }
 
