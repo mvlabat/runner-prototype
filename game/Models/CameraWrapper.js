@@ -32,7 +32,7 @@ function CameraWrapper() {
     camera.right = halfWidth;
     camera.top = halfHeight;
     camera.bottom = -halfHeight;
-    camera.near = 0;
+    camera.near = -2000;
     camera.zoom = 5;
 
     camera.updateProjectionMatrix();
