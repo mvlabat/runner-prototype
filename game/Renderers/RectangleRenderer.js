@@ -20,7 +20,7 @@ function RectangleRenderer() {
         1,
       );
       const rectangleMaterial = new THREE.MeshBasicMaterial({
-        color: rectangle.placableObjectInterface.getColor().getHex(),
+        color: rectangle.placeableObjectInterface.getColor().getHex(),
         side: THREE.DoubleSide,
       });
       mesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
@@ -29,10 +29,10 @@ function RectangleRenderer() {
     getRootMesh: () => mesh,
 
     renderUpdate: () => {
-      const position = rectangle.placableObjectInterface.getPosition();
+      const position = rectangle.placeableObjectInterface.getPosition();
       mesh.position.x = position.x;
       mesh.position.y = position.y;
-      mesh.material.color = rectangle.placableObjectInterface.getColor();
+      mesh.material.color = rectangle.placeableObjectInterface.getColor();
     },
 
   });

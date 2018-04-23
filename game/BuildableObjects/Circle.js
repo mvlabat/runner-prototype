@@ -1,5 +1,5 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
-import PlacableObjectInterface from '../Interfaces/PlacableObjectInterface';
+import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import CircleRenderer from '../Renderers/CircleRenderer';
 
@@ -10,10 +10,10 @@ function Circle(position, radius, color, predefinedHashId = '') {
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
     getHashedContent: () =>
-      this.placableObjectInterface.getScene().hashableIdInterface.getHashId(),
+      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId(),
   });
 
-  this.placableObjectInterface = new PlacableObjectInterface(this, {
+  this.placeableObjectInterface = new PlaceableObjectInterface(this, {
     getType: () => 'circle',
 
     getPosition: () => parameters.position,
@@ -42,9 +42,9 @@ function Circle(position, radius, color, predefinedHashId = '') {
   };
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.placableObjectInterface.setPosition(position);
+  this.placeableObjectInterface.setPosition(position);
   this.setRadius(radius);
-  this.placableObjectInterface.setColor(color);
+  this.placeableObjectInterface.setColor(color);
 }
 
 export default Circle;

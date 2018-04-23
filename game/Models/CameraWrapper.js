@@ -34,7 +34,6 @@ function CameraWrapper() {
     camera.bottom = -halfHeight;
     camera.near = 0;
     camera.zoom = 5;
-    camera.far = Math.max(cameraSize.x, cameraSize.y);
 
     camera.updateProjectionMatrix();
   };

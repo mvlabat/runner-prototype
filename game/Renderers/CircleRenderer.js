@@ -15,7 +15,7 @@ function CircleRenderer() {
       circle = renderedObject;
       const circleGeometry = new THREE.CircleBufferGeometry(circle.getRadius(), 32);
       const circleMaterial = new THREE.MeshBasicMaterial({
-        color: circle.placableObjectInterface.getColor().getHex(),
+        color: circle.placeableObjectInterface.getColor().getHex(),
         side: THREE.DoubleSide,
       });
       mesh = new THREE.Mesh(circleGeometry, circleMaterial);
@@ -24,10 +24,10 @@ function CircleRenderer() {
     getRootMesh: () => mesh,
 
     renderUpdate: () => {
-      const position = circle.placableObjectInterface.getPosition();
+      const position = circle.placeableObjectInterface.getPosition();
       mesh.position.x = position.x;
       mesh.position.y = position.y;
-      mesh.material.color = circle.placableObjectInterface.getColor();
+      mesh.material.color = circle.placeableObjectInterface.getColor();
     },
 
   });
