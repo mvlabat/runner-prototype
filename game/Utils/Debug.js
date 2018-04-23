@@ -10,3 +10,9 @@ export function setDebugProperty(entity, property, value) {
     entity._debug[property] = value;
   }
 }
+
+export function log(message) {
+  if (Game.config.debugIsEnabled()) {
+    console.log(message);
+  }
+}
