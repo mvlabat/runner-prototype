@@ -2,12 +2,12 @@ import * as THREE from 'three';
 
 /**
  * @param {WebGLRenderer} renderer
- * @param {SceneObjectManager} sceneObjectManager
+ * @param {GameScene} gameScene
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
  * @constructor
  */
-function Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper) {
+function Renderer(renderer, gameScene, canvasWrapper, cameraWrapper) {
   const scene = new THREE.Scene();
 
   this.render = () => {
@@ -31,19 +31,19 @@ function Renderer(renderer, sceneObjectManager, canvasWrapper, cameraWrapper) {
   }
 
   function updateMeshes() {
-    for (const object of sceneObjectManager.getAllObjects()) {
+    for (const object of gameScene.getAllObjects()) {
       const hashId = object.hashableIdInterface.getHashId();
       if (!renderedObjects.has(hashId)) {
         renderedObjects.set(hashId, object);
-        const objectRenderer = object.placableObjectInterface.getRenderer();
+        const objectRenderer = object.placeableObjectInterface.getRenderer();
         objectRenderer.objectRendererInterface.initialize(object);
         scene.add(objectRenderer.objectRendererInterface.getRootMesh());
       }
     }
 
     for (const [hashId, object] of renderedObjects) {
-      const objectRenderer = object.placableObjectInterface.getRenderer();
-      if (sceneObjectManager.hasObject(hashId)) {
+      const objectRenderer = object.placeableObjectInterface.getRenderer();
+      if (gameScene.hasObject(hashId)) {
         objectRenderer.objectRendererInterface.renderUpdate();
       } else {
         renderedObjects.delete(hashId);

@@ -1,29 +1,27 @@
 import * as THREE from 'three';
 
 import Renderer from './Renderer';
-import Scene from './Models/GameScene';
+import GameScene from './Models/GameScene';
 import Sandbox from './Sandbox';
 import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
 import MainUiController from './Controllers/MainUiController';
 import NetworkController from './Controllers/NetworkController';
-import SceneObjectManager from './SceneObjectManager';
 
 function Game() {
-  const scene = new Scene();
-  const sceneObjectManager = new SceneObjectManager(scene);
+  const gameScene = new GameScene();
 
-  Sandbox(sceneObjectManager);
+  Sandbox(gameScene);
 
-  const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(sceneObjectManager);
+  const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameScene);
 
   const networkController = new NetworkController();
-  const mainUiController = new MainUiController(cameraWrapper, canvasWrapper, sceneObjectManager);
+  const mainUiController = new MainUiController(cameraWrapper, canvasWrapper, gameScene);
 
   if (Game.config.debugIsEnabled()) {
     console.log('Debug mode is enabled.');
     window.THREE = THREE;
-    window.sceneObjectManager = sceneObjectManager;
+    window.gameScene = gameScene;
   }
 
   // Gameloop.
@@ -80,7 +78,7 @@ function GameConfig() {
 
 Game.config = new GameConfig();
 
-function initializeRenderer(sceneObjectmanager) {
+function initializeRenderer(scene) {
   const renderer = new THREE.WebGLRenderer();
   const cameraWrapper = new CameraWrapper();
   const canvasWrapper = new CanvasWrapper(renderer.domElement);
@@ -88,7 +86,7 @@ function initializeRenderer(sceneObjectmanager) {
   document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
   return {
-    renderer: new Renderer(renderer, sceneObjectmanager, canvasWrapper, cameraWrapper),
+    renderer: new Renderer(renderer, scene, canvasWrapper, cameraWrapper),
     canvasWrapper,
     cameraWrapper,
   };

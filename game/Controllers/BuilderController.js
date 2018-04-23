@@ -7,10 +7,10 @@ import UpdatableInterface from '../Interfaces/UpdatableInterface';
 /**
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
- * @param {SceneObjectManager} sceneObjectManager
+ * @param {GameScene} gameScene
  * @constructor
  */
-function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
+function BuilderController(canvasWrapper, cameraWrapper, gameScene) {
   let placedObject = null;
 
   this.updatableInterface = new UpdatableInterface(this, {
@@ -42,9 +42,9 @@ function BuilderController(canvasWrapper, cameraWrapper, sceneObjectManager) {
         );
       }
 
-      sceneObjectManager.addObject(placedObject);
+      gameScene.addBuildableObject(placedObject);
     }
-    placedObject.placableObjectInterface.setPosition(position);
+    placedObject.placeableObjectInterface.setPosition(position);
   }
 }
 
