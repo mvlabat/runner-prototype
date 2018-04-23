@@ -21,13 +21,15 @@ function MainUiController(cameraWrapper, canvasWrapper, gameScene) {
   // We define these controllers here, because UI state (may) effects
   // what is updated and what is not.
   const builderController = new BuilderController(canvasWrapper, cameraWrapper, gameScene);
-  const playerController = new PlayerController(gameScene);
+  const playerController = new PlayerController(gameScene, cameraWrapper);
+  builderController.activateBuilderMode();
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: (timeDelta) => {
       cameraController.updatableInterface.update(timeDelta);
       canvasWrapper.updateWorldMousePosition(cameraWrapper);
       builderController.updatableInterface.update(timeDelta);
+      playerController.updatableInterface.update(timeDelta);
     },
   });
 

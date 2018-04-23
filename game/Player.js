@@ -1,9 +1,13 @@
+import * as THREE from 'three';
+
 import HashableIdInterface from './Interfaces/HashableIdInterface';
 import { setDebugProperty } from './Utils/Debug';
 import PlaceableObjectInterface from './Interfaces/PlaceableObjectInterface';
+import PlayerRenderer from './Renderers/PlayerRender';
 
-function Player(position, scene, predefinedHashId = '') {
+function Player(position, predefinedHashId = '') {
   const parameters = {};
+  const renderer = new PlayerRenderer();
 
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
     getHashedContent: () =>
@@ -26,9 +30,15 @@ function Player(position, scene, predefinedHashId = '') {
       setDebugProperty(this, 'color', newColor);
       return this;
     },
+
+    getRenderer: () => renderer,
   });
 
   this.getRadius = () => 5;
+
+  // INITIALIZE DEFAULT PARAMETERS.
+  this.placeableObjectInterface.setPosition(position);
+  this.placeableObjectInterface.setColor(new THREE.Color(Math.random() * 0xffffff));
 }
 
 export default Player;
