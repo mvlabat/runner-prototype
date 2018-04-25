@@ -1,0 +1,3 @@
+[submodule "platformio_common"]
+	path = platformio_common
+	url = git@github.com:mvlabat/platformio_common.git
