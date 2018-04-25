@@ -1,0 +1,3 @@
+[submodule "platformio_common"]
+	path = platformio_common
+	url = https://github.com/Gitlings/platformio_common.git
