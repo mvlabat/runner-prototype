@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "scripts": {
     "eslint": "eslint main.js",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "serve": "parcel index.html --no-hmr",
+    "build": "parcel build index.html"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
@@ -20,6 +22,8 @@
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
     "node-sass": "^4.8.3",
+    "parcel-bundler": "1.7.0",
+    "parcel-plugin-cargo-web": "^0.2.0",
     "vue-template-compiler": "^2.5.16"
   }
 }
