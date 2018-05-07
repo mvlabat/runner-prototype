@@ -1,6 +1,7 @@
 {
   "name": "platformio_frontend",
   "version": "0.1.0",
+  "license": "MIT",
   "scripts": {
     "eslint": "eslint main.js",
     "precommit": "lint-staged",

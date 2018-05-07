@@ -1,8 +1,11 @@
-/.idea
+.idea
 
-/node_modules
-/yarn-error.log
-/.cache
-/dist
+node_modules
+yarn-error.log
 
-/.env
+/backend/.cache
+/backend/dist
+/frontend/.cache
+/frontend/dist
+
+.env
