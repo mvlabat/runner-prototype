@@ -1,4 +1,4 @@
-import UpdatableInterface from '../Interfaces/UpdatableInterface';
+import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
 
 function NetworkController() {
   this.updatableInterface = new UpdatableInterface(this, {

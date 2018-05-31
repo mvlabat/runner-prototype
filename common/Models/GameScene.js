@@ -12,9 +12,10 @@ function GameScene() {
 
   const buildableObjects = new Map();
   this.addBuildableObject = (object) => {
-    object.placeableObjectInterface
-      .setScene(this)
-      .calculateHashId();
+    object.placeableObjectInterface.setScene(this);
+    if (!object.hashableIdInterface.getHashId()) {
+      object.hashableIdInterface.calculateHashId();
+    }
     objects.set(object.hashableIdInterface.getHashId(), object);
     buildableObjects.set(object.hashableIdInterface.getHashId(), object);
     return this;
@@ -29,13 +30,18 @@ function GameScene() {
 
   const players = new Map();
   this.addPlayer = (player) => {
-    player.placeableObjectInterface
-      .setScene(this)
-      .calculateHashId();
+    player.placeableObjectInterface.setScene(this);
+    if (!player.hashableIdInterface.getHashId()) {
+      player.hashableIdInterface.calculateHashId();
+    }
     objects.set(player.hashableIdInterface.getHashId(), player);
     players.set(player.hashableIdInterface.getHashId(), player);
     return this;
   };
+  /**
+   * @param hashId
+   * @returns {Player|undefined}
+   */
   this.getPlayer = hashId => players.get(hashId);
   this.getAllPlayers = () => players.values();
   this.removePlayer = (hashId) => {

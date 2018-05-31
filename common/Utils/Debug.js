@@ -1,9 +1,9 @@
-import Game from '../Game';
-
 // eslint-disable-next-line import/prefer-default-export
+import Engine from '../Engine';
+
 export function setDebugProperty(entity, property, value) {
   /* eslint-disable no-param-reassign, no-underscore-dangle */
-  if (Game.config.debugIsEnabled()) {
+  if (Engine.config.debugIsEnabled()) {
     if (!entity._debug) {
       entity._debug = {};
     }
@@ -12,7 +12,19 @@ export function setDebugProperty(entity, property, value) {
 }
 
 export function log(message) {
-  if (Game.config.debugIsEnabled()) {
+  if (Engine.config.debugIsEnabled()) {
     console.log(message);
+  }
+}
+
+export function serverLog(message) {
+  if (Engine.config.isServer()) {
+    log(message);
+  }
+}
+
+export function clientLog(message) {
+  if (Engine.config.isClient()) {
+    log(message);
   }
 }

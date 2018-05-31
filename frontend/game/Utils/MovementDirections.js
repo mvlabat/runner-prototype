@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-function MovingDirections() {
+function MovementDirections() {
   this.up = false;
   this.left = false;
   this.down = false;
@@ -36,4 +36,4 @@ function MovingDirections() {
   };
 }
 
-export default MovingDirections;
+export default MovementDirections;

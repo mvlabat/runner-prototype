@@ -1,5 +1,11 @@
 {
-  "name": "platformio_common",
+  "name": "platformio-common",
   "version": "0.1.0",
-  "license": "MIT"
+  "license": "LGPL-3.0",
+  "main": "index.js",
+  "dependencies": {
+    "crypto-js": "^3.1.9-1",
+    "nonce": "^1.0.4",
+    "three": "^0.91.0"
+  }
 }

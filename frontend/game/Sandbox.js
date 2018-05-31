@@ -1,33 +1,37 @@
 /* eslint-disable */
 import * as THREE from 'three';
-
-import Rectangle from './BuildableObjects/Rectangle';
+import SaveBuildableObjectAction from 'platformio-common/Actions/SaveBuildableObjectAction';
+import Rectangle from 'platformio-common/PlaceableObjects/Rectangle';
+import Circle from '../../common/PlaceableObjects/Circle';
 
 /**
- * @param {GameScene} gameScene
+ * @param {ActionController} actionController
  * @constructor
  */
-function Sandbox(gameScene) {
+function Sandbox(actionController) {
   console.log('Sandbox is activated. We can do here whatever we want!');
 
-  // gameScene.addBuildableObject(new Rectangle(
+  // actionController.addAction(new SaveBuildableObjectAction(new Rectangle(
   //   new THREE.Vector2(0, 0),
   //   new THREE.Vector2(10, 20),
   //   new THREE.Color(0x0000FF),
-  // ));
+  //   false,
+  // )));
   //
-  // gameScene.addBuildableObject(new Rectangle(
+  // actionController.addAction(new SaveBuildableObjectAction(new Rectangle(
   //   new THREE.Vector2(50, 50),
   //   new THREE.Vector2(100, 20),
-  //   new THREE.Color(0x0000FF),
-  // ));
+  //   new THREE.Color(0x00FF00),
+  //   false,
+  // )));
   //
   // setTimeout(() => {
-  //   gameScene.addBuildableObject(new Rectangle(
-  //     new THREE.Vector2(100, 100),
-  //     new THREE.Vector2(100, 20),
-  //     new THREE.Color(0x0000FF),
-  //   ));
+  //   actionController.addAction(new SaveBuildableObjectAction(new Circle(
+  //     new THREE.Vector2(-20, -20),
+  //     15,
+  //     new THREE.Color(0xFF0000),
+  //     false,
+  //   )));
   // }, 3000);
 }
 

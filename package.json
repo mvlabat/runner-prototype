@@ -1,0 +1,22 @@
+{
+  "name": "platformio",
+  "version": "1.0.0",
+  "repository": "git@github.com:Gitlings/platformio_frontend.git",
+  "author": "mvlabat <mvlabat@gmail.com>",
+  "license": "LGPL-3.0",
+  "scripts": {
+    "eslint": "yarn eslint-backend && yarn eslint-frontend && yarn eslint-common",
+    "eslint-backend": "eslint backend/index.js && eslint backend/bundler.js",
+    "eslint-common": "eslint common/index.js",
+    "eslint-frontend": "eslint frontend/index.js",
+    "precommit": "lint-staged"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-vue": "^4.5.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.0"
+  }
+}
