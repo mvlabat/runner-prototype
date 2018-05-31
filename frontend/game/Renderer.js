@@ -1,13 +1,22 @@
 import * as THREE from 'three';
+import CircleRenderer from './Renderers/CircleRenderer';
+import PlayerRenderer from './Renderers/PlayerRender';
+import RectangleRenderer from './Renderers/RectangleRenderer';
+
+const objectRendererConstructors = {
+  circle: CircleRenderer,
+  player: PlayerRenderer,
+  rectangle: RectangleRenderer,
+};
 
 /**
  * @param {WebGLRenderer} renderer
- * @param {GameScene} gameScene
+ * @param {GameState} gameState
  * @param {CanvasWrapper} canvasWrapper
  * @param {CameraWrapper} cameraWrapper
  * @constructor
  */
-function Renderer(renderer, gameScene, canvasWrapper, cameraWrapper) {
+function Renderer(renderer, gameState, canvasWrapper, cameraWrapper) {
   const scene = new THREE.Scene();
 
   this.render = () => {
@@ -21,7 +30,7 @@ function Renderer(renderer, gameScene, canvasWrapper, cameraWrapper) {
   /**
    * @type {Map<string, Mesh>}
    */
-  const renderedObjects = new Map();
+  const objectRenderers = new Map();
 
   function updateRendererSize() {
     const { x: width, y: height } = canvasWrapper.getCanvasSize();
@@ -31,25 +40,41 @@ function Renderer(renderer, gameScene, canvasWrapper, cameraWrapper) {
   }
 
   function updateMeshes() {
-    for (const object of gameScene.getAllObjects()) {
+    for (const object of gameState.getAllObjects()) {
       const hashId = object.hashableIdInterface.getHashId();
-      if (!renderedObjects.has(hashId)) {
-        renderedObjects.set(hashId, object);
-        const objectRenderer = object.placeableObjectInterface.getRenderer();
-        objectRenderer.objectRendererInterface.initialize(object);
-        scene.add(objectRenderer.objectRendererInterface.getRootMesh());
+      if (!objectRenderers.has(hashId)) {
+        const objectRenderer = createObjectRenderer(object);
+        if (objectRenderer !== null) {
+          objectRenderers.set(hashId, objectRenderer);
+          objectRenderer.objectRendererInterface.initialize(object);
+          scene.add(objectRenderer.objectRendererInterface.getRootMesh());
+        }
       }
     }
 
-    for (const [hashId, object] of renderedObjects) {
-      const objectRenderer = object.placeableObjectInterface.getRenderer();
-      if (gameScene.hasObject(hashId)) {
+    for (const [hashId, objectRenderer] of objectRenderers) {
+      if (gameState.hasObject(hashId)) {
         objectRenderer.objectRendererInterface.renderUpdate();
       } else {
-        renderedObjects.delete(hashId);
         scene.remove(objectRenderer.objectRendererInterface.getRootMesh());
+        objectRenderers.delete(hashId);
       }
     }
+  }
+
+  function createObjectRenderer(object) {
+    const ObjectRenderer = objectRendererConstructors[object.placeableObjectInterface.getType()];
+    if (typeof ObjectRenderer !== 'undefined') {
+      return new ObjectRenderer();
+    }
+
+    console.warn(`No renderer available for type '
+      ${object.placableObjectInterface.getType()}
+      ': Object("
+      ${object.hashableIdInterface.getHashId()}
+      ')`);
+
+    return null;
   }
 }
 

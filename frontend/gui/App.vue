@@ -52,8 +52,8 @@ export default {
     #builder-bar {
         position: absolute;
         bottom: 0;
-        height: 15%;
-        font-size: 2em;
+        height: 6em;
+        font-size: 1.5em;
         text-align: center;
         width: 100%;
 

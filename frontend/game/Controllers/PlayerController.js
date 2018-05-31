@@ -1,28 +1,35 @@
 import * as THREE from 'three';
 
-import Player from '../Player';
-import MovingDirections from '../Utils/Movement';
-import { log } from '../Utils/Debug';
-import UpdatableInterface from '../Interfaces/UpdatableInterface';
+import Player from 'platformio-common/PlaceableObjects/Player';
+import { log } from 'platformio-common/Utils/Debug';
+import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+
+import SpawnPlayerAction from 'platformio-common/Actions/SpawnPlayerAction';
+import DespawnPlayerAction from 'platformio-common/Actions/DespawnPlayerAction';
+import PlayerSetMovingAction from 'platformio-common/Actions/PlayerSetMovingAction';
+
+import MovementDirections from '../Utils/MovementDirections';
 
 /**
- * @param {GameScene} gameScene
+ * @param {ActionController} actionController
  * @param {CameraWrapper} cameraWrapper
  * @constructor
  */
-function PlayerController(gameScene, cameraWrapper) {
+function PlayerController(actionController, cameraWrapper) {
   let activated = false;
+  /**
+   * @type {Player}
+   */
   let player = null;
 
   // INTERFACES IMPLEMENTATION.
 
   this.updatableInterface = new UpdatableInterface(this, {
-    update: (timeDelta) => {
+    update: () => {
       if (!activated) {
         return;
       }
-
-      movePlayer(timeDelta);
+      cameraWrapper.setPosition(player.placeableObjectInterface.getPosition());
     },
   });
 
@@ -39,10 +46,14 @@ function PlayerController(gameScene, cameraWrapper) {
     removePlayer();
   };
 
-  const movingDirections = new MovingDirections();
+  const movementDirections = new MovementDirections();
 
   this.setMovementDirection = (direction, enable) => {
-    movingDirections[direction] = enable;
+    movementDirections[direction] = enable;
+    actionController.addAction(new PlayerSetMovingAction(
+      player.hashableIdInterface.getHashId(),
+      movementDirections.getDirectionVector(),
+    ));
   };
 
   /**
@@ -50,23 +61,12 @@ function PlayerController(gameScene, cameraWrapper) {
    */
   function addPlayer(position) {
     player = new Player(position);
-    gameScene.addPlayer(player);
+    actionController.addAction(new SpawnPlayerAction(player));
   }
 
   function removePlayer() {
-    gameScene.removePlayer(player.hashableIdInterface.getHashId());
+    actionController.addAction(new DespawnPlayerAction(player.hashableIdInterface.getHashId()));
     player = null;
-  }
-
-  const PLAYER_SPEED = 50;
-
-  function movePlayer(timeDelta) {
-    const offsetVector = movingDirections
-      .getDirectionVector()
-      .multiplyScalar(PLAYER_SPEED * timeDelta);
-    const newPosition = player.placeableObjectInterface.getPosition().add(offsetVector);
-    player.placeableObjectInterface.setPosition(newPosition);
-    cameraWrapper.setPosition(newPosition);
   }
 }
 

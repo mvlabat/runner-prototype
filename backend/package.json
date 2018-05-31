@@ -1,5 +1,15 @@
 {
   "name": "platformio_backend",
   "version": "0.1.0",
-  "license": "MIT"
+  "license": "LGPL-3.0",
+  "scripts": {
+    "serve": "node bundler.js run",
+    "build": "NODE_ENV=production node bundler.js"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.8.1"
+  },
+  "dependencies": {
+    "express": "^4.16.3"
+  }
 }

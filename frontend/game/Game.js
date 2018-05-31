@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
+import Engine from 'platformio-common/Engine';
+
 import Renderer from './Renderer';
-import GameScene from './Models/GameScene';
 import Sandbox from './Sandbox';
 import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
@@ -9,19 +10,19 @@ import MainUiController from './Controllers/MainUiController';
 import NetworkController from './Controllers/NetworkController';
 
 function Game() {
-  const gameScene = new GameScene();
+  const engine = new Engine();
+  const actionController = engine.getActionController();
+  const gameState = engine.getGameState();
 
-  Sandbox(gameScene);
+  Sandbox(actionController);
 
-  const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameScene);
+  const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameState);
 
   const networkController = new NetworkController();
-  const mainUiController = new MainUiController(cameraWrapper, canvasWrapper, gameScene);
+  const mainUiController = new MainUiController(actionController, cameraWrapper, canvasWrapper);
 
-  if (Game.config.debugIsEnabled()) {
-    console.log('Debug mode is enabled.');
+  if (Engine.config.debugIsEnabled()) {
     window.THREE = THREE;
-    window.gameScene = gameScene;
   }
 
   // Gameloop.
@@ -47,6 +48,7 @@ function Game() {
       const gameplayTimeDeltaSecs = gameplayTimeDelta / 1000;
       if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
         lastGameplayUpdate = now;
+        engine.tick(gameplayTimeDeltaSecs);
         mainUiController.updatableInterface.update(gameplayTimeDeltaSecs);
       }
       if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
@@ -66,19 +68,7 @@ function Game() {
   tick(0);
 }
 
-function GameConfig() {
-  const debugIsEnabled = boolean(process.env.DEBUG_ENABLED) || boolean(process.env.FORCE_DEBUG);
-
-  this.debugIsEnabled = () => debugIsEnabled;
-
-  function boolean(string) {
-    return string === 'true';
-  }
-}
-
-Game.config = new GameConfig();
-
-function initializeRenderer(scene) {
+function initializeRenderer(gameState) {
   const renderer = new THREE.WebGLRenderer();
   const cameraWrapper = new CameraWrapper();
   const canvasWrapper = new CanvasWrapper(renderer.domElement);
@@ -86,7 +76,7 @@ function initializeRenderer(scene) {
   document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
   return {
-    renderer: new Renderer(renderer, scene, canvasWrapper, cameraWrapper),
+    renderer: new Renderer(renderer, gameState, canvasWrapper, cameraWrapper),
     canvasWrapper,
     cameraWrapper,
   };

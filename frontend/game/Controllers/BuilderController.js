@@ -1,17 +1,18 @@
 import * as THREE from 'three';
+import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
 
-import Rectangle from '../BuildableObjects/Rectangle';
-import Circle from '../BuildableObjects/Circle';
-import UpdatableInterface from '../Interfaces/UpdatableInterface';
-import { log } from '../Utils/Debug';
+import SaveBuildableObjectAction from 'platformio-common/Actions/SaveBuildableObjectAction';
+import RemoveBuildableObjectAction from 'platformio-common/Actions/RemoveBuildableObjectAction';
+import Rectangle from 'platformio-common/PlaceableObjects/Rectangle';
+import Circle from 'platformio-common/PlaceableObjects/Circle';
+import { log } from 'platformio-common/Utils/Debug';
 
 /**
+ * @param {ActionController} actionController
  * @param {CanvasWrapper} canvasWrapper
- * @param {CameraWrapper} cameraWrapper
- * @param {GameScene} gameScene
  * @constructor
  */
-function BuilderController(canvasWrapper, cameraWrapper, gameScene) {
+function BuilderController(actionController, canvasWrapper) {
   let activated = false;
   let placedObject = null;
 
@@ -32,11 +33,14 @@ function BuilderController(canvasWrapper, cameraWrapper, gameScene) {
 
   this.deactivateBuilderMode = () => {
     activated = false;
-    gameScene.removeBuildableObject(placedObject.hashableIdInterface.getHashId());
+    const action = new RemoveBuildableObjectAction(placedObject.hashableIdInterface.getHashId());
+    actionController.addAction(action);
     placedObject = null;
   };
 
   this.placeObject = () => {
+    placedObject.placeableObjectInterface.setAstralShifted(false);
+    actionController.addAction(new SaveBuildableObjectAction(placedObject));
     // We create a new object on update.
     placedObject = null;
   };
@@ -48,18 +52,19 @@ function BuilderController(canvasWrapper, cameraWrapper, gameScene) {
           position,
           new THREE.Vector2(3, 3),
           new THREE.Color(Math.random() * 0xffffff),
+          true,
         );
       } else {
         placedObject = new Circle(
           position,
           1.5,
           new THREE.Color(Math.random() * 0xffffff),
+          true,
         );
       }
-
-      gameScene.addBuildableObject(placedObject);
     }
     placedObject.placeableObjectInterface.setPosition(position);
+    actionController.addAction(new SaveBuildableObjectAction(placedObject));
   }
 }
 

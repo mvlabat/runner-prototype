@@ -1,27 +1,23 @@
-/**
- * @param {CanvasWrapper} canvasWrapper
- * @constructor
- */
+import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
 import CameraController from './CameraController';
 import BuilderController from './BuilderController';
 import PlayerController from './PlayerController';
-import UpdatableInterface from '../Interfaces/UpdatableInterface';
 import UiInputActions from '../Utils/UiInputActions';
 
 /**
+ * @param {ActionController} actionController
  * @param {CameraWrapper} cameraWrapper
  * @param {CanvasWrapper} canvasWrapper
- * @param {GameScene} gameScene
  * @constructor
  */
-function MainUiController(cameraWrapper, canvasWrapper, gameScene) {
+function MainUiController(actionController, cameraWrapper, canvasWrapper) {
   const canvas = canvasWrapper.getCanvas();
 
   const cameraController = new CameraController(cameraWrapper, canvasWrapper);
   // We define these controllers here, because UI state (may) effects
   // what is updated and what is not.
-  const builderController = new BuilderController(canvasWrapper, cameraWrapper, gameScene);
-  const playerController = new PlayerController(gameScene, cameraWrapper);
+  const builderController = new BuilderController(actionController, canvasWrapper);
+  const playerController = new PlayerController(actionController, cameraWrapper);
   builderController.activateBuilderMode();
 
   this.updatableInterface = new UpdatableInterface(this, {

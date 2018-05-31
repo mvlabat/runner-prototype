@@ -1,7 +1,7 @@
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
 
 function PlaceableObjectInterface(object, interfaceImplementation) {
-  const implementation = new InterfaceImplementation(this, interfaceImplementation);
+  const implementation = new InterfaceImplementation(this, object, interfaceImplementation);
 
   this.getType = () => implementation.callMethod('getType');
 
@@ -11,7 +11,9 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
   this.setColor = color => implementation.callMethod('setColor', color);
   this.getColor = () => implementation.callMethod('getColor');
 
-  this.getRenderer = () => implementation.callMethod('getRenderer');
+  this.setAstralShifted = isAstralShifted =>
+    implementation.callMethod('setAstralShifted', isAstralShifted);
+  this.isAstralShifted = () => implementation.callMethod('isAstralShifted');
 
   let objectScene = null;
   this.setScene = (scene) => {
@@ -19,11 +21,6 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
     return this;
   };
   this.getScene = () => objectScene;
-
-  this.calculateHashId = () => {
-    object.hashableIdInterface.calculateHashId();
-    return this;
-  };
 }
 
 export default PlaceableObjectInterface;

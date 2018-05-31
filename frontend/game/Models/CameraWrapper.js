@@ -44,6 +44,7 @@ function CameraWrapper() {
   this.setPosition = (position) => {
     cameraPosition.copy(position);
     updateCameraPosition();
+    camera.updateMatrixWorld();
   };
 
   /**

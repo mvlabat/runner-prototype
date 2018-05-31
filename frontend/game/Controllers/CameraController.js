@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import MovingDirections from '../Utils/Movement';
-import UpdatableInterface from '../Interfaces/UpdatableInterface';
+import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+import MovementDirections from '../Utils/MovementDirections';
 
 /**
  * @param {CameraWrapper} cameraWrapper
@@ -16,7 +16,7 @@ function CameraController(cameraWrapper, canvasWrapper) {
     },
   });
 
-  const movingDirections = new MovingDirections();
+  const movingDirections = new MovementDirections();
 
   this.setMovementDirection = (direction, enable) => {
     movingDirections[direction] = enable;
@@ -27,8 +27,9 @@ function CameraController(cameraWrapper, canvasWrapper) {
   function moveCamera(timeDelta) {
     const offsetVector = movingDirections
       .getDirectionVector()
+      .clone()
       .multiplyScalar(CAMERA_SPEED * timeDelta);
-    const newPosition = cameraWrapper.getPosition().add(offsetVector);
+    const newPosition = cameraWrapper.getPosition().clone().add(offsetVector);
     cameraWrapper.setPosition(newPosition);
   }
 }

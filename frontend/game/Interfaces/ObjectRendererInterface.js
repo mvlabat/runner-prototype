@@ -1,7 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation from 'platformio-common/Utils/InterfaceImplementation';
 
 function ObjectRendererInterface(renderer, interfaceImplementation) {
-  const implementation = new InterfaceImplementation(this, interfaceImplementation);
+  const implementation = new InterfaceImplementation(this, renderer, interfaceImplementation);
 
   this.initialize = renderedObject => implementation.callMethod('initialize', renderedObject);
 

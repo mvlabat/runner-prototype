@@ -1,27 +1,20 @@
 {
   "name": "platformio_frontend",
   "version": "0.1.0",
-  "license": "MIT",
+  "license": "LGPL-3.0",
   "scripts": {
-    "eslint": "eslint main.js",
-    "precommit": "lint-staged",
     "serve": "parcel index.html --no-hmr",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "postinstall": "npm link ../common",
+    "postupdate": "npm link ../common"
   },
   "dependencies": {
-    "crypto-js": "^3.1.9-1",
-    "nonce": "^1.0.4",
+    "platformio-common": "file:../common",
     "three": "^0.91.0",
     "vue": "^2.5.16"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^1.0.0",
-    "eslint": "^4.19.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-vue": "^4.5.0",
-    "husky": "^0.14.3",
-    "lint-staged": "^7.0.0",
     "node-sass": "^4.8.3",
     "parcel-bundler": "1.7.0",
     "parcel-plugin-cargo-web": "^0.2.0",
