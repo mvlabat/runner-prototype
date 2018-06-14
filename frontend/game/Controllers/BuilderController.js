@@ -1,11 +1,11 @@
 import * as THREE from 'three';
-import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 
-import SaveBuildableObjectAction from 'platformio-common/Actions/SaveBuildableObjectAction';
-import RemoveBuildableObjectAction from 'platformio-common/Actions/RemoveBuildableObjectAction';
-import Rectangle from 'platformio-common/PlaceableObjects/Rectangle';
-import Circle from 'platformio-common/PlaceableObjects/Circle';
-import { log } from 'platformio-common/Utils/Debug';
+import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
+import RemoveBuildableObjectAction from 'common/Actions/RemoveBuildableObjectAction';
+import Rectangle from 'common/PlaceableObjects/Rectangle';
+import Circle from 'common/PlaceableObjects/Circle';
+import { log } from 'common/Utils/Debug';
 
 /**
  * @param {ActionController} actionController

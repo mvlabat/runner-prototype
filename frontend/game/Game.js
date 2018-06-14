@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import Engine from 'platformio-common/Engine';
+import Engine from 'common/Engine';
 
 import Renderer from './Renderer';
 import Sandbox from './Sandbox';

@@ -3,7 +3,7 @@ const Bundler = require('parcel-bundler');
 const childProcess = require('child_process');
 
 const file = 'index.js';
-const options = {};
+const options = { target: 'node', 'bundle-node-modules': true };
 
 const bundler = new Bundler(file, options);
 

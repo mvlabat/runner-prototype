@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as THREE from 'three';
-import SaveBuildableObjectAction from 'platformio-common/Actions/SaveBuildableObjectAction';
-import Rectangle from 'platformio-common/PlaceableObjects/Rectangle';
+import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
+import Rectangle from 'common/PlaceableObjects/Rectangle';
 import Circle from '../../common/PlaceableObjects/Circle';
 
 /**

@@ -1,4 +1,4 @@
-import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import CameraController from './CameraController';
 import BuilderController from './BuilderController';
 import PlayerController from './PlayerController';

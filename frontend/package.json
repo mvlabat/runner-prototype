@@ -4,9 +4,7 @@
   "license": "LGPL-3.0",
   "scripts": {
     "serve": "parcel index.html --no-hmr",
-    "build": "parcel build index.html",
-    "postinstall": "npm link ../common",
-    "postupdate": "npm link ../common"
+    "build": "parcel build index.html"
   },
   "dependencies": {
     "platformio-common": "file:../common",
@@ -16,8 +14,7 @@
   "devDependencies": {
     "@vue/component-compiler-utils": "^1.0.0",
     "node-sass": "^4.8.3",
-    "parcel-bundler": "1.7.0",
-    "parcel-plugin-cargo-web": "^0.2.0",
+    "parcel-bundler": "^1.9.0",
     "vue-template-compiler": "^2.5.16"
   }
 }
