@@ -39,7 +39,7 @@ function UiInputActions(cameraController, builderController, playerController) {
   const playerActions = UI_INPUT_ACTIONS[UI_STATES.PLAYER];
 
   // TODO: move this out to UI framework store.
-  let currentUiState = UI_STATES.BUILDER;
+  let currentUiState = UI_STATES.PLAYER;
 
   initialize();
 

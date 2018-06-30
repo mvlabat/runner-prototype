@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import MovementDirections from '../Utils/MovementDirections';
 
 /**

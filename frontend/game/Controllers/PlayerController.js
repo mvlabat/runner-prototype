@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 
-import Player from 'platformio-common/PlaceableObjects/Player';
-import { log } from 'platformio-common/Utils/Debug';
-import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+import Player from 'common/PlaceableObjects/Player';
+import { log } from 'common/Utils/Debug';
+import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 
-import SpawnPlayerAction from 'platformio-common/Actions/SpawnPlayerAction';
-import DespawnPlayerAction from 'platformio-common/Actions/DespawnPlayerAction';
-import PlayerSetMovingAction from 'platformio-common/Actions/PlayerSetMovingAction';
+import SpawnPlayerAction from 'common/Actions/SpawnPlayerAction';
+import DespawnPlayerAction from 'common/Actions/DespawnPlayerAction';
+import PlayerSetMovingAction from 'common/Actions/PlayerSetMovingAction';
 
 import MovementDirections from '../Utils/MovementDirections';
 

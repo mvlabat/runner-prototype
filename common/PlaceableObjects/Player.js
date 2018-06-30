@@ -9,6 +9,13 @@ import {
   vector2Deserialize, colorSerialize, colorDeserialize,
 } from '../Utils/ThreeJsonSerializes';
 
+/**
+ * @param position
+ * @param isAstralShifted
+ * @param color
+ * @param predefinedHashId
+ * @constructor
+ */
 function Player(position, isAstralShifted, color = null, predefinedHashId = '') {
   const parameters = {};
 

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import Engine from 'platformio-common/Engine';
+import Engine from 'common';
 
 import Renderer from './Renderer';
 import Sandbox from './Sandbox';
@@ -10,15 +10,18 @@ import MainUiController from './Controllers/MainUiController';
 import NetworkController from './Controllers/NetworkController';
 
 function Game() {
-  const engine = new Engine();
+  const engine = new Engine(false);
   const actionController = engine.getActionController();
   const gameState = engine.getGameState();
 
+  const playerModel = engine.getPlayerModel();
   Sandbox(actionController);
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameState);
 
-  const networkController = new NetworkController();
+  const networkController = new NetworkController(actionController, playerModel);
+  actionController.setNetworkController(networkController);
+
   const mainUiController = new MainUiController(actionController, cameraWrapper, canvasWrapper);
 
   if (Engine.config.debugIsEnabled()) {

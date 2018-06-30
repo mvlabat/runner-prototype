@@ -1,4 +1,4 @@
-import UpdatableInterface from 'platformio-common/Interfaces/UpdatableInterface';
+import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import CameraController from './CameraController';
 import BuilderController from './BuilderController';
 import PlayerController from './PlayerController';
@@ -18,7 +18,7 @@ function MainUiController(actionController, cameraWrapper, canvasWrapper) {
   // what is updated and what is not.
   const builderController = new BuilderController(actionController, canvasWrapper);
   const playerController = new PlayerController(actionController, cameraWrapper);
-  builderController.activateBuilderMode();
+  playerController.activatePlayerMode();
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: (timeDelta) => {

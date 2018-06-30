@@ -1,39 +1,62 @@
 import ActionInterface from '../Interfaces/ActionInterface';
 import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
+import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {string} playerHashId
- * @param deserializedTimeOccurred
+ * @param timeOccurred
+ * @param {number|null} senderId
  * @constructor
  */
-function DespawnPlayerAction(playerHashId, deserializedTimeOccurred = 0) {
-  let timeOccurred = deserializedTimeOccurred;
+function DespawnPlayerAction(playerHashId, timeOccurred = 0, senderId = null) {
+  const parameters = {};
 
+  // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
-    getTimeOccurred: () => timeOccurred,
+    getTimeOccurred: () => parameters.timeOccurred,
 
-    setTimeOccurred: (time) => {
-      timeOccurred = time;
+    setTimeOccurred: (newTimeOccurred) => {
+      parameters.timeOccurred = newTimeOccurred;
+      setDebugProperty(this, 'timeOccurred', newTimeOccurred);
+      return this;
     },
   });
 
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
+    getSenderId: () => parameters.senderId,
+
+    setSenderId: (newSenderId) => {
+      parameters.senderId = newSenderId;
+      setDebugProperty(this, 'senderId', newSenderId);
+      return this;
+    },
+  });
+
+  // CLASS IMPLEMENTATION.
   this.getPlayerHashId = () => playerHashId;
+
+  // INITIALIZE DEFAULT PARAMETERS.
+  this.actionInterface.setTimeOccurred(timeOccurred);
+  this.broadcastedActionInterface.setSenderId(senderId);
 }
 
 DespawnPlayerAction.jsonSerializableInterface =
   new JsonSerializableInterface(DespawnPlayerAction, {
     /**
      * @param {DespawnPlayerAction} action
-     * @returns {{actionType: string, playerHashId: string, timeOccurred: number}}
+     * @returns {{playerHashId: string, timeOccurred: number, senderId: number|null}}
      */
     serialize: action => ({
       playerHashId: action.getPlayerHashId(),
-      timeOccurred: action.actionInterface.getTimeOccurred().getTime(),
+      timeOccurred: action.actionInterface.getTimeOccurred(),
+      senderId: action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new DespawnPlayerAction(
       json.playerHashId,
-      json.timeOccurred,
+      new Date(json.timeOccurred),
+      json.senderId,
     ),
   });
 

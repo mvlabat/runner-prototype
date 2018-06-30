@@ -10,7 +10,16 @@ module.exports = {
   'env': {
     'browser': true,
   },
+  'settings': {
+    'import/resolver': {
+      "babel-module": {},
+    },
+  },
   'rules': {
+    'import/extensions': ['error', 'always', {
+      js: 'never',
+      mjs: 'never',
+    }],
     quotes: ['error', 'single', { 'avoidEscape': true }],
     'no-use-before-define': ['error', { 'functions': false }],
     'no-restricted-syntax': [

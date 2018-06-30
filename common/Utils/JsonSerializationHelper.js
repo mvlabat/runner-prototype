@@ -1,21 +1,26 @@
 import JsonSerializableRegistry from '../TypeRegistries/JsonSerializableRegistry';
-import { hasInterface } from './InterfaceImplementation';
+import { assertInterface } from './InterfaceImplementation';
 import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
-
-// TODO: handle errors somewhere: crashing server on serialization errors is not cool :[
 
 export function serialize(object) {
   const { constructor } = object;
-  if (hasInterface(constructor, JsonSerializableInterface)) {
-    throw new Error('JsonSerializableInterface is not implemented');
-  }
+  assertInterface(constructor, JsonSerializableInterface);
   return constructor.jsonSerializableInterface.serialize(object);
 }
 
 export function deserialize(json) {
   const constructor = JsonSerializableRegistry.getConstructor(json.constructorName);
-  if (hasInterface(constructor, JsonSerializableInterface)) {
-    throw new Error('JsonSerializableInterface is not implemented');
+  if (!constructor) {
+    throw new Error(`Unknown constructor name: ${json.constructorName}`);
   }
+  assertInterface(constructor, JsonSerializableInterface);
   return constructor.jsonSerializableInterface.deserialize(json);
+}
+
+export function serializeArray(array, serializer = serialize) {
+  return Array.from(array).map(entity => serializer(entity));
+}
+
+export function deserializeArray(array, deserializer = deserialize) {
+  return Array.from(array).map(entity => deserializer(entity));
 }

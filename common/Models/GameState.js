@@ -1,5 +1,5 @@
 /**
- * Readonly interface for accessing game scene state (usable by front-end).
+ * Readonly interface for accessing game scene state.
  *
  * @param {GameScene} gameScene
  * @constructor

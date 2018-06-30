@@ -1,8 +1,15 @@
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
 import JsonSerializableRegistry from '../TypeRegistries/JsonSerializableRegistry';
 
+/**
+ * @param constructor
+ * @param interfaceImplementation
+ * @constructor
+ */
 function JsonSerializableInterface(constructor, interfaceImplementation) {
-  JsonSerializableRegistry.registerConstructor(constructor);
+  if (!JsonSerializableRegistry.hasConstructor(constructor.name)) {
+    JsonSerializableRegistry.registerConstructor(constructor);
+  }
 
   const implementation = new InterfaceImplementation(this, constructor, interfaceImplementation);
 
