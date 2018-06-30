@@ -1,5 +1,8 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 
+/**
+ * @constructor
+ */
 function GameScene() {
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, '', {});
@@ -30,6 +33,7 @@ function GameScene() {
 
   const players = new Map();
   this.addPlayer = (player) => {
+    console.log(`hmm ${player.hashableIdInterface.getHashId()}`);
     player.placeableObjectInterface.setScene(this);
     if (!player.hashableIdInterface.getHashId()) {
       player.hashableIdInterface.calculateHashId();

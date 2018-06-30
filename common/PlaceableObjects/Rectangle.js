@@ -10,6 +10,14 @@ import {
 } from '../Utils/ThreeJsonSerializes';
 import SavableInterface from '../Interfaces/SavableInterface';
 
+/**
+ * @param position
+ * @param size
+ * @param color
+ * @param isAstralShifted
+ * @param predefinedHashid
+ * @constructor
+ */
 function Rectangle(position, size, color, isAstralShifted, predefinedHashid = '') {
   const parameters = {};
 

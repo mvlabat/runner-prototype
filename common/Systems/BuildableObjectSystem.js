@@ -2,30 +2,36 @@
  * @param {GameScene} gameScene
  * @constructor
  */
-import ActionProcessorInterface from '../Interfaces/ActionProcessorInterface';
+import SystemInterface from '../Interfaces/SystemInterface';
 import SaveBuildableObjectAction from '../Actions/SaveBuildableObjectAction';
 import RemoveBuildableObjectAction from '../Actions/RemoveBuildableObjectAction';
+import { replaying } from '../Utils/SystemHelpers';
 
 /**
  * @param {GameScene} gameScene
+ * @param {PlayerModel} playerModel
  * @constructor
  */
-function BuildableObjectSystem(gameScene) {
+function BuildableObjectSystem(gameScene, playerModel) {
   const actionProcessors = new Map([
     [SaveBuildableObjectAction, saveBuildableObject],
     [RemoveBuildableObjectAction, removeBuildableObject],
   ]);
 
-  this.actionProcessorInterface = new ActionProcessorInterface(this, {
-    canProcess: actionClass => actionProcessors.has(actionClass),
+  this.systemInterface = new SystemInterface(this, {
+    canProcess: action => actionProcessors.has(action.constructor),
 
-    processAction: action => actionProcessors.get(action.constructor)(action),
+    process: action => actionProcessors.get(action.constructor)(action),
   });
 
   /**
    * @param {SaveBuildableObjectAction} action
    */
   function saveBuildableObject(action) {
+    if (replaying(action, playerModel)) {
+      return;
+    }
+
     const buildableObject = action.getBuildableObject();
     const existingBuildableObject =
       gameScene.getBuildableObject(buildableObject.hashableIdInterface.getHashId());

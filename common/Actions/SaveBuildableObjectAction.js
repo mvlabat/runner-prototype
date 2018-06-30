@@ -1,39 +1,64 @@
 import ActionInterface from '../Interfaces/ActionInterface';
 import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
 import { deserialize, serialize } from '../Utils/JsonSerializationHelper';
+import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
+import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {object} buildableObject
- * @param deserializedTimeOccurred
+ * @param timeOccurred
+ * @param {number|null} senderId
  * @constructor
  */
-function SaveBuildableObjectAction(buildableObject, deserializedTimeOccurred = 0) {
-  let timeOccurred = deserializedTimeOccurred;
+function SaveBuildableObjectAction(buildableObject, timeOccurred = 0, senderId = null) {
+  const parameters = {};
 
+  // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
-    getTimeOccurred: () => timeOccurred,
+    getTimeOccurred: () => parameters.timeOccurred,
 
-    setTimeOccurred: (time) => {
-      timeOccurred = time;
+    setTimeOccurred: (newTimeOccurred) => {
+      parameters.timeOccurred = newTimeOccurred;
+      setDebugProperty(this, 'timeOccurred', newTimeOccurred);
+      return this;
     },
   });
 
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
+    getSenderId: () => parameters.senderId,
+
+    setSenderId: (newSenderId) => {
+      parameters.senderId = newSenderId;
+      setDebugProperty(this, 'senderId', newSenderId);
+      return this;
+    },
+
+    isBroadcastedAfterExecution: () => true,
+  });
+
+  // CLASS IMPLEMENTATION.
   this.getBuildableObject = () => buildableObject;
+
+  // INITIALIZE DEFAULT PARAMETERS.
+  this.actionInterface.setTimeOccurred(timeOccurred);
+  this.broadcastedActionInterface.setSenderId(senderId);
 }
 
 SaveBuildableObjectAction.jsonSerializableInterface =
   new JsonSerializableInterface(SaveBuildableObjectAction, {
     /**
-     * @param {SaveBuildableObjectAction} object
+     * @param {SaveBuildableObjectAction} action
      */
-    serialize: object => ({
-      buildableObject: serialize(object.getBuildableObject()),
-      timeOccurred: object.actionInterface.getTimeOccurred(),
+    serialize: action => ({
+      buildableObject: serialize(action.getBuildableObject()),
+      timeOccurred: action.actionInterface.getTimeOccurred(),
+      senderId: action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new SaveBuildableObjectAction(
       deserialize(json.buildableObject),
-      json.timeOccurred,
+      new Date(json.timeOccurred),
+      json.senderId,
     ),
   });
 

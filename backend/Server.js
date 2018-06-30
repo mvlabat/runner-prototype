@@ -2,8 +2,11 @@ import Engine from 'common';
 import NetworkController from './Controllers/NetworkController';
 
 function Server() {
-  const engine = new Engine();
-  NetworkController();
+  const engine = new Engine(true);
+  const actionController = engine.getActionController();
+  const gameState = engine.getGameState();
+  const networkController = new NetworkController(actionController, gameState);
+  actionController.setNetworkController(networkController);
 
   // Gameloop.
 
@@ -14,9 +17,10 @@ function Server() {
   let lastNetworkUpdate = 0;
   let crashed = false;
 
-  function tick(now) {
+  function tick() {
     if (crashed) return;
     setImmediate(tick);
+    const now = new Date();
 
     const gameplayTimeDelta = now - lastGameplayUpdate;
     const networkTimeDelta = now - lastNetworkUpdate;
@@ -36,7 +40,7 @@ function Server() {
     }
   }
 
-  tick(0);
+  tick();
 }
 
 export default Server;

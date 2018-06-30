@@ -1,11 +1,20 @@
 import InterfaceImplementation from '../Utils/InterfaceImplementation';
 
+/**
+ * @param action
+ * @param interfaceImplementation
+ * @constructor
+ */
 function BroadcastedActionInterface(action, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, action, interfaceImplementation);
 
-  this.getTimeOccurred = () => implementation.callMethod('getTimeOccurred');
+  this.getSenderId = () => implementation.callMethod('getSenderId');
 
-  this.setTimeOccurred = time => implementation.callMethod('setTimeOccurred', time);
+  this.setSenderId = senderId =>
+    implementation.callMethod('setSenderId', senderId);
+
+  this.isBroadcastedAfterExecution = () =>
+    implementation.callMethodOr(false, 'isBroadcastedAfterExecution');
 }
 
 export default BroadcastedActionInterface;

@@ -10,6 +10,8 @@ const JsonSerializableRegistry = (() => {
     },
 
     getConstructor: name => registry.get(name),
+
+    hasConstructor: name => registry.has(name),
   };
 })();
 

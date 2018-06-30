@@ -1,20 +1,22 @@
-import ActionProcessorInterface from '../Interfaces/ActionProcessorInterface';
+import SystemInterface from '../Interfaces/SystemInterface';
 import PlayerSetMovingAction from '../Actions/PlayerSetMovingAction';
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
+import { replaying } from '../Utils/SystemHelpers';
 
 /**
  * @param {GameScene} gameScene
+ * @param {PlayerModel} playerModel
  * @constructor
  */
-function MovementSystem(gameScene) {
+function MovementSystem(gameScene, playerModel) {
   const actionProcessors = new Map([
     [PlayerSetMovingAction, playerSetMoving],
   ]);
 
-  this.actionProcessorInterface = new ActionProcessorInterface(this, {
-    canProcess: actionClass => actionProcessors.has(actionClass),
+  this.systemInterface = new SystemInterface(this, {
+    canProcess: action => actionProcessors.has(action.constructor),
 
-    processAction: action => actionProcessors.get(action.constructor)(action),
+    process: action => actionProcessors.get(action.constructor)(action),
   });
 
   this.updatableInterface = new UpdatableInterface(this, {
@@ -29,7 +31,16 @@ function MovementSystem(gameScene) {
    * @param {PlayerSetMovingAction} action
    */
   function playerSetMoving(action) {
+    if (replaying(action, playerModel)) {
+      return;
+    }
+
     const player = gameScene.getPlayer(action.getPlayerHashId());
+    for (const p of gameScene.getAllPlayers()) {
+      console.log(p.hashableIdInterface.getHashId());
+    }
+    console.log(player);
+    console.log(action.getPlayerHashId());
     player.setMovementDirection(action.getDirection());
   }
 

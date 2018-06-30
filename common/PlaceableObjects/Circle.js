@@ -10,6 +10,14 @@ import {
 } from '../Utils/ThreeJsonSerializes';
 import SavableInterface from '../Interfaces/SavableInterface';
 
+/**
+ * @param position
+ * @param radius
+ * @param color
+ * @param isAstralShifted
+ * @param predefinedHashId
+ * @constructor
+ */
 function Circle(position, radius, color, isAstralShifted, predefinedHashId = '') {
   const parameters = {};
 

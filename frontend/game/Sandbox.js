@@ -2,14 +2,15 @@
 import * as THREE from 'three';
 import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
 import Rectangle from 'common/PlaceableObjects/Rectangle';
-import Circle from '../../common/PlaceableObjects/Circle';
+import Circle from 'common/PlaceableObjects/Circle';
+import { log } from 'common/Utils/Debug';
 
 /**
  * @param {ActionController} actionController
  * @constructor
  */
 function Sandbox(actionController) {
-  console.log('Sandbox is activated. We can do here whatever we want!');
+  log('Sandbox is activated. We can do here whatever we want!');
 
   // actionController.addAction(new SaveBuildableObjectAction(new Rectangle(
   //   new THREE.Vector2(0, 0),

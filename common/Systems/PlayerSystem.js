@@ -2,30 +2,37 @@
  * @param {GameScene} gameScene
  * @constructor
  */
-import ActionProcessorInterface from '../Interfaces/ActionProcessorInterface';
+import SystemInterface from '../Interfaces/SystemInterface';
 import SpawnPlayerAction from '../Actions/SpawnPlayerAction';
 import DespawnPlayerAction from '../Actions/DespawnPlayerAction';
+import { replaying } from '../Utils/SystemHelpers';
 
 /**
  * @param {GameScene} gameScene
+ * @param {PlayerModel} playerModel
  * @constructor
  */
-function PlayerSystem(gameScene) {
+function PlayerSystem(gameScene, playerModel) {
   const actionProcessors = new Map([
     [SpawnPlayerAction, spawnPlayer],
     [DespawnPlayerAction, despawnPlayer],
   ]);
 
-  this.actionProcessorInterface = new ActionProcessorInterface(this, {
-    canProcess: actionClass => actionProcessors.has(actionClass),
+  this.systemInterface = new SystemInterface(this, {
+    canProcess: action => actionProcessors.has(action.constructor),
 
-    processAction: action => actionProcessors.get(action.constructor)(action),
+    process: action => actionProcessors.get(action.constructor)(action),
   });
 
   /**
    * @param {SpawnPlayerAction} action
    */
   function spawnPlayer(action) {
+    console.log(action);
+    if (replaying(action, playerModel)) {
+      return;
+    }
+
     gameScene.addPlayer(action.getPlayer());
   }
 
@@ -33,6 +40,10 @@ function PlayerSystem(gameScene) {
    * @param {DespawnPlayerAction} action
    */
   function despawnPlayer(action) {
+    if (replaying(action, playerModel)) {
+      return;
+    }
+
     gameScene.removePlayer(action.getPlayerHashId());
   }
 }

@@ -14,6 +14,20 @@ export class NotImplementedMethodError extends Error {
   }
 }
 
+export class NotImplementedInterfaceError extends Error {
+  constructor(interfaceImplementer, interfaceClass, message) {
+    super();
+    this.name = 'NotImplementedMethodError';
+    this.interfaceImplementer = interfaceImplementer;
+    this.interfaceClass = interfaceClass;
+    const implementerClassName = typeof interfaceImplementer === 'function'
+      ? interfaceImplementer.name
+      : interfaceImplementer.constructor.name;
+    this.message = message || `'${interfaceClass.name}' interface is not implemented for ${implementerClassName}`;
+    Error.captureStackTrace(this, NotImplementedMethodError);
+  }
+}
+
 /**
  * @param {object} object
  * @param {Function} interfaceConstructor
@@ -27,22 +41,32 @@ export function hasInterface(object, interfaceConstructor) {
     && object[interfaceProperty].constructor === interfaceConstructor;
 }
 
+/**
+ * @param {object} object
+ * @param {Function} interfaceConstructor
+ */
+export function assertInterface(object, interfaceConstructor) {
+  if (!hasInterface(object, interfaceConstructor)) {
+    throw new NotImplementedInterfaceError(object, interfaceConstructor);
+  }
+}
+
 function InterfaceImplementation(interfaceClass, implementerClass, implementation) {
   this.callMethod = (method, ...args) => {
-    if (isImplemented(implementation, method)) {
+    if (methodIsImplemented(implementation, method)) {
       return implementation[method].call(interfaceClass, ...args);
     }
     throw new NotImplementedMethodError(implementerClass, interfaceClass, method);
   };
 
-  this.defaultUnlessCall = (defaultValue, method, ...args) => {
-    if (isImplemented(implementation, method)) {
+  this.callMethodOr = (defaultValue, method, ...args) => {
+    if (methodIsImplemented(implementation, method)) {
       return implementation[method].call(interfaceClass, ...args);
     }
     return defaultValue;
   };
 
-  function isImplemented(interfaceImplementation, method) {
+  function methodIsImplemented(interfaceImplementation, method) {
     return typeof interfaceImplementation[method] === 'function';
   }
 }
