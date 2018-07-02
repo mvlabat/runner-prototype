@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param entity
@@ -20,5 +23,11 @@ function SystemInterface(entity, interfaceImplementation) {
    */
   this.process = processedEntity => implementation.callMethod('process', processedEntity);
 }
+
+SystemInterface.assert = (entity) => {
+  assertInterface(entity.systemInterface, SystemInterface);
+};
+
+SystemInterface.has = entity => isInterface(entity.systemInterface, SystemInterface);
 
 export default SystemInterface;

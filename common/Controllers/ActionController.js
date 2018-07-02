@@ -1,4 +1,3 @@
-import { hasInterface } from '../Utils/InterfaceImplementation';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 import BuildableObjectSystem from '../Systems/BuildableObjectSystem';
 import MovementSystem from '../Systems/MovementSystem';
@@ -49,7 +48,7 @@ function ActionController(gameScene, playerModel) {
   this.addAction = (action) => {
     action.actionInterface.setTimeOccurred(0); // TODO: set actual game time.
     actionsQueue.push(action);
-    if (hasInterface(action, BroadcastedActionInterface)) {
+    if (BroadcastedActionInterface.has(action)) {
       if (!action.broadcastedActionInterface.isBroadcastedAfterExecution()) {
         networkController.networkControllerInterface.broadcastAction(action);
       } else {

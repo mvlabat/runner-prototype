@@ -29,25 +29,21 @@ export class NotImplementedInterfaceError extends Error {
 }
 
 /**
- * @param {object} object
- * @param {Function} interfaceConstructor
+ * @param {object} interfaceInstance
+ * @param {Function} InterfaceConstructor
  * @returns {boolean}
  */
-export function hasInterface(object, interfaceConstructor) {
-  // TODO: refactor to assertInterface or getInterface maybe?
-  const constructorName = interfaceConstructor.name;
-  const interfaceProperty = constructorName.substr(0, 1).toLowerCase() + constructorName.substr(1);
-  return Object.prototype.hasOwnProperty.call(object, interfaceProperty)
-    && object[interfaceProperty].constructor === interfaceConstructor;
+export function isInterface(interfaceInstance, InterfaceConstructor) {
+  return interfaceInstance && interfaceInstance.constructor === InterfaceConstructor;
 }
 
 /**
- * @param {object} object
- * @param {Function} interfaceConstructor
+ * @param {object} interfaceInstance
+ * @param {Function} InterfaceConstructor
  */
-export function assertInterface(object, interfaceConstructor) {
-  if (!hasInterface(object, interfaceConstructor)) {
-    throw new NotImplementedInterfaceError(object, interfaceConstructor);
+export function assertInterface(interfaceInstance, InterfaceConstructor) {
+  if (!isInterface(interfaceInstance, InterfaceConstructor)) {
+    throw new NotImplementedInterfaceError(interfaceInstance, InterfaceConstructor);
   }
 }
 

@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 import JsonSerializableRegistry from '../TypeRegistries/JsonSerializableRegistry';
 
 /**
@@ -21,5 +24,12 @@ function JsonSerializableInterface(constructor, interfaceImplementation) {
 
   this.deserialize = json => implementation.callMethod('deserialize', json);
 }
+
+JsonSerializableInterface.assert = (entity) => {
+  assertInterface(entity.jsonSerializableInterface, JsonSerializableInterface);
+};
+
+JsonSerializableInterface.has = entity =>
+  isInterface(entity.jsonSerializableInterface, JsonSerializableInterface);
 
 export default JsonSerializableInterface;

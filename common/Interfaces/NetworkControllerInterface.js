@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param networkController
@@ -14,5 +17,12 @@ function NetworkControllerInterface(networkController, interfaceImplementation) 
 
   this.broadcastAction = action => implementation.callMethod('broadcastAction', action);
 }
+
+NetworkControllerInterface.assert = (entity) => {
+  assertInterface(entity.networkControllerInterface, NetworkControllerInterface);
+};
+
+NetworkControllerInterface.has = entity =>
+  isInterface(entity.networkControllerInterface, NetworkControllerInterface);
 
 export default NetworkControllerInterface;

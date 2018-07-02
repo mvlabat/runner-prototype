@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param object
@@ -27,5 +30,12 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
   };
   this.getScene = () => objectScene;
 }
+
+PlaceableObjectInterface.assert = (entity) => {
+  assertInterface(entity.placeableObjectInterface, PlaceableObjectInterface);
+};
+
+PlaceableObjectInterface.has = entity =>
+  isInterface(entity.placeableObjectInterface, PlaceableObjectInterface);
 
 export default PlaceableObjectInterface;

@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 
-import { assertInterface } from './InterfaceImplementation';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 
 /**
@@ -9,7 +8,7 @@ import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface
  * @returns {boolean}
  */
 export function replaying(action, playerModel) {
-  assertInterface(action, BroadcastedActionInterface);
+  BroadcastedActionInterface.assert(action);
   const senderId = action.broadcastedActionInterface.getSenderId();
   return senderId !== null && senderId === playerModel.playerId;
 }
