@@ -36,11 +36,6 @@ function MovementSystem(gameScene, playerModel) {
     }
 
     const player = gameScene.getPlayer(action.getPlayerHashId());
-    for (const p of gameScene.getAllPlayers()) {
-      console.log(p.hashableIdInterface.getHashId());
-    }
-    console.log(player);
-    console.log(action.getPlayerHashId());
     player.setMovementDirection(action.getDirection());
   }
 

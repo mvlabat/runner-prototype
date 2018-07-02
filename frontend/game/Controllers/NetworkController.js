@@ -26,7 +26,6 @@ function NetworkController(actionController, playerModel) {
       if (action.broadcastedActionInterface.getSenderId() === null) {
         const message = new BroadcastActionMessage(action);
         const serializedMessage = JSON.stringify(serialize(message));
-        console.log(serializedMessage);
         if (socket.readyState === socket.OPEN) {
           socket.send(serializedMessage);
         } else {

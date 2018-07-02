@@ -28,7 +28,6 @@ function PlayerSystem(gameScene, playerModel) {
    * @param {SpawnPlayerAction} action
    */
   function spawnPlayer(action) {
-    console.log(action);
     if (replaying(action, playerModel)) {
       return;
     }
