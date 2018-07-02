@@ -1,5 +1,13 @@
-import InterfaceImplementation from 'common/Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from 'common/Utils/InterfaceImplementation';
 
+/**
+ * @param renderer
+ * @param interfaceImplementation
+ * @constructor
+ */
 function ObjectRendererInterface(renderer, interfaceImplementation) {
   const implementation = new InterfaceImplementation(this, renderer, interfaceImplementation);
 
@@ -9,5 +17,12 @@ function ObjectRendererInterface(renderer, interfaceImplementation) {
 
   this.renderUpdate = () => implementation.callMethod('renderUpdate');
 }
+
+ObjectRendererInterface.assert = (entity) => {
+  assertInterface(entity.objectRendererInterface, ObjectRendererInterface);
+};
+
+ObjectRendererInterface.has = entity =>
+  isInterface(entity.objectRendererInterface, ObjectRendererInterface);
 
 export default ObjectRendererInterface;

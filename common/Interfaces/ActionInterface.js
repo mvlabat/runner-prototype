@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param action
@@ -12,5 +15,11 @@ function ActionInterface(action, interfaceImplementation) {
 
   this.setTimeOccurred = time => implementation.callMethod('setTimeOccurred', time);
 }
+
+ActionInterface.assert = (entity) => {
+  assertInterface(entity.actionInterface, ActionInterface);
+};
+
+ActionInterface.has = entity => isInterface(entity.actionInterface, ActionInterface);
 
 export default ActionInterface;

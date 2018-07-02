@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param object
@@ -10,5 +13,11 @@ function UpdatableInterface(object, interfaceImplementation) {
 
   this.update = timeDelta => implementation.callMethod('update', timeDelta);
 }
+
+UpdatableInterface.assert = (entity) => {
+  assertInterface(entity.updatableInterface, UpdatableInterface);
+};
+
+UpdatableInterface.has = entity => isInterface(entity.updatableInterface, UpdatableInterface);
 
 export default UpdatableInterface;

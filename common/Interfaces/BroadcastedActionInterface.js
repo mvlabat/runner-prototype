@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param action
@@ -16,5 +19,12 @@ function BroadcastedActionInterface(action, interfaceImplementation) {
   this.isBroadcastedAfterExecution = () =>
     implementation.callMethodOr(false, 'isBroadcastedAfterExecution');
 }
+
+BroadcastedActionInterface.assert = (entity) => {
+  assertInterface(entity.broadcastedActionInterface, BroadcastedActionInterface);
+};
+
+BroadcastedActionInterface.has = entity =>
+  isInterface(entity.broadcastedActionInterface, BroadcastedActionInterface);
 
 export default BroadcastedActionInterface;

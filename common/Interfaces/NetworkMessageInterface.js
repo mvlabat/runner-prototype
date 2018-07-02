@@ -1,4 +1,7 @@
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 /**
  * @param message
@@ -20,5 +23,12 @@ function NetworkMessageInterface(message, interfaceImplementation) {
    */
   this.getSenderId = () => implementation.callMethod('getSenderId');
 }
+
+NetworkMessageInterface.assert = (entity) => {
+  assertInterface(entity.networkMessageInterface, NetworkMessageInterface);
+};
+
+NetworkMessageInterface.has = entity =>
+  isInterface(entity.networkMessageInterface, NetworkMessageInterface);
 
 export default NetworkMessageInterface;

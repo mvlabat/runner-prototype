@@ -1,10 +1,9 @@
 import JsonSerializableRegistry from '../TypeRegistries/JsonSerializableRegistry';
-import { assertInterface } from './InterfaceImplementation';
 import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
 
 export function serialize(object) {
   const { constructor } = object;
-  assertInterface(constructor, JsonSerializableInterface);
+  JsonSerializableInterface.assert(constructor);
   return constructor.jsonSerializableInterface.serialize(object);
 }
 
@@ -13,7 +12,7 @@ export function deserialize(json) {
   if (!constructor) {
     throw new Error(`Unknown constructor name: ${json.constructorName}`);
   }
-  assertInterface(constructor, JsonSerializableInterface);
+  JsonSerializableInterface.assert(constructor);
   return constructor.jsonSerializableInterface.deserialize(json);
 }
 

@@ -1,7 +1,10 @@
 import nonce from 'nonce';
 import sha256 from 'crypto-js/sha256';
 
-import InterfaceImplementation from '../Utils/InterfaceImplementation';
+import InterfaceImplementation, {
+  assertInterface,
+  isInterface,
+} from '../Utils/InterfaceImplementation';
 
 const generateNonce = nonce();
 
@@ -23,5 +26,11 @@ function HashableIdInterface(entity, predefinedHashId, interfaceImplementation) 
 
   this.getHashId = () => hashId;
 }
+
+HashableIdInterface.assert = (entity) => {
+  assertInterface(entity.hashableIdInterface, HashableIdInterface);
+};
+
+HashableIdInterface.has = entity => isInterface(entity.hashableIdInterface, HashableIdInterface);
 
 export default HashableIdInterface;
