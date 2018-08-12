@@ -2,6 +2,8 @@ import Engine from 'common';
 import NetworkController from './Controllers/NetworkController';
 
 function Server() {
+  process.env.FORCE_DEBUG = true;
+
   const engine = new Engine(true);
   const actionController = engine.getActionController();
   const gameState = engine.getGameState();

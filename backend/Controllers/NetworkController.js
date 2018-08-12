@@ -1,4 +1,5 @@
 import WebSocket from 'ws';
+
 import NetworkControllerInterface from 'common/Interfaces/NetworkControllerInterface';
 import BroadcastActionMessage from 'common/NetworkMessages/BroadcastActionMessage';
 import { deserialize, serialize } from 'common/Utils/JsonSerializationHelper';
@@ -21,7 +22,9 @@ function NetworkController(actionController, gameState) {
   });
   const networkMessageSystem = new NetworkMessageSystem(actionController);
 
-  wss.on('connection', (ws) => {
+  wss.on('connection', (ws, req) => {
+    log(`A new player has connected (${req.connection.remoteAddress})`);
+
     ws.on('message', (data) => {
       try {
         const serializedMessage = JSON.parse(data);
@@ -41,23 +44,31 @@ function NetworkController(actionController, gameState) {
     const message = new AuthenticationResponseMessage(clientIdCount);
     activePlayers.set(ws, clientIdCount);
     clientIdCount += 1;
-    ws.send(JSON.stringify(serialize(message)));
+    send(ws, message);
 
     const gameStateMessage = new GameStateMessage(
       gameState.getAllPlayers(),
       gameState.getAllBuildableObjects(),
     );
-    ws.send(JSON.stringify(serialize(gameStateMessage)));
+    send(ws, gameStateMessage);
   });
 
   this.networkControllerInterface = new NetworkControllerInterface(this, {
     broadcastAction: (action) => {
       for (const ws of wss.clients) {
         const message = new BroadcastActionMessage(action);
-        ws.send(JSON.stringify(serialize(message)));
+        send(ws, message);
       }
     },
   });
+
+  function send(ws, message) {
+    if (ws.readyState === ws.OPEN) {
+      ws.send(JSON.stringify(serialize(message)));
+    } else {
+      log('Tried to send a message via a socket that was not OPEN');
+    }
+  }
 }
 
 export default NetworkController;
