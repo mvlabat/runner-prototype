@@ -52,6 +52,7 @@ function PlayerController(actionController, cameraWrapper) {
     movementDirections[direction] = enable;
     actionController.addAction(new PlayerSetMovingAction(
       player.hashableIdInterface.getHashId(),
+      player.placeableObjectInterface.getPosition(),
       movementDirections.getDirectionVector(),
     ));
   };

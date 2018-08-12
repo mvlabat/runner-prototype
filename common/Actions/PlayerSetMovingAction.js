@@ -6,12 +6,19 @@ import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {string} playerHashId
+ * @param {Vector2} position
  * @param {Vector2} direction
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function PlayerSetMovingAction(playerHashId, direction, timeOccurred = 0, senderId = null) {
+function PlayerSetMovingAction(
+  playerHashId,
+  position,
+  direction,
+  timeOccurred = 0,
+  senderId = null,
+) {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -37,6 +44,7 @@ function PlayerSetMovingAction(playerHashId, direction, timeOccurred = 0, sender
 
   // CLASS IMPLEMENTATION.
   this.getPlayerHashId = () => playerHashId;
+  this.getPosition = () => position;
   this.getDirection = () => direction;
 
   // INITIALIZE DEFAULT PARAMETERS.
@@ -52,6 +60,7 @@ PlayerSetMovingAction.jsonSerializableInterface =
      */
     serialize: action => ({
       playerHashId: action.getPlayerHashId(),
+      position: vector2Serialize(action.getPosition()),
       direction: vector2Serialize(action.getDirection()),
       timeOccurred: action.actionInterface.getTimeOccurred(),
       senderId: action.broadcastedActionInterface.getSenderId(),
@@ -59,6 +68,7 @@ PlayerSetMovingAction.jsonSerializableInterface =
 
     deserialize: json => new PlayerSetMovingAction(
       json.playerHashId,
+      vector2Deserialize(json.position),
       vector2Deserialize(json.direction),
       new Date(json.timeOccurred),
       json.senderId,
