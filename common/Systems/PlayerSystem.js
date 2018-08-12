@@ -6,6 +6,7 @@ import SystemInterface from '../Interfaces/SystemInterface';
 import SpawnPlayerAction from '../Actions/SpawnPlayerAction';
 import DespawnPlayerAction from '../Actions/DespawnPlayerAction';
 import { replaying } from '../Utils/SystemHelpers';
+import DespawnClientPlayersAction from '../Actions/DespawnClientPlayersAction';
 
 /**
  * @param {GameScene} gameScene
@@ -16,6 +17,7 @@ function PlayerSystem(gameScene, playerModel) {
   const actionProcessors = new Map([
     [SpawnPlayerAction, spawnPlayer],
     [DespawnPlayerAction, despawnPlayer],
+    [DespawnClientPlayersAction, despawnClientPlayers],
   ]);
 
   this.systemInterface = new SystemInterface(this, {
@@ -23,6 +25,8 @@ function PlayerSystem(gameScene, playerModel) {
 
     process: action => actionProcessors.get(action.constructor)(action),
   });
+
+  const playersByClientIds = new Map();
 
   /**
    * @param {SpawnPlayerAction} action
@@ -32,6 +36,7 @@ function PlayerSystem(gameScene, playerModel) {
       return;
     }
 
+    playersByClientIds.set(action.broadcastedActionInterface.getSenderId(), action.getPlayer());
     gameScene.addPlayer(action.getPlayer());
   }
 
@@ -43,7 +48,23 @@ function PlayerSystem(gameScene, playerModel) {
       return;
     }
 
+    playersByClientIds.delete(action.broadcastedActionInterface.getSenderId());
     gameScene.removePlayer(action.getPlayerHashId());
+  }
+
+  /**
+   * @param {DespawnClientPlayersAction} action
+   */
+  function despawnClientPlayers(action) {
+    if (replaying(action, playerModel)) {
+      return;
+    }
+
+    const player = playersByClientIds.get(action.getClientId());
+    if (player) {
+      playersByClientIds.delete(action.getClientId());
+      gameScene.removePlayer(player.hashableIdInterface.getHashId());
+    }
   }
 }
 

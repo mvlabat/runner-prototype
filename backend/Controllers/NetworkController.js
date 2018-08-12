@@ -7,6 +7,7 @@ import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
 import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
 import { log } from 'common/Utils/Debug';
 import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
+import DespawnClientPlayersAction from 'common/Actions/DespawnClientPlayersAction';
 
 /**
  * @param {ActionController} actionController
@@ -39,6 +40,14 @@ function NetworkController(actionController, gameState) {
         log(`Not processable message: ${e.message}`);
         throw e;
       }
+    });
+
+    ws.on('close', (closeCode, closeMessage) => {
+      const reason = closeMessage ? `: ${closeMessage}` : '';
+      log(`Connection closed (code ${closeCode})${reason}`);
+      const clientId = activePlayers.get(ws);
+      actionController.addAction(new DespawnClientPlayersAction(clientId, 0, -1));
+      activePlayers.delete(ws);
     });
 
     const message = new AuthenticationResponseMessage(clientIdCount);
