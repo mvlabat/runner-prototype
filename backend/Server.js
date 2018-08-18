@@ -12,6 +12,8 @@ function Server() {
 
   // Gameloop.
 
+  // TODO: maybe there's more clever way to tick without setImmediate performance impact.
+  const TICK_INTERVAL = 5;
   const GAMEPLAY_UPDATE_INTERVAL = 15;
   const NETWORK_UPDATE_INTERVAL = 45;
 
@@ -21,7 +23,7 @@ function Server() {
 
   function tick() {
     if (crashed) return;
-    setImmediate(tick);
+    setTimeout(tick, TICK_INTERVAL);
     const now = new Date();
 
     const gameplayTimeDelta = now - lastGameplayUpdate;
