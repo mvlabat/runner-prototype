@@ -2,12 +2,20 @@ import WebSocket from 'ws';
 
 import NetworkControllerInterface from 'common/Interfaces/NetworkControllerInterface';
 import BroadcastActionMessage from 'common/NetworkMessages/BroadcastActionMessage';
-import { deserialize, serialize } from 'common/Utils/JsonSerializationHelper';
+import { deserialize } from 'common/Utils/JsonSerializationHelper';
 import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
 import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
 import { log } from 'common/Utils/Debug';
 import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
 import DespawnClientPlayersAction from 'common/Actions/DespawnClientPlayersAction';
+import PlayerModel from 'common/Models/PlayerModel';
+import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
+import { assertInterface } from 'common/Utils/InterfaceImplementation';
+import NetworkMessageInterface from 'common/Interfaces/NetworkMessageInterface';
+import { send } from 'common/Utils/NetworkUtils';
+
+import ServerNetworkMessageSystem from '../Systems/ServerNetworkMessageSystem';
+import ClientsRegistry from '../Registries/ClientsRegistries';
 
 /**
  * @param {ActionController} actionController
@@ -15,25 +23,36 @@ import DespawnClientPlayersAction from 'common/Actions/DespawnClientPlayersActio
  * @constructor
  */
 function NetworkController(actionController, gameState) {
-  const activePlayers = new Map();
   let clientIdCount = 0;
+
   const wss = new WebSocket.Server({
     port: 8080,
     // perMessageDeflate: false,
   });
+  const serverNetworkMessageSystem = new ServerNetworkMessageSystem(actionController);
   const networkMessageSystem = new NetworkMessageSystem(actionController);
 
+  this.updatableInterface = new UpdatableInterface(this, {
+    update: (timeDelta) => {
+      serverNetworkMessageSystem.updatableInterface.update(timeDelta);
+    },
+  });
+
   wss.on('connection', (ws, req) => {
-    log(`A new player has connected (${req.connection.remoteAddress})`);
+    log(`A new player has connected: (${req.connection.remoteAddress})`);
 
     ws.on('message', (data) => {
       try {
         const serializedMessage = JSON.parse(data);
-        serializedMessage.senderId = activePlayers.get(ws);
-
         const message = deserialize(serializedMessage);
 
-        if (networkMessageSystem.systemInterface.canProcess(message)) {
+        const senderId = ClientsRegistry.getPlayerBySocket(ws).clientId;
+        assertInterface(message.networkMessageInterface, NetworkMessageInterface);
+        message.networkMessageInterface.setSenderId(senderId);
+
+        if (serverNetworkMessageSystem.systemInterface.canProcess(message)) {
+          serverNetworkMessageSystem.systemInterface.process(message);
+        } else if (networkMessageSystem.systemInterface.canProcess(message)) {
           networkMessageSystem.systemInterface.process(message);
         }
       } catch (e) {
@@ -44,14 +63,13 @@ function NetworkController(actionController, gameState) {
 
     ws.on('close', (closeCode, closeMessage) => {
       const reason = closeMessage ? `: ${closeMessage}` : '';
-      log(`Connection closed (code ${closeCode})${reason}`);
-      const clientId = activePlayers.get(ws);
-      actionController.addAction(new DespawnClientPlayersAction(clientId, 0, -1));
-      activePlayers.delete(ws);
+      const { clientId } = ClientsRegistry.getPlayerBySocket(ws);
+      log(`Connection with Player (${clientId}) has been closed (code ${closeCode})${reason}`);
     });
 
     const message = new AuthenticationResponseMessage(clientIdCount);
-    activePlayers.set(ws, clientIdCount);
+    const player = new PlayerModel(clientIdCount);
+    ClientsRegistry.registerClient(player, ws);
     clientIdCount += 1;
     send(ws, message);
 
@@ -70,14 +88,6 @@ function NetworkController(actionController, gameState) {
       }
     },
   });
-
-  function send(ws, message) {
-    if (ws.readyState === ws.OPEN) {
-      ws.send(JSON.stringify(serialize(message)));
-    } else {
-      log('Tried to send a message via a socket that was not OPEN');
-    }
-  }
 }
 
 export default NetworkController;

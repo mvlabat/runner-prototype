@@ -3,17 +3,23 @@ import AuthenticationResponseMessage from 'common/NetworkMessages/Authentication
 import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
 import SpawnPlayerAction from 'common/Actions/SpawnPlayerAction';
 import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
+import PingMessage from 'common/NetworkMessages/PingMessage';
+import { log } from 'common/Utils/Debug';
+import PongMessage from 'common/NetworkMessages/PongMessage';
+import { send } from 'common/Utils/NetworkUtils';
 
 /**
+ * @param {WebSocket} ws
  * @param {ActionController} actionController
  * @param {PlayerModel} playerModel
  * @constructor
  */
-function ClientNetworkMessageSystem(actionController, playerModel) {
+function ClientNetworkMessageSystem(ws, actionController, playerModel) {
   const parameters = { playerModel };
   const messageProcessors = new Map([
     [AuthenticationResponseMessage, processAuthenticationResponse],
     [GameStateMessage, processGameStateMessage],
+    [PingMessage, processPingMessage],
   ]);
 
   this.systemInterface = new SystemInterface(this, {
@@ -26,7 +32,7 @@ function ClientNetworkMessageSystem(actionController, playerModel) {
    * @param {AuthenticationResponseMessage} message
    */
   function processAuthenticationResponse(message) {
-    parameters.playerModel.playerId = message.getClientId();
+    parameters.playerModel.clientId = message.getClientId();
   }
 
   /**
@@ -41,6 +47,16 @@ function ClientNetworkMessageSystem(actionController, playerModel) {
       const spawnBuildableObjectAction = new SaveBuildableObjectAction(buildableObject, 0, -1);
       actionController.addAction(spawnBuildableObjectAction);
     }
+  }
+
+  /**
+   * @param {PingMessage} message
+   */
+  function processPingMessage(message) {
+    parameters.playerModel.latency = message.getLastLatency();
+    const pongMessage = new PongMessage(message.getPingId());
+    send(ws, pongMessage);
+    log(`Ping: ${message.getLastLatency()}`);
   }
 }
 

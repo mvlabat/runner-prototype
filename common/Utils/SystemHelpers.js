@@ -4,11 +4,11 @@ import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface
 
 /**
  * @param action
- * @param {PlayerModel} playerModel
+ * @param {PlayerModel} player
  * @returns {boolean}
  */
-export function replaying(action, playerModel) {
+export function replaying(action, player) {
   BroadcastedActionInterface.assert(action);
   const senderId = action.broadcastedActionInterface.getSenderId();
-  return senderId !== null && senderId === playerModel.playerId;
+  return senderId !== null && senderId === player.clientId;
 }

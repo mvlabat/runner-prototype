@@ -4,14 +4,11 @@ import { deserialize, serialize } from '../Utils/JsonSerializationHelper';
 
 /**
  * @param payload
- * @param senderId
  * @constructor
  */
-function BroadcastActionMessage(payload, senderId = null) {
+function BroadcastActionMessage(payload) {
   this.networkMessageInterface = new NetworkMessageInterface(this, {
     getPayload: () => payload,
-
-    getSenderId: () => senderId,
   });
 }
 
@@ -23,10 +20,9 @@ BroadcastActionMessage.jsonSerializableInterface = new JsonSerializableInterface
      */
     serialize: message => ({
       payload: serialize(message.networkMessageInterface.getPayload()),
-      senderId: message.networkMessageInterface.getSenderId(),
     }),
 
-    deserialize: json => new BroadcastActionMessage(deserialize(json.payload), json.senderId),
+    deserialize: json => new BroadcastActionMessage(deserialize(json.payload)),
   },
 );
 

@@ -31,12 +31,14 @@ function Server() {
 
     try {
       const gameplayTimeDeltaSecs = gameplayTimeDelta / 1000;
+      const networkTimeDeltaSecs = networkTimeDelta / 1000;
       if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
         lastGameplayUpdate = now;
         engine.tick(gameplayTimeDeltaSecs);
       }
       if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
         lastNetworkUpdate = now;
+        networkController.updatableInterface.update(networkTimeDeltaSecs);
       }
     } catch (error) {
       crashed = true;
