@@ -56,5 +56,6 @@ module.exports = {
       ],
       allowSamePrecedence: true,
     }],
+    'no-continue': 'off',
   },
 };

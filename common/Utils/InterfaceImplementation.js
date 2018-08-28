@@ -24,7 +24,7 @@ export class NotImplementedInterfaceError extends Error {
       ? interfaceImplementer.name
       : interfaceImplementer.constructor.name;
     this.message = message || `'${interfaceClass.name}' interface is not implemented for ${implementerClassName}`;
-    Error.captureStackTrace(this, NotImplementedMethodError);
+    Error.captureStackTrace(this, NotImplementedInterfaceError);
   }
 }
 

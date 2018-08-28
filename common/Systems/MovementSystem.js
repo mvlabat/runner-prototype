@@ -36,6 +36,7 @@ function MovementSystem(gameScene, playerModel) {
     }
 
     const player = gameScene.getPlayer(action.getPlayerHashId());
+    player.placeableObjectInterface.setPosition(action.getPosition());
     player.setMovementDirection(action.getDirection());
   }
 

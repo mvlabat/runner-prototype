@@ -1,4 +1,4 @@
-import JsonSerializableRegistry from '../TypeRegistries/JsonSerializableRegistry';
+import JsonSerializableRegistry from '../Registries/JsonSerializableRegistry';
 import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
 
 export function serialize(object) {

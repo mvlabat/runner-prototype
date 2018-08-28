@@ -12,8 +12,12 @@ import ClientNetworkMessageSystem from '../Systems/ClientNetworkMessageSystem';
  * @constructor
  */
 function NetworkController(actionController, playerModel) {
-  const socket = new WebSocket(process.env.WEBSOCKET_ADDRESS);
-  const clientNetworkMessageSystem = new ClientNetworkMessageSystem(actionController, playerModel);
+  const ws = new WebSocket(process.env.WEBSOCKET_ADDRESS);
+  const clientNetworkMessageSystem = new ClientNetworkMessageSystem(
+    ws,
+    actionController,
+    playerModel,
+  );
   const networkMessageSystem = new NetworkMessageSystem(actionController);
   const messageQueue = [];
 
@@ -26,8 +30,8 @@ function NetworkController(actionController, playerModel) {
       if (action.broadcastedActionInterface.getSenderId() === null) {
         const message = new BroadcastActionMessage(action);
         const serializedMessage = JSON.stringify(serialize(message));
-        if (socket.readyState === socket.OPEN) {
-          socket.send(serializedMessage);
+        if (ws.readyState === ws.OPEN) {
+          ws.send(serializedMessage);
         } else {
           messageQueue.push(serializedMessage);
         }
@@ -35,16 +39,16 @@ function NetworkController(actionController, playerModel) {
     },
   });
 
-  socket.addEventListener('open', () => {
+  ws.addEventListener('open', () => {
     log('Connected to the server.');
     const messages = messageQueue.splice(0, messageQueue.length);
     messages.reverse();
     for (const message of messages) {
-      socket.send(message);
+      ws.send(message);
     }
   });
 
-  socket.addEventListener('message', (event) => {
+  ws.addEventListener('message', (event) => {
     try {
       const message = deserialize(JSON.parse(event.data));
       if (clientNetworkMessageSystem.systemInterface.canProcess(message)) {

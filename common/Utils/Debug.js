@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/prefer-default-export
 import Engine from '../Engine';
 
 export function setDebugProperty(entity, property, value) {

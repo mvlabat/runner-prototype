@@ -2,7 +2,7 @@ import InterfaceImplementation, {
   assertInterface,
   isInterface,
 } from '../Utils/InterfaceImplementation';
-import JsonSerializableRegistry from '../TypeRegistries/JsonSerializableRegistry';
+import JsonSerializableRegistry from '../Registries/JsonSerializableRegistry';
 
 /**
  * @param constructor

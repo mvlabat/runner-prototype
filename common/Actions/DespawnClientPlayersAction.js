@@ -1,24 +1,15 @@
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
-import { vector2Deserialize, vector2Serialize } from '../Utils/ThreeJsonSerializes';
 import ActionInterface from '../Interfaces/ActionInterface';
+import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 import { setDebugProperty } from '../Utils/Debug';
 
 /**
- * @param {string} playerHashId
- * @param {Vector2} position
- * @param {Vector2} direction
+ * @param {string} clientId
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function PlayerSetMovingAction(
-  playerHashId,
-  position,
-  direction,
-  timeOccurred = 0,
-  senderId = null,
-) {
+function DespawnClientPlayersAction(clientId, timeOccurred = 0, senderId = null) {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -43,36 +34,30 @@ function PlayerSetMovingAction(
   });
 
   // CLASS IMPLEMENTATION.
-  this.getPlayerHashId = () => playerHashId;
-  this.getPosition = () => position;
-  this.getDirection = () => direction;
+  this.getClientId = () => clientId;
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.setTimeOccurred(timeOccurred);
   this.broadcastedActionInterface.setSenderId(senderId);
 }
 
-PlayerSetMovingAction.jsonSerializableInterface =
-  new JsonSerializableInterface(PlayerSetMovingAction, {
+DespawnClientPlayersAction.jsonSerializableInterface =
+  new JsonSerializableInterface(DespawnClientPlayersAction, {
     /**
-     * @param {PlayerSetMovingAction} action
-     * @returns {{actionType: string, playerHashId: string, position: {x, y}, direction: {x, y}}}
+     * @param {DespawnClientPlayersAction} action
+     * @returns {{playerHashId: string, timeOccurred: number, senderId: number|null}}
      */
     serialize: action => ({
-      playerHashId: action.getPlayerHashId(),
-      position: vector2Serialize(action.getPosition()),
-      direction: vector2Serialize(action.getDirection()),
+      clientId: action.getClientId(),
       timeOccurred: action.actionInterface.getTimeOccurred(),
       senderId: action.broadcastedActionInterface.getSenderId(),
     }),
 
-    deserialize: json => new PlayerSetMovingAction(
-      json.playerHashId,
-      vector2Deserialize(json.position),
-      vector2Deserialize(json.direction),
+    deserialize: json => new DespawnClientPlayersAction(
+      json.clientId,
       new Date(json.timeOccurred),
       json.senderId,
     ),
   });
 
-export default PlayerSetMovingAction;
+export default DespawnClientPlayersAction;
