@@ -1,22 +1,25 @@
 language: node_js
 node_js:
-  - "node"
-
+- node
 cache:
   yarn: true
   directories:
-  - "node_modules"
-  - "common/node_modules"
-  - "backend/node_modules"
-  - "frontend/node_modules"
-
+  - node_modules
+  - common/node_modules
+  - backend/node_modules
+  - frontend/node_modules
+before_install: yarn global add greenkeeper-lockfile@1
 install:
-  - cd common && yarn install
-  - cd ../backend && yarn install
-  - cd ../frontend && yarn install
-  - cd .. && yarn install
-
+- cd common && yarn install
+- cd ../backend && yarn install
+- cd ../frontend && yarn install
+- cd .. && yarn install
+before_script: greenkeeper-lockfile-update
 script:
-  - cd backend && yarn build
-  - cd ../frontend && yarn build
-  - cd .. && yarn eslint
+- cd backend && yarn build
+- cd ../frontend && yarn build
+- cd .. && yarn eslint
+after_script: greenkeeper-lockfile-upload
+env:
+  global:
+    secure: WUC0WIO+q44gqrwwH/Ts102GW0NxebmETYPr4UX1So9YHTZOsvXRwg0guZNlWS9PIGfP6PTCQ/a9RUEutcOyYjYGpMQwd3alFxDr50IBYjj20QtzDtMNfqv8swY5EttTbehFvY9OCy3kFSjT62QpqHzHbTw64EbqLG4cSk11QIXgKkZ6Tm2p6puSuj0f9efeu3e4o1Hr28qh+od86I6BdLKxdS0p+hrJmmFL2rCmZwjVuzxNCJIuLpMZw+Gl5kGh5waVVZB+7o1mZsqU/yChv5CNJ3wPY1KWkJHWwSSrSzti892ZQ+fXObSlZ9xpuwdZW1zUEx5oWunW5AHfHQWbpp9o8IZNKpF7Pqq2Z0s9kJeJFxr252Yg5xA4P0igSa1nJUID/P8PKWydSqqOWixS4oRQjNmer5iYL1V1bMwn8ZqRTFz1kQH8XRttaWQ0cuPFdInenipMS6UopRYCJZNkTtArNpbw0QaaejrbSNJZKFbFYBKCMGjnledFm0xkSJbWoJRZdC7ELWk/DSxloYAEGSgmI+nxkfpudNZUKcCMucgeL1ayssahn0AXH0n5ndQEyjShSyBQZCwQPR5X11ebG0V1LWfwFDsNxy7HLAk5YjCwMHPDmFyqbebwn3Yx5RcP63ncI1hBF6uGlMb3CuZQrvazxlbB7a9bk7j9gF11CDg=
