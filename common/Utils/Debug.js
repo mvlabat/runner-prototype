@@ -1,8 +1,8 @@
-import Engine from '../Engine';
+import EngineConfig from '../EngineConfig';
 
 export function setDebugProperty(entity, property, value) {
   /* eslint-disable no-param-reassign, no-underscore-dangle */
-  if (Engine.config.debugIsEnabled()) {
+  if (EngineConfig.debugIsEnabled()) {
     if (!entity._debug) {
       entity._debug = {};
     }
@@ -11,19 +11,19 @@ export function setDebugProperty(entity, property, value) {
 }
 
 export function log(message) {
-  if (Engine.config.debugIsEnabled()) {
+  if (EngineConfig.debugIsEnabled()) {
     console.log(message);
   }
 }
 
 export function serverLog(message) {
-  if (Engine.config.isServer()) {
+  if (EngineConfig.isServer()) {
     log(message);
   }
 }
 
 export function clientLog(message) {
-  if (Engine.config.isClient()) {
+  if (EngineConfig.isClient()) {
     log(message);
   }
 }

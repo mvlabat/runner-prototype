@@ -19,8 +19,7 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
   this.setColor = color => implementation.callMethod('setColor', color);
   this.getColor = () => implementation.callMethod('getColor');
 
-  this.setAstralShifted = isAstralShifted =>
-    implementation.callMethod('setAstralShifted', isAstralShifted);
+  this.setAstralShifted = isAstralShifted => implementation.callMethod('setAstralShifted', isAstralShifted);
   this.isAstralShifted = () => implementation.callMethod('isAstralShifted');
 
   let objectScene = null;
@@ -35,7 +34,8 @@ PlaceableObjectInterface.assert = (entity) => {
   assertInterface(entity.placeableObjectInterface, PlaceableObjectInterface);
 };
 
-PlaceableObjectInterface.has = entity =>
-  isInterface(entity.placeableObjectInterface, PlaceableObjectInterface);
+PlaceableObjectInterface.has = entity => (
+  isInterface(entity.placeableObjectInterface, PlaceableObjectInterface)
+);
 
 export default PlaceableObjectInterface;

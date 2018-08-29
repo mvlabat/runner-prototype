@@ -20,8 +20,9 @@ function Player(position, isAstralShifted, color = null, predefinedHashId = '') 
   const parameters = {};
 
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
-    getHashedContent: () =>
-      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId(),
+    getHashedContent: () => (
+      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId()
+    ),
   });
 
   this.placeableObjectInterface = new PlaceableObjectInterface(this, {

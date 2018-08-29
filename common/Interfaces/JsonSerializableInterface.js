@@ -29,7 +29,8 @@ JsonSerializableInterface.assert = (entity) => {
   assertInterface(entity.jsonSerializableInterface, JsonSerializableInterface);
 };
 
-JsonSerializableInterface.has = entity =>
-  isInterface(entity.jsonSerializableInterface, JsonSerializableInterface);
+JsonSerializableInterface.has = entity => (
+  isInterface(entity.jsonSerializableInterface, JsonSerializableInterface)
+);
 
 export default JsonSerializableInterface;

@@ -1,4 +1,4 @@
-import Engine from '../Engine';
+import EngineConfig from '../EngineConfig';
 import BroadcastActionMessage from '../NetworkMessages/BroadcastActionMessage';
 import SystemInterface from '../Interfaces/SystemInterface';
 
@@ -23,7 +23,7 @@ function NetworkMessageSystem(actionController) {
   function processActionMessage(message) {
     const action = message.networkMessageInterface.getPayload();
     const senderId = message.networkMessageInterface.getSenderId();
-    if (Engine.config.isServer() && senderId !== null) {
+    if (EngineConfig.isServer() && senderId !== null) {
       action.broadcastedActionInterface.setSenderId(senderId);
     }
     actionController.addAction(action);

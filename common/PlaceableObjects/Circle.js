@@ -23,8 +23,9 @@ function Circle(position, radius, color, isAstralShifted, predefinedHashId = '')
 
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
-    getHashedContent: () =>
-      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId(),
+    getHashedContent: () => (
+      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId()
+    ),
   });
 
   this.placeableObjectInterface = new PlaceableObjectInterface(this, {

@@ -22,7 +22,8 @@ NetworkControllerInterface.assert = (entity) => {
   assertInterface(entity.networkControllerInterface, NetworkControllerInterface);
 };
 
-NetworkControllerInterface.has = entity =>
-  isInterface(entity.networkControllerInterface, NetworkControllerInterface);
+NetworkControllerInterface.has = entity => (
+  isInterface(entity.networkControllerInterface, NetworkControllerInterface)
+);
 
 export default NetworkControllerInterface;

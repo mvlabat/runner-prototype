@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Engine from 'common';
+import EngineConfig from 'common/EngineConfig';
 
 import Renderer from './Renderer';
 import Sandbox from './Sandbox';
@@ -24,7 +26,7 @@ function Game() {
 
   const mainUiController = new MainUiController(actionController, cameraWrapper, canvasWrapper);
 
-  if (Engine.config.debugIsEnabled()) {
+  if (EngineConfig.debugIsEnabled()) {
     window.THREE = THREE;
   }
 

@@ -23,8 +23,9 @@ function Rectangle(position, size, color, isAstralShifted, predefinedHashid = ''
 
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashid, {
-    getHashedContent: () =>
-      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId(),
+    getHashedContent: () => (
+      this.placeableObjectInterface.getScene().hashableIdInterface.getHashId()
+    ),
   });
 
   this.placeableObjectInterface = new PlaceableObjectInterface(this, {

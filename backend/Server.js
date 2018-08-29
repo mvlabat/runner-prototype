@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import Engine from 'common';
 import NetworkController from './Controllers/NetworkController';
 

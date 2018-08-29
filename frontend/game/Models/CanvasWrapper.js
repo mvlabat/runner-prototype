@@ -17,8 +17,9 @@ function CanvasWrapper(canvas) {
   /**
    * @returns {Vector2}
    */
-  this.getCanvasSize = () =>
-    new THREE.Vector2(canvasWrapper.clientWidth, canvasWrapper.clientHeight);
+  this.getCanvasSize = () => (
+    new THREE.Vector2(canvasWrapper.clientWidth, canvasWrapper.clientHeight)
+  );
 
   /**
    * @returns {Vector3}

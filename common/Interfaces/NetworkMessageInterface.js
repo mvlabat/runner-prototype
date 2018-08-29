@@ -1,8 +1,8 @@
-import Engine from '../Engine';
 import InterfaceImplementation, {
   assertInterface,
   isInterface,
 } from '../Utils/InterfaceImplementation';
+import EngineConfig from '../EngineConfig';
 
 /**
  * This interface is meant to be used only when a message is supposed to be sent to server,
@@ -36,7 +36,7 @@ function NetworkMessageInterface(message, interfaceImplementation) {
    * @param {number} newSenderId
    */
   this.setSenderId = (newSenderId) => {
-    if (Engine.config.isClient()) {
+    if (EngineConfig.isClient()) {
       throw new Error("Message 'senderId' field is supposed to be set only on server side");
     }
     senderId = newSenderId;
@@ -47,7 +47,8 @@ NetworkMessageInterface.assert = (entity) => {
   assertInterface(entity.networkMessageInterface, NetworkMessageInterface);
 };
 
-NetworkMessageInterface.has = entity =>
-  isInterface(entity.networkMessageInterface, NetworkMessageInterface);
+NetworkMessageInterface.has = entity => (
+  isInterface(entity.networkMessageInterface, NetworkMessageInterface)
+);
 
 export default NetworkMessageInterface;

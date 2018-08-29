@@ -22,7 +22,8 @@ ObjectRendererInterface.assert = (entity) => {
   assertInterface(entity.objectRendererInterface, ObjectRendererInterface);
 };
 
-ObjectRendererInterface.has = entity =>
-  isInterface(entity.objectRendererInterface, ObjectRendererInterface);
+ObjectRendererInterface.has = entity => (
+  isInterface(entity.objectRendererInterface, ObjectRendererInterface)
+);
 
 export default ObjectRendererInterface;

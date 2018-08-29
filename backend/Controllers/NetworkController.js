@@ -7,7 +7,6 @@ import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
 import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
 import { log } from 'common/Utils/Debug';
 import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
-import DespawnClientPlayersAction from 'common/Actions/DespawnClientPlayersAction';
 import PlayerModel from 'common/Models/PlayerModel';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import { assertInterface } from 'common/Utils/InterfaceImplementation';
