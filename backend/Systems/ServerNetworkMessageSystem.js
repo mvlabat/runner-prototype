@@ -73,7 +73,7 @@ function ServerNetworkMessageSystem(actionController) {
           sendPingMessage(now, player);
         } else if (now - lastPingMessageDate > CONNECTION_TIMEOUT) {
           dropPlayer(player);
-          log(`Player (${player.clientId}) connection has been dropped (timeout)`);
+          log(`Connection with Player (${player.clientId}) has been dropped (timeout)`);
         }
       }
     },
@@ -128,13 +128,19 @@ function ServerNetworkMessageSystem(actionController) {
    * @param {PlayerModel} player
    */
   function dropPlayer(player) {
+    // Firstly we emit close signal for ws (NetworkController), after that, on next network tick,
+    // we can clean up the player.
+    const ws = ClientsRegistry.getSocketByClientId(player.clientId);
+    if (ws.readyState === ws.OPEN) {
+      ws.terminate();
+      return;
+    }
+
     const pingMessage = pingMessagesByClientId.get(player.clientId);
     if (pingMessage) {
       pingMessagesById.delete(pingMessage.getPingId());
       pingMessagesByClientId.delete(player.clientId);
     }
-    const ws = ClientsRegistry.getSocketByClientId(player.clientId);
-    ws.terminate();
 
     ClientsRegistry.removeClientWithId(player.clientId);
     actionController.addAction(new DespawnClientPlayersAction(player.clientId, 0, -1));
