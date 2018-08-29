@@ -4605,10 +4605,6 @@ terser@^3.7.3, terser@^3.8.1:
     source-map "~0.6.1"
     source-map-support "~0.5.6"
 
-three@^0.91.0:
-  version "0.91.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.91.0.tgz#033fe745b64e56e679a86581957cfd1c5f9fe284"
-
 three@^0.95.0:
   version "0.95.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.95.0.tgz#b60ea076ba17df9faba9e855b86ab3f541289abf"

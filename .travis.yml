@@ -11,7 +11,8 @@ cache:
   - "frontend/node_modules"
 
 install:
-  - cd backend && yarn install
+  - cd common && yarn install
+  - cd ../backend && yarn install
   - cd ../frontend && yarn install
   - cd .. && yarn install
 
