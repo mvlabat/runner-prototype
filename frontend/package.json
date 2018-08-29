@@ -12,7 +12,7 @@
     "vue": "^2.5.16"
   },
   "devDependencies": {
-    "@vue/component-compiler-utils": "^1.0.0",
+    "@vue/component-compiler-utils": "^2.2.0",
     "node-sass": "^4.8.3",
     "parcel-bundler": "*",
     "vue-template-compiler": "^2.5.16"
