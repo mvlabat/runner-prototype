@@ -56,7 +56,7 @@ function ServerNetworkMessageSystem(actionController) {
       const now = new Date();
       for (const player of ActivePlayersRegistry.getAllPlayers()) {
         const ws = ClientsRegistry.getSocketByClientId(player.clientId);
-        if (ws.readyState === ws.CLOSED || ws.readyState === ws.CLOSING) {
+        if (ws.readyState === ws.CLOSED) {
           dropPlayer(player);
           continue;
         }
