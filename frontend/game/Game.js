@@ -10,13 +10,16 @@ import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
 import MainUiController from './Controllers/MainUiController';
 import NetworkController from './Controllers/NetworkController';
+import LocalGameState from './LocalGameState';
 
 function Game() {
   const engine = new Engine(false);
   const actionController = engine.getActionController();
-  const gameState = engine.getGameState();
 
+  const gameState = engine.getGameState();
   const playerModel = engine.getPlayerModel();
+  LocalGameState.initialize(gameState, playerModel);
+
   Sandbox(actionController);
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameState);
@@ -70,7 +73,9 @@ function Game() {
     }
   }
 
-  tick(0);
+  this.startGameLoop = () => {
+    tick(0);
+  };
 }
 
 function initializeRenderer(gameState) {

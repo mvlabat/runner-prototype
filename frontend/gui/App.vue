@@ -1,24 +1,16 @@
 <template>
-    <div id="canvas-wrapper">
-        <div id="gui-wrapper">
-            <div id="builder-bar">
-                <p>GUI placeholder</p>
-                <p>
-                    Press W/A/S/D to move camera or player,
-                    ESC to switch to player or builder mode.
-                </p>
-            </div>
-        </div>
+    <div id="gui-wrapper">
+        <player-info-bar></player-info-bar>
     </div>
 </template>
 
 <script>
+import PlayerInfoBar from './PlayerInfoBar.vue';
+
 export default {
   name: 'app',
-  data() {
-    return {
-      msg: 'Welcome to Your Vue.js App!',
-    };
+  components: {
+    PlayerInfoBar,
   },
 };
 </script>
@@ -45,18 +37,8 @@ export default {
         pointer-events: none;
 
         > * {
+            position: absolute;
             pointer-events: all;
         }
-    }
-
-    #builder-bar {
-        position: absolute;
-        bottom: 0;
-        height: 6em;
-        font-size: 1.5em;
-        text-align: center;
-        width: 100%;
-
-        background: rgba(0.2, 0.2, 0.2, 0.1);
     }
 </style>
