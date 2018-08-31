@@ -1,4 +1,4 @@
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 import { vector2Deserialize, vector2Serialize } from '../Utils/ThreeJsonSerializes';
 import ActionInterface from '../Interfaces/ActionInterface';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
@@ -52,18 +52,17 @@ function PlayerSetMovingAction(
   this.broadcastedActionInterface.setSenderId(senderId);
 }
 
-PlayerSetMovingAction.jsonSerializableInterface =
-  new JsonSerializableInterface(PlayerSetMovingAction, {
+PlayerSetMovingAction.serializableInterface =
+  new SerializableInterface(PlayerSetMovingAction, {
     /**
      * @param {PlayerSetMovingAction} action
-     * @returns {{actionType: string, playerHashId: string, position: {x, y}, direction: {x, y}}}
      */
     serialize: action => ({
-      playerHashId: action.getPlayerHashId(),
-      position: vector2Serialize(action.getPosition()),
-      direction: vector2Serialize(action.getDirection()),
-      timeOccurred: action.actionInterface.getTimeOccurred(),
-      senderId: action.broadcastedActionInterface.getSenderId(),
+      playerHashId: () => action.getPlayerHashId(),
+      position: () => vector2Serialize(action.getPosition()),
+      direction: () => vector2Serialize(action.getDirection()),
+      timeOccurred: () => action.actionInterface.getTimeOccurred(),
+      senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new PlayerSetMovingAction(

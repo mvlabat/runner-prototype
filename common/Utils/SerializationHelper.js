@@ -1,19 +1,19 @@
-import JsonSerializableRegistry from '../Registries/JsonSerializableRegistry';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableRegistry from '../Registries/SerializableRegistry';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 
 export function serialize(object) {
   const { constructor } = object;
-  JsonSerializableInterface.assert(constructor);
-  return constructor.jsonSerializableInterface.serialize(object);
+  SerializableInterface.assert(constructor);
+  return constructor.serializableInterface.serialize(object);
 }
 
 export function deserialize(json) {
-  const constructor = JsonSerializableRegistry.getConstructor(json.constructorName);
+  const constructor = SerializableRegistry.getConstructor(json.constructorName);
   if (!constructor) {
     throw new Error(`Unknown constructor name: ${json.constructorName}`);
   }
-  JsonSerializableInterface.assert(constructor);
-  return constructor.jsonSerializableInterface.deserialize(json);
+  SerializableInterface.assert(constructor);
+  return constructor.serializableInterface.deserialize(json);
 }
 
 export function serializeArray(array, serializer = serialize) {

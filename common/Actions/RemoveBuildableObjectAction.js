@@ -1,5 +1,5 @@
 import ActionInterface from '../Interfaces/ActionInterface';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 
@@ -41,15 +41,15 @@ function RemoveBuildableObjectAction(buildableObjectHashId, timeOccurred = 0, se
   this.broadcastedActionInterface.setSenderId(senderId);
 }
 
-RemoveBuildableObjectAction.jsonSerializableInterface =
-  new JsonSerializableInterface(RemoveBuildableObjectAction, {
+RemoveBuildableObjectAction.serializableInterface =
+  new SerializableInterface(RemoveBuildableObjectAction, {
     /**
      * @param {RemoveBuildableObjectAction} action
      */
     serialize: action => ({
-      buildableObjectHashId: action.getBuildableObjectHashId(),
-      timeOccurred: action.actionInterface.getTimeOccurred(),
-      senderId: action.broadcastedActionInterface.getSenderId(),
+      buildableObjectHashId: () => action.getBuildableObjectHashId(),
+      timeOccurred: () => action.actionInterface.getTimeOccurred(),
+      senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new RemoveBuildableObjectAction(

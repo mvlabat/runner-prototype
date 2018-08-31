@@ -1,4 +1,4 @@
-const JsonSerializableRegistry = (() => {
+const SerializableRegistry = (() => {
   const registry = new Map();
 
   return {
@@ -15,4 +15,4 @@ const JsonSerializableRegistry = (() => {
   };
 })();
 
-export default JsonSerializableRegistry;
+export default SerializableRegistry;

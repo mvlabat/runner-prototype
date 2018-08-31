@@ -2,8 +2,8 @@ import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import NetworkControllerInterface from 'common/Interfaces/NetworkControllerInterface';
 import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
 import BroadcastActionMessage from 'common/NetworkMessages/BroadcastActionMessage';
-import { deserialize, serialize } from 'common/Utils/JsonSerializationHelper';
 import { log } from 'common/Utils/Debug';
+import PsonSerializationHelper from 'common/Utils/PsonSerializationHelper';
 import ClientNetworkMessageSystem from '../Systems/ClientNetworkMessageSystem';
 
 /**
@@ -13,6 +13,7 @@ import ClientNetworkMessageSystem from '../Systems/ClientNetworkMessageSystem';
  */
 function NetworkController(actionController, playerModel) {
   const ws = new WebSocket(process.env.WEBSOCKET_ADDRESS);
+  ws.binaryType = 'arraybuffer';
   const clientNetworkMessageSystem = new ClientNetworkMessageSystem(
     ws,
     actionController,
@@ -29,8 +30,9 @@ function NetworkController(actionController, playerModel) {
     broadcastAction: (action) => {
       if (action.broadcastedActionInterface.getSenderId() === null) {
         const message = new BroadcastActionMessage(action);
-        const serializedMessage = JSON.stringify(serialize(message));
+        const serializedMessage = PsonSerializationHelper.serialize(message);
         if (ws.readyState === ws.OPEN) {
+          console.log(serializedMessage);
           ws.send(serializedMessage);
         } else {
           messageQueue.push(serializedMessage);
@@ -50,7 +52,7 @@ function NetworkController(actionController, playerModel) {
 
   ws.addEventListener('message', (event) => {
     try {
-      const message = deserialize(JSON.parse(event.data));
+      const message = PsonSerializationHelper.deserialize(event.data);
       if (clientNetworkMessageSystem.systemInterface.canProcess(message)) {
         clientNetworkMessageSystem.systemInterface.process(message);
       } else if (networkMessageSystem.systemInterface.canProcess(message)) {

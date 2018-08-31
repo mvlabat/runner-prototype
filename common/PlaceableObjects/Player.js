@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import {
@@ -75,12 +75,12 @@ function Player(position, isAstralShifted, color = null, predefinedHashId = '') 
   this.placeableObjectInterface.setColor(color || new THREE.Color(Math.random() * 0xffffff));
 }
 
-Player.jsonSerializableInterface = new JsonSerializableInterface(Player, {
+Player.serializableInterface = new SerializableInterface(Player, {
   serialize: object => ({
-    hashId: object.hashableIdInterface.getHashId(),
-    position: vector2Serialize(object.placeableObjectInterface.getPosition()),
-    isAstralShifted: object.placeableObjectInterface.isAstralShifted(),
-    color: colorSerialize(object.placeableObjectInterface.getColor()),
+    hashId: () => object.hashableIdInterface.getHashId(),
+    position: () => vector2Serialize(object.placeableObjectInterface.getPosition()),
+    isAstralShifted: () => object.placeableObjectInterface.isAstralShifted(),
+    color: () => colorSerialize(object.placeableObjectInterface.getColor()),
   }),
 
   deserialize: json => new Player(

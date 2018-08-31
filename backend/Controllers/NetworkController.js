@@ -2,7 +2,6 @@ import WebSocket from 'ws';
 
 import NetworkControllerInterface from 'common/Interfaces/NetworkControllerInterface';
 import BroadcastActionMessage from 'common/NetworkMessages/BroadcastActionMessage';
-import { deserialize } from 'common/Utils/JsonSerializationHelper';
 import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
 import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
 import { log } from 'common/Utils/Debug';
@@ -12,6 +11,7 @@ import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import { assertInterface } from 'common/Utils/InterfaceImplementation';
 import NetworkMessageInterface from 'common/Interfaces/NetworkMessageInterface';
 import { send } from 'common/Utils/NetworkUtils';
+import PsonSerializationHelper from 'common/Utils/PsonSerializationHelper';
 
 import ServerNetworkMessageSystem from '../Systems/ServerNetworkMessageSystem';
 import ClientsRegistry from '../Registries/ClientsRegistries';
@@ -42,8 +42,7 @@ function NetworkController(actionController, gameState) {
 
     ws.on('message', (data) => {
       try {
-        const serializedMessage = JSON.parse(data);
-        const message = deserialize(serializedMessage);
+        const message = PsonSerializationHelper.deserialize(data);
 
         const senderId = ClientsRegistry.getPlayerBySocket(ws).clientId;
         assertInterface(message.networkMessageInterface, NetworkMessageInterface);
