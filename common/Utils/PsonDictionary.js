@@ -5,6 +5,9 @@ const initialList = [
   'constructorName',
 ];
 
+/**
+ * @constructor
+ */
 const PsonDictionary = (() => {
   const words = new Set(initialList);
   let dictionary;

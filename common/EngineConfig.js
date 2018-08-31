@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 const EngineConfig = (() => {
   let isServer;
   let debugIsEnabled;

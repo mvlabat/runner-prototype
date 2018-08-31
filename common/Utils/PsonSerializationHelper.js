@@ -1,6 +1,9 @@
 import { deserialize, serialize } from './SerializationHelper';
 import PsonDictionary from './PsonDictionary';
 
+/**
+ * @constructor
+ */
 const PsonSerializationHelper = (() => (
   {
     serialize: object => (

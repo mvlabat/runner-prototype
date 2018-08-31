@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 const ActivePlayersRegistry = (() => {
   const playersById = new Map();
 

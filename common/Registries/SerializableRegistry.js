@@ -1,3 +1,6 @@
+/**
+ * @constructor
+ */
 const SerializableRegistry = (() => {
   const registry = new Map();
 

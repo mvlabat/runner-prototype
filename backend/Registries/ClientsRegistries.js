@@ -1,5 +1,8 @@
 import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
 
+/**
+ * @constructor
+ */
 const ClientsRegistry = (() => {
   /**
    * @type {Map<number, WebSocket>}
