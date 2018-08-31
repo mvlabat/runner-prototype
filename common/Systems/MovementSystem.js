@@ -36,8 +36,10 @@ function MovementSystem(gameScene, playerModel) {
     }
 
     const player = gameScene.getPlayer(action.getPlayerHashId());
-    player.placeableObjectInterface.setPosition(action.getPosition());
-    player.setMovementDirection(action.getDirection());
+    if (player) {
+      player.placeableObjectInterface.setPosition(action.getPosition());
+      player.setMovementDirection(action.getDirection());
+    }
   }
 
   const PLAYER_SPEED = 50;
