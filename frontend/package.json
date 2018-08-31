@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "platformio-common": "file:../common",
-    "three": "^0.95.0",
+    "three": "^0.96.0",
     "vue": "^2.5.16"
   },
   "devDependencies": {
