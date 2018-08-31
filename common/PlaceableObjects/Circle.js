@@ -1,5 +1,5 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import {
@@ -96,14 +96,14 @@ function Circle(position, radius, color, isAstralShifted, predefinedHashId = '')
   this.placeableObjectInterface.setAstralShifted(isAstralShifted);
 }
 
-Circle.jsonSerializableInterface = new JsonSerializableInterface(Circle, {
+Circle.serializableInterface = new SerializableInterface(Circle, {
   serialize: object => ({
-    hashId: object.hashableIdInterface.getHashId(),
-    position: vector2Serialize(object.placeableObjectInterface.getPosition()),
-    radius: object.getRadius(),
-    color: colorSerialize(object.placeableObjectInterface.getColor()),
-    isAstralShifted: object.placeableObjectInterface.isAstralShifted(),
-    type: object.placeableObjectInterface.getType(),
+    hashId: () => object.hashableIdInterface.getHashId(),
+    position: () => vector2Serialize(object.placeableObjectInterface.getPosition()),
+    radius: () => object.getRadius(),
+    color: () => colorSerialize(object.placeableObjectInterface.getColor()),
+    isAstralShifted: () => object.placeableObjectInterface.isAstralShifted(),
+    type: () => object.placeableObjectInterface.getType(),
   }),
 
   deserialize: json => new Circle(

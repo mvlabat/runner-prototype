@@ -1,6 +1,6 @@
 import NetworkMessageInterface from '../Interfaces/NetworkMessageInterface';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
-import { deserialize, serialize } from '../Utils/JsonSerializationHelper';
+import SerializableInterface from '../Interfaces/SerializableInterface';
+import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 /**
  * @param payload
@@ -12,14 +12,14 @@ function BroadcastActionMessage(payload) {
   });
 }
 
-BroadcastActionMessage.jsonSerializableInterface = new JsonSerializableInterface(
+BroadcastActionMessage.serializableInterface = new SerializableInterface(
   BroadcastActionMessage,
   {
     /**
      * @param {BroadcastActionMessage} message
      */
     serialize: message => ({
-      payload: serialize(message.networkMessageInterface.getPayload()),
+      payload: () => serialize(message.networkMessageInterface.getPayload()),
     }),
 
     deserialize: json => new BroadcastActionMessage(deserialize(json.payload)),

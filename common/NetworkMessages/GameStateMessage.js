@@ -1,5 +1,5 @@
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
-import { deserializeArray, serializeArray } from '../Utils/JsonSerializationHelper';
+import SerializableInterface from '../Interfaces/SerializableInterface';
+import { deserializeArray, serializeArray } from '../Utils/SerializationHelper';
 
 /**
  * @oaram players
@@ -12,13 +12,13 @@ function GameStateMessage(players, buildableObjects) {
   this.getBuildableObjects = () => buildableObjects;
 }
 
-GameStateMessage.jsonSerializableInterface = new JsonSerializableInterface(GameStateMessage, {
+GameStateMessage.serializableInterface = new SerializableInterface(GameStateMessage, {
   /**
    * @param {GameStateMessage} message
    */
   serialize: message => ({
-    players: serializeArray(message.getPlayers()),
-    buildableObjects: serializeArray(message.getBuildableObjects()),
+    players: () => serializeArray(message.getPlayers()),
+    buildableObjects: () => serializeArray(message.getBuildableObjects()),
   }),
 
   deserialize: json => new GameStateMessage(

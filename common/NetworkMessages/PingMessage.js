@@ -1,4 +1,4 @@
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 
 /**
  * @param {number} pingId
@@ -10,15 +10,15 @@ function PingMessage(pingId, lastLatency = null) {
   this.getLastLatency = () => lastLatency;
 }
 
-PingMessage.jsonSerializableInterface = new JsonSerializableInterface(
+PingMessage.serializableInterface = new SerializableInterface(
   PingMessage,
   {
     /**
      * @param {PingMessage} message
      */
     serialize: message => ({
-      pingId: message.getPingId(),
-      lastLatency: message.getLastLatency(),
+      pingId: () => message.getPingId(),
+      lastLatency: () => message.getLastLatency(),
     }),
 
     deserialize: json => new PingMessage(json.pingId, json.lastLatency),

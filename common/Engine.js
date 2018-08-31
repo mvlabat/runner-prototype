@@ -4,10 +4,12 @@ import GameState from './Models/GameState';
 import { log } from './Utils/Debug';
 import PlayerModel from './Models/PlayerModel';
 import EngineConfig from './EngineConfig';
+import PsonDictionary from './Utils/PsonDictionary';
 
 function Engine(isServer) {
   EngineConfig.initialize(isServer);
   log('Debug mode is enabled');
+  PsonDictionary.commitDictionary();
 
   const gameScene = new GameScene();
   const playerModel = new PlayerModel();

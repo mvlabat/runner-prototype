@@ -1,4 +1,4 @@
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 import NetworkMessageInterface from '../Interfaces/NetworkMessageInterface';
 
 /**
@@ -11,14 +11,14 @@ function PongMessage(pingId) {
   this.getPingId = () => pingId;
 }
 
-PongMessage.jsonSerializableInterface = new JsonSerializableInterface(
+PongMessage.serializableInterface = new SerializableInterface(
   PongMessage,
   {
     /**
      * @param {PongMessage} message
      */
     serialize: message => ({
-      pingId: message.getPingId(),
+      pingId: () => message.getPingId(),
     }),
 
     deserialize: json => new PongMessage(json.pingId),

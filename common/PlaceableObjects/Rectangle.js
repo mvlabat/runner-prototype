@@ -1,5 +1,5 @@
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import {
@@ -96,14 +96,14 @@ function Rectangle(position, size, color, isAstralShifted, predefinedHashid = ''
   this.placeableObjectInterface.setAstralShifted(isAstralShifted);
 }
 
-Rectangle.jsonSerializableInterface = new JsonSerializableInterface(Rectangle, {
+Rectangle.serializableInterface = new SerializableInterface(Rectangle, {
   serialize: object => ({
-    hashId: object.hashableIdInterface.getHashId(),
-    position: vector2Serialize(object.placeableObjectInterface.getPosition()),
-    size: vector2Serialize(object.getSize()),
-    color: colorSerialize(object.placeableObjectInterface.getColor()),
-    isAstralShifted: object.placeableObjectInterface.isAstralShifted(),
-    type: object.placeableObjectInterface.getType(),
+    hashId: () => object.hashableIdInterface.getHashId(),
+    position: () => vector2Serialize(object.placeableObjectInterface.getPosition()),
+    size: () => vector2Serialize(object.getSize()),
+    color: () => colorSerialize(object.placeableObjectInterface.getColor()),
+    isAstralShifted: () => object.placeableObjectInterface.isAstralShifted(),
+    type: () => object.placeableObjectInterface.getType(),
   }),
 
   deserialize: json => new Rectangle(

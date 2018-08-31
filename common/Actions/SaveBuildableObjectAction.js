@@ -1,6 +1,6 @@
 import ActionInterface from '../Interfaces/ActionInterface';
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
-import { deserialize, serialize } from '../Utils/JsonSerializationHelper';
+import SerializableInterface from '../Interfaces/SerializableInterface';
+import { deserialize, serialize } from '../Utils/SerializationHelper';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 import { setDebugProperty } from '../Utils/Debug';
 
@@ -44,15 +44,15 @@ function SaveBuildableObjectAction(buildableObject, timeOccurred = 0, senderId =
   this.broadcastedActionInterface.setSenderId(senderId);
 }
 
-SaveBuildableObjectAction.jsonSerializableInterface =
-  new JsonSerializableInterface(SaveBuildableObjectAction, {
+SaveBuildableObjectAction.serializableInterface =
+  new SerializableInterface(SaveBuildableObjectAction, {
     /**
      * @param {SaveBuildableObjectAction} action
      */
     serialize: action => ({
-      buildableObject: serialize(action.getBuildableObject()),
-      timeOccurred: action.actionInterface.getTimeOccurred(),
-      senderId: action.broadcastedActionInterface.getSenderId(),
+      buildableObject: () => serialize(action.getBuildableObject()),
+      timeOccurred: () => action.actionInterface.getTimeOccurred(),
+      senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new SaveBuildableObjectAction(

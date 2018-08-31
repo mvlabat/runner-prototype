@@ -1,4 +1,4 @@
-import JsonSerializableInterface from '../Interfaces/JsonSerializableInterface';
+import SerializableInterface from '../Interfaces/SerializableInterface';
 
 /**
  * @param clientId
@@ -8,14 +8,14 @@ function AuthenticationResponseMessage(clientId) {
   this.getClientId = () => clientId;
 }
 
-AuthenticationResponseMessage.jsonSerializableInterface = new JsonSerializableInterface(
+AuthenticationResponseMessage.serializableInterface = new SerializableInterface(
   AuthenticationResponseMessage,
   {
     /**
      * @param {AuthenticationResponseMessage} message
      */
     serialize: message => ({
-      clientId: message.getClientId(),
+      clientId: () => message.getClientId(),
     }),
 
     deserialize: json => new AuthenticationResponseMessage(json.clientId),
