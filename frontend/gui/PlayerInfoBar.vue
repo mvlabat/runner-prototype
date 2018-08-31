@@ -7,7 +7,7 @@
             </div>
         </div>
         <div id="bar-right">
-            <div id="ping">Ping: {{ playerPing }}</div>
+            <div id="ping">Latency: {{ playerPing }}</div>
         </div>
     </div>
 </template>

@@ -102,10 +102,10 @@ function ServerNetworkMessageSystem(actionController) {
       return;
     }
 
-    player.latency = (now - lastPingMessageDate) / 2;
+    player.latency = now - lastPingMessageDate;
     pingMessagesByClientId.delete(player.clientId);
     pingMessagesById.delete(message.getPingId());
-    log(`Player (${player.clientId}) ping: ${player.latency}`);
+    log(`Player (${player.clientId}) latency: ${player.latency}`);
   }
 
   /**
