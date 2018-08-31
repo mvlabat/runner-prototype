@@ -19,7 +19,7 @@ function ServerNetworkMessageSystem(actionController) {
   ]);
 
   const CONNECTION_TIMEOUT = 30000;
-  const PING_INTERVAL = 5000;
+  const PING_INTERVAL = 1000;
 
   /**
    * This map stores dates of last ping messages by players id.
