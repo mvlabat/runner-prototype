@@ -2,12 +2,15 @@ import SerializableInterface from '../Interfaces/SerializableInterface';
 import { deserializeArray, serializeArray } from '../Utils/SerializationHelper';
 
 /**
- * @oaram players
- * @oaram buildableObjects
+ * @param activePlayers
+ * @param playerObjects
+ * @param buildableObjects
  * @constructor
  */
-function GameStateMessage(players, buildableObjects) {
-  this.getPlayers = () => players;
+function GameStateMessage(activePlayers, playerObjects, buildableObjects) {
+  this.getActivePlayers = () => activePlayers;
+
+  this.getPlayerObjects = () => playerObjects;
 
   this.getBuildableObjects = () => buildableObjects;
 }
@@ -17,12 +20,14 @@ GameStateMessage.serializableInterface = new SerializableInterface(GameStateMess
    * @param {GameStateMessage} message
    */
   serialize: message => ({
-    players: () => serializeArray(message.getPlayers()),
+    activePlayers: () => serializeArray(message.getActivePlayers()),
+    playerObjects: () => serializeArray(message.getPlayerObjects()),
     buildableObjects: () => serializeArray(message.getBuildableObjects()),
   }),
 
   deserialize: json => new GameStateMessage(
-    deserializeArray(json.players),
+    deserializeArray(json.activePlayers),
+    deserializeArray(json.playerObjects),
     deserializeArray(json.buildableObjects),
   ),
 });
