@@ -1,5 +1,5 @@
 {
-  "name": "platformio_frontend",
+  "name": "muddle_frontend",
   "version": "0.1.0",
   "license": "LGPL-3.0",
   "scripts": {
@@ -10,7 +10,7 @@
     "@vuikit/icons": "^0.8.1",
     "@vuikit/theme": "^0.8.1",
     "autoprefixer": "^9.1.5",
-    "platformio-common": "file:../common",
+    "muddle-common": "file:../common",
     "three": "^0.96.0",
     "vue": "^2.5.17",
     "vuelidate": "^0.7.4",
