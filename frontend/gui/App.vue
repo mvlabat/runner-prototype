@@ -1,19 +1,22 @@
-<template>
-    <div id="gui-wrapper">
-        <player-info-bar></player-info-bar>
-    </div>
-</template>
-
 <script>
+import AuthenticationModal from './AuthenticationModal.vue';
 import PlayerInfoBar from './PlayerInfoBar.vue';
 
 export default {
   name: 'app',
   components: {
+    AuthenticationModal,
     PlayerInfoBar,
   },
 };
 </script>
+
+<template>
+    <div id="gui-wrapper">
+        <authentication-modal></authentication-modal>
+        <player-info-bar></player-info-bar>
+    </div>
+</template>
 
 <style lang="scss">
     html, body, #canvas-wrapper, #canvas-wrapper canvas {

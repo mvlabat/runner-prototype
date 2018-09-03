@@ -7,6 +7,9 @@ import PingMessage from 'common/NetworkMessages/PingMessage';
 import { log } from 'common/Utils/Debug';
 import PongMessage from 'common/NetworkMessages/PongMessage';
 import { send } from 'common/Utils/NetworkUtils';
+import BroadcastPlayersLatencyMessage from 'common/NetworkMessages/BroadcastPlayersLatencyMessage';
+import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage';
+import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
 
 /**
  * @param {WebSocket} ws
@@ -18,8 +21,11 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
   const parameters = { playerModel };
   const messageProcessors = new Map([
     [AuthenticationResponseMessage, processAuthenticationResponse],
+    [BroadcastPlayersLatencyMessage, () => {}],
     [GameStateMessage, processGameStateMessage],
     [PingMessage, processPingMessage],
+    [PlayerLoggedInMessage, () => {}],
+    [PlayerLoggedOutMessage, () => {}],
   ]);
 
   this.systemInterface = new SystemInterface(this, {
@@ -32,14 +38,17 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
    * @param {AuthenticationResponseMessage} message
    */
   function processAuthenticationResponse(message) {
-    parameters.playerModel.clientId = message.getClientId();
+    parameters.playerModel.clientId = message.getResponse();
+    if (typeof message.getResponse() === 'number') {
+      parameters.playerModel.authenticated = true;
+    }
   }
 
   /**
    * @param {GameStateMessage} message
    */
   function processGameStateMessage(message) {
-    for (const player of message.getPlayers()) {
+    for (const player of message.getPlayerObjects()) {
       const spawnPlayerAction = new SpawnPlayerAction(player, 0, -1);
       actionController.addAction(spawnPlayerAction);
     }

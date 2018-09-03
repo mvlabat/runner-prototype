@@ -1,18 +1,5 @@
-<template>
-    <div id="player-info-bar">
-        <div id="bar-left">
-            <div id="help">
-                Press W/A/S/D to move camera or player,
-                ESC to switch to player or builder mode.
-            </div>
-        </div>
-        <div id="bar-right">
-            <div id="ping">Latency: {{ playerPing }}</div>
-        </div>
-    </div>
-</template>
-
 <script>
+
 import LocalGameState from '../game/LocalGameState';
 
 export default {
@@ -29,6 +16,20 @@ export default {
   },
 };
 </script>
+
+<template>
+    <div id="player-info-bar">
+        <div id="bar-left">
+            <div id="help">
+                Press W/A/S/D to move camera or player,
+                ESC to switch to player or builder mode.
+            </div>
+        </div>
+        <div id="bar-right">
+            <div id="ping">Latency: {{ playerPing }}</div>
+        </div>
+    </div>
+</template>
 
 <style scoped lang="scss">
     #player-info-bar {

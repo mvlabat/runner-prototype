@@ -7,10 +7,14 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "@vuikit/icons": "^0.8.1",
+    "@vuikit/theme": "^0.8.1",
     "autoprefixer": "^9.1.5",
     "platformio-common": "file:../common",
     "three": "^0.96.0",
-    "vue": "^2.5.16"
+    "vue": "^2.5.17",
+    "vuelidate": "^0.7.4",
+    "vuikit": "^0.8.10"
   },
   "devDependencies": {
     "@vue/component-compiler-utils": "^2.2.0",
