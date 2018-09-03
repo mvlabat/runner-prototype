@@ -8,8 +8,9 @@
   },
   "dependencies": {
     "express": "^4.16.3",
-    "platformio-common": "file:../common",
-    "ws": "^6.0.0"
+    "muddle-common": "file:../common",
+    "ws": "^6.0.0",
+    "wu": "^2.1.0"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.1.1",

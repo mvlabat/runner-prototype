@@ -9,6 +9,7 @@ module.exports = {
   },
   'env': {
     'browser': true,
+    "jquery": true,
   },
   'settings': {
     'import/resolver': {

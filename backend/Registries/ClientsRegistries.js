@@ -27,6 +27,11 @@ const ClientsRegistry = (() => {
     },
 
     /**
+     * @return {IterableIterator<WebSocket>}
+     */
+    getAllSockets: () => socketsByClientId.values(),
+
+    /**
      * @param {number} clientId
      * @return {WebSocket}
      */

@@ -2608,6 +2608,16 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+"muddle-common@file:../common":
+  version "0.1.0"
+  dependencies:
+    bytebuffer "^5.0.1"
+    common "^0.2.5"
+    crypto-js "^3.1.9-1"
+    nonce "^1.0.4"
+    pson "^2.0.0"
+    three "^0.96.0"
+
 nan@^2.0.7, nan@^2.9.2:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.0.tgz#574e360e4d954ab16966ec102c0c049fd961a099"
@@ -3033,16 +3043,6 @@ pkg-up@^2.0.0:
   resolved "https://registry.yarnpkg.com/pkg-up/-/pkg-up-2.0.0.tgz#c819ac728059a461cab1c3889a2be3c49a004d7f"
   dependencies:
     find-up "^2.1.0"
-
-"platformio-common@file:../common":
-  version "0.1.0"
-  dependencies:
-    bytebuffer "^5.0.1"
-    common "^0.2.5"
-    crypto-js "^3.1.9-1"
-    nonce "^1.0.4"
-    pson "^2.0.0"
-    three "^0.96.0"
 
 posix-character-classes@^0.1.0:
   version "0.1.1"
@@ -4426,6 +4426,10 @@ ws@^6.0.0:
   resolved "https://registry.yarnpkg.com/ws/-/ws-6.0.0.tgz#eaa494aded00ac4289d455bac8d84c7c651cef35"
   dependencies:
     async-limiter "~1.0.0"
+
+wu@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/wu/-/wu-2.1.0.tgz#7e72e3fba23e0ff669ddd537e1c857d3d4b1614f"
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.1"

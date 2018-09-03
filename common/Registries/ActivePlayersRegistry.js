@@ -18,7 +18,7 @@ const ActivePlayersRegistry = (() => {
     getAllPlayers: () => playersById.values(),
 
     /**
-     * @param id
+     * @param {number} id
      * @return {PlayerModel|undefined}
      */
     getPlayerById: id => playersById.get(id),

@@ -11,7 +11,7 @@ import ClientNetworkMessageSystem from '../Systems/ClientNetworkMessageSystem';
  * @param {PlayerModel} playerModel
  * @constructor
  */
-function FrontendNetworkController(actionController, playerModel) {
+function ClientNetworkController(actionController, playerModel) {
   const ws = new WebSocket(process.env.WEBSOCKET_ADDRESS);
   ws.binaryType = 'arraybuffer';
   const clientNetworkMessageSystem = new ClientNetworkMessageSystem(
@@ -66,4 +66,4 @@ function FrontendNetworkController(actionController, playerModel) {
   });
 }
 
-export default FrontendNetworkController;
+export default ClientNetworkController;

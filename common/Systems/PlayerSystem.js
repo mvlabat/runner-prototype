@@ -7,6 +7,7 @@ import SpawnPlayerAction from '../Actions/SpawnPlayerAction';
 import DespawnPlayerAction from '../Actions/DespawnPlayerAction';
 import { replaying } from '../Utils/SystemHelpers';
 import DespawnClientPlayersAction from '../Actions/DespawnClientPlayersAction';
+import ActivePlayersRegistry from '../Registries/ActivePlayersRegistry';
 
 /**
  * @param {GameScene} gameScene
@@ -26,6 +27,10 @@ function PlayerSystem(gameScene, playerModel) {
     process: action => actionProcessors.get(action.constructor)(action),
   });
 
+  /**
+   * Players by client ID. Don't confuse its value type with PlayerModel.
+   * @type {Map<number, Player>}
+   */
   const playersByClientIds = new Map();
 
   /**
@@ -60,11 +65,14 @@ function PlayerSystem(gameScene, playerModel) {
       return;
     }
 
-    const player = playersByClientIds.get(action.getClientId());
+    const playerId = action.getClientId();
+    const player = playersByClientIds.get(playerId);
     if (player) {
-      playersByClientIds.delete(action.getClientId());
+      playersByClientIds.delete(playerId);
       gameScene.removePlayer(player.hashableIdInterface.getHashId());
     }
+
+    ActivePlayersRegistry.removePlayerWithId(playerId);
   }
 }
 

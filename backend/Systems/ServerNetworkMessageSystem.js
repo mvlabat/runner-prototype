@@ -1,3 +1,5 @@
+import wu from 'wu';
+
 import SystemInterface from 'common/Interfaces/SystemInterface';
 import PongMessage from 'common/NetworkMessages/PongMessage';
 import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
@@ -6,19 +8,30 @@ import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import PingMessage from 'common/NetworkMessages/PingMessage';
 import { send } from 'common/Utils/NetworkUtils';
 import DespawnClientPlayersAction from 'common/Actions/DespawnClientPlayersAction';
+import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
+import AuthenticationRequestMessage from 'common/NetworkMessages/AuthenticationRequestMessage';
+import BroadcastPlayersLatencyMessage from 'common/NetworkMessages/BroadcastPlayersLatencyMessage';
+import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
+import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage';
+import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
 
+import { broadcastToEveryone, broadcastToOthers } from '../Utils/ServerNetworkUtils';
 import ClientsRegistry from '../Registries/ClientsRegistries';
 
 /**
  * @param {ActionController} actionController
+ * @param {GameState} gameState
  * @constructor
  */
-function ServerNetworkMessageSystem(actionController) {
+function ServerNetworkMessageSystem(actionController, gameState) {
   const messageProcessors = new Map([
+    [AuthenticationRequestMessage, processAuthenticationRequestMessage],
     [PongMessage, processPongMessage],
   ]);
 
+  const UNAUTHENTICATED_CONNECTION_TIMEOUT = 60000;
   const CONNECTION_TIMEOUT = 30000;
+  const BROADCAST_LATENCY_INTERVAL = 5000;
   const PING_INTERVAL = 1000;
 
   /**
@@ -48,6 +61,7 @@ function ServerNetworkMessageSystem(actionController) {
 
   let pingIdCounter = 0;
 
+  // INTERFACES IMPLEMENTATION.
   this.updatableInterface = new UpdatableInterface(this, {
     /**
      * Send ping messages and close sockets that do not respond.
@@ -69,9 +83,12 @@ function ServerNetworkMessageSystem(actionController) {
           && !isAwaitingPongMessage
           && now - lastPingMessageDate > PING_INTERVAL;
 
+        const noPingTime = now - lastPingMessageDate;
+        const timeout = noPingTime > CONNECTION_TIMEOUT
+          || (!player.authenticated && noPingTime > UNAUTHENTICATED_CONNECTION_TIMEOUT);
         if (hasNoPingMessageSent || isTimeToSendAnotherPing) {
           sendPingMessage(now, player);
-        } else if (now - lastPingMessageDate > CONNECTION_TIMEOUT) {
+        } else if (timeout) {
           dropPlayer(player);
           log(`Connection with Player (${player.clientId}) has been dropped (timeout)`);
         }
@@ -84,6 +101,43 @@ function ServerNetworkMessageSystem(actionController) {
 
     process: message => messageProcessors.get(message.constructor)(message),
   });
+
+  // CLASS IMPLEMENTATION.
+  setInterval(broadcastPlayersLatency, BROADCAST_LATENCY_INTERVAL);
+
+  /**
+   * @param {AuthenticationRequestMessage} message
+   */
+  function processAuthenticationRequestMessage(message) {
+    const clientId = message.networkMessageInterface.getSenderId();
+    const player = ActivePlayersRegistry.getPlayerById(clientId);
+    const displayName = (message.getDisplayName() || '').trim();
+
+    const currentPlayerSocket = ClientsRegistry.getSocketByClientId(clientId);
+    if (displayName && displayName.length >= 2 && displayName.length <= 20) {
+      // Send OK authentication response to the client.
+      send(currentPlayerSocket, new AuthenticationResponseMessage(clientId));
+
+      // Send current Game State to the client.
+      const activePlayers = wu(ActivePlayersRegistry.getAllPlayers())
+        .filter(activePlayer => activePlayer.authenticated)
+        .toArray();
+
+      const gameStateMessage = new GameStateMessage(
+        activePlayers,
+        gameState.getAllPlayers(),
+        gameState.getAllBuildableObjects(),
+      );
+      send(currentPlayerSocket, gameStateMessage);
+
+      // Broadcast information to other clients.
+      player.displayName = displayName;
+      player.authenticated = true;
+      broadcastToOthers(currentPlayerSocket, new PlayerLoggedInMessage(player));
+    } else {
+      send(currentPlayerSocket, new AuthenticationResponseMessage('Invalid display name'));
+    }
+  }
 
   /**
    * @param {PongMessage} message
@@ -105,7 +159,6 @@ function ServerNetworkMessageSystem(actionController) {
     player.latency = now - lastPingMessageDate;
     pingMessagesByClientId.delete(player.clientId);
     pingMessagesById.delete(message.getPingId());
-    log(`Player (${player.clientId}) latency: ${player.latency}`);
   }
 
   /**
@@ -144,6 +197,18 @@ function ServerNetworkMessageSystem(actionController) {
 
     ClientsRegistry.removeClientWithId(player.clientId);
     actionController.addAction(new DespawnClientPlayersAction(player.clientId, 0, -1));
+    broadcastToOthers(ws, new PlayerLoggedOutMessage(player.clientId));
+  }
+
+  function broadcastPlayersLatency() {
+    const playersLatency = {};
+    for (const player of ActivePlayersRegistry.getAllPlayers()) {
+      if (player.authenticated) {
+        playersLatency[player.clientId] = player.latency;
+      }
+    }
+    const broadcastPlayersLatencyMessage = new BroadcastPlayersLatencyMessage(playersLatency);
+    broadcastToEveryone(broadcastPlayersLatencyMessage);
   }
 }
 

@@ -2,9 +2,9 @@ import SerializableInterface from '../Interfaces/SerializableInterface';
 import { deserializeArray, serializeArray } from '../Utils/SerializationHelper';
 
 /**
- * @param activePlayers
- * @param playerObjects
- * @param buildableObjects
+ * @param {Iterable<PlayerModel>} activePlayers
+ * @param {Iterable<Player>} playerObjects
+ * @param {Iterable<*>} buildableObjects
  * @constructor
  */
 function GameStateMessage(activePlayers, playerObjects, buildableObjects) {

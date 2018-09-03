@@ -5,6 +5,9 @@ import PlayerSystem from '../Systems/PlayerSystem';
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
 
 /**
+ * @param {GameScene} gameScene
+ * @param {PlayerModel} playerModel - Is supposed to have null clientId on server.
+ *
  * @constructor
  */
 function ActionController(gameScene, playerModel) {
