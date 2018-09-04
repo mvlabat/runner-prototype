@@ -4,7 +4,7 @@ import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface
 import { setDebugProperty } from '../Utils/Debug';
 
 /**
- * @param {string} clientId
+ * @param {number} clientId
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor
@@ -34,7 +34,11 @@ function DespawnClientPlayersAction(clientId, timeOccurred = 0, senderId = null)
   });
 
   // CLASS IMPLEMENTATION.
+  /**
+   * @return {number}
+   */
   this.getClientId = () => clientId;
+  setDebugProperty(this, 'clientId', clientId);
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.setTimeOccurred(timeOccurred);

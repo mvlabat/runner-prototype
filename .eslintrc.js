@@ -4,11 +4,12 @@ module.exports = {
     'plugin:vue/essential',
   ],
   'parserOptions': {
-    'ecmaVersion': 2017,
+    'ecmaVersion': 2018,
     'sourceType': 'module',
   },
   'env': {
     'browser': true,
+    "jquery": true,
   },
   'settings': {
     'import/resolver': {

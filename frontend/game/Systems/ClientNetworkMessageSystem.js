@@ -4,9 +4,14 @@ import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
 import SpawnPlayerAction from 'common/Actions/SpawnPlayerAction';
 import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
 import PingMessage from 'common/NetworkMessages/PingMessage';
-import { log } from 'common/Utils/Debug';
 import PongMessage from 'common/NetworkMessages/PongMessage';
 import { send } from 'common/Utils/NetworkUtils';
+import BroadcastPlayersLatencyMessage from 'common/NetworkMessages/BroadcastPlayersLatencyMessage';
+import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage';
+import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
+import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
+
+import Store from '../../store';
 
 /**
  * @param {WebSocket} ws
@@ -18,8 +23,11 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
   const parameters = { playerModel };
   const messageProcessors = new Map([
     [AuthenticationResponseMessage, processAuthenticationResponse],
+    [BroadcastPlayersLatencyMessage, processBroadcastPlayersLatencyMessage],
     [GameStateMessage, processGameStateMessage],
     [PingMessage, processPingMessage],
+    [PlayerLoggedInMessage, processPlayerLoggedInMessage],
+    [PlayerLoggedOutMessage, processPlayerLoggedOutMessage],
   ]);
 
   this.systemInterface = new SystemInterface(this, {
@@ -32,15 +40,35 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
    * @param {AuthenticationResponseMessage} message
    */
   function processAuthenticationResponse(message) {
-    parameters.playerModel.clientId = message.getClientId();
+    const player = parameters.playerModel;
+    player.clientId = message.getResponse();
+    if (typeof message.getResponse() === 'number') {
+      ActivePlayersRegistry.registerPlayer(player);
+      Store.commit('players/addPlayer', player);
+      player.authenticated = true;
+      localStorage.setItem('displayName', player.displayName);
+    }
+  }
+
+  /**
+   * @param {BroadcastPlayersLatencyMessage} message
+   */
+  function processBroadcastPlayersLatencyMessage(message) {
+    for (const [playerId, latency] of Object.entries(message.getPlayersLatency())) {
+      ActivePlayersRegistry.getPlayerById(parseInt(playerId, 10)).latency = latency;
+    }
   }
 
   /**
    * @param {GameStateMessage} message
    */
   function processGameStateMessage(message) {
-    for (const player of message.getPlayers()) {
-      const spawnPlayerAction = new SpawnPlayerAction(player, 0, -1);
+    for (const player of message.getActivePlayers()) {
+      ActivePlayersRegistry.registerPlayer(player);
+      Store.commit('players/addPlayer', player);
+    }
+    for (const playerObject of message.getPlayerObjects()) {
+      const spawnPlayerAction = new SpawnPlayerAction(playerObject, 0, -1);
       actionController.addAction(spawnPlayerAction);
     }
     for (const buildableObject of message.getBuildableObjects()) {
@@ -56,7 +84,26 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
     parameters.playerModel.latency = message.getLastLatency();
     const pongMessage = new PongMessage(message.getPingId());
     send(ws, pongMessage);
-    log(`Ping: ${message.getLastLatency()}`);
+  }
+
+  /**
+   * @param {PlayerLoggedInMessage} message
+   */
+  function processPlayerLoggedInMessage(message) {
+    const player = message.getPlayer();
+    player.authenticated = true;
+    Store.commit('players/addPlayer', player);
+    ActivePlayersRegistry.registerPlayer(player);
+  }
+
+  /**
+   * @param {PlayerLoggedOutMessage} message
+   */
+  function processPlayerLoggedOutMessage(message) {
+    // We actually remove the player on DespawnClientPlayersAction.
+    const player = ActivePlayersRegistry.getPlayerById(message.getClientId());
+    Store.commit('players/removePlayerWithId', player.clientId);
+    player.online = false;
   }
 }
 

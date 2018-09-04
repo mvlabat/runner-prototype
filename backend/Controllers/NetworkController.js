@@ -3,18 +3,16 @@ import WebSocket from 'ws';
 import NetworkControllerInterface from 'common/Interfaces/NetworkControllerInterface';
 import BroadcastActionMessage from 'common/NetworkMessages/BroadcastActionMessage';
 import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
-import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
 import { log } from 'common/Utils/Debug';
-import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
 import PlayerModel from 'common/Models/PlayerModel';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import { assertInterface } from 'common/Utils/InterfaceImplementation';
 import NetworkMessageInterface from 'common/Interfaces/NetworkMessageInterface';
-import { send } from 'common/Utils/NetworkUtils';
 import PsonSerializationHelper from 'common/Utils/PsonSerializationHelper';
 
 import ServerNetworkMessageSystem from '../Systems/ServerNetworkMessageSystem';
 import ClientsRegistry from '../Registries/ClientsRegistries';
+import { broadcastToEveryone } from '../Utils/ServerNetworkUtils';
 
 /**
  * @param {ActionController} actionController
@@ -28,7 +26,7 @@ function NetworkController(actionController, gameState) {
     port: 8080,
     // perMessageDeflate: false,
   });
-  const serverNetworkMessageSystem = new ServerNetworkMessageSystem(actionController);
+  const serverNetworkMessageSystem = new ServerNetworkMessageSystem(actionController, gameState);
   const networkMessageSystem = new NetworkMessageSystem(actionController);
 
   this.updatableInterface = new UpdatableInterface(this, {
@@ -65,25 +63,14 @@ function NetworkController(actionController, gameState) {
       log(`Connection with Player (${clientId}) has been closed (code ${closeCode})${reason}`);
     });
 
-    const message = new AuthenticationResponseMessage(clientIdCount);
     const player = new PlayerModel(clientIdCount);
     ClientsRegistry.registerClient(player, ws);
     clientIdCount += 1;
-    send(ws, message);
-
-    const gameStateMessage = new GameStateMessage(
-      gameState.getAllPlayers(),
-      gameState.getAllBuildableObjects(),
-    );
-    send(ws, gameStateMessage);
   });
 
   this.networkControllerInterface = new NetworkControllerInterface(this, {
     broadcastAction: (action) => {
-      for (const ws of wss.clients) {
-        const message = new BroadcastActionMessage(action);
-        send(ws, message);
-      }
+      broadcastToEveryone(new BroadcastActionMessage(action));
     },
   });
 }

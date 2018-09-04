@@ -4,11 +4,15 @@
 const LocalGameState = (() => {
   let localGameState;
   let localPlayerModel;
+  let localNetworkController;
+  let localActionController;
 
   return {
-    initialize: (gameState, playerModel) => {
+    initialize: (gameState, playerModel, networkController, actionController) => {
       localGameState = gameState;
       localPlayerModel = playerModel;
+      localNetworkController = networkController;
+      localActionController = actionController;
     },
 
     /**
@@ -20,6 +24,16 @@ const LocalGameState = (() => {
      * @return {PlayerModel}
      */
     getPlayerModel: () => localPlayerModel,
+
+    /**
+     * @return {ClientNetworkController}
+     */
+    getNetworkController: () => localNetworkController,
+
+    /**
+     * @return {ActionController}
+     */
+    getActionController: () => localActionController,
   };
 })();
 

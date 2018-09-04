@@ -1,11 +1,11 @@
 import SerializableInterface from '../Interfaces/SerializableInterface';
 
 /**
- * @param clientId
+ * @param {number|string} response - Client ID if success or error message.
  * @constructor
  */
-function AuthenticationResponseMessage(clientId) {
-  this.getClientId = () => clientId;
+function AuthenticationResponseMessage(response) {
+  this.getResponse = () => response;
 }
 
 AuthenticationResponseMessage.serializableInterface = new SerializableInterface(
@@ -15,10 +15,10 @@ AuthenticationResponseMessage.serializableInterface = new SerializableInterface(
      * @param {AuthenticationResponseMessage} message
      */
     serialize: message => ({
-      clientId: () => message.getClientId(),
+      response: () => message.getResponse(),
     }),
 
-    deserialize: json => new AuthenticationResponseMessage(json.clientId),
+    deserialize: json => new AuthenticationResponseMessage(json.response),
   },
 );
 

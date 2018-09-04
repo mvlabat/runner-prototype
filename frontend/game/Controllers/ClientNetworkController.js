@@ -11,7 +11,7 @@ import ClientNetworkMessageSystem from '../Systems/ClientNetworkMessageSystem';
  * @param {PlayerModel} playerModel
  * @constructor
  */
-function NetworkController(actionController, playerModel) {
+function ClientNetworkController(actionController, playerModel) {
   const ws = new WebSocket(process.env.WEBSOCKET_ADDRESS);
   ws.binaryType = 'arraybuffer';
   const clientNetworkMessageSystem = new ClientNetworkMessageSystem(
@@ -29,17 +29,19 @@ function NetworkController(actionController, playerModel) {
   this.networkControllerInterface = new NetworkControllerInterface(this, {
     broadcastAction: (action) => {
       if (action.broadcastedActionInterface.getSenderId() === null) {
-        const message = new BroadcastActionMessage(action);
-        const serializedMessage = PsonSerializationHelper.serialize(message);
-        if (ws.readyState === ws.OPEN) {
-          console.log(serializedMessage);
-          ws.send(serializedMessage);
-        } else {
-          messageQueue.push(serializedMessage);
-        }
+        this.send(new BroadcastActionMessage(action));
       }
     },
   });
+
+  this.send = (message) => {
+    const serializedMessage = PsonSerializationHelper.serialize(message);
+    if (ws.readyState === ws.OPEN) {
+      ws.send(serializedMessage);
+    } else {
+      messageQueue.push(serializedMessage);
+    }
+  };
 
   ws.addEventListener('open', () => {
     log('Connected to the server.');
@@ -64,4 +66,4 @@ function NetworkController(actionController, playerModel) {
   });
 }
 
-export default NetworkController;
+export default ClientNetworkController;
