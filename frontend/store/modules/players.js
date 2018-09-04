@@ -1,4 +1,4 @@
-import ActivePlayersRegistry from 'muddle-common/Registries/ActivePlayersRegistry';
+import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
 
 export default {
   namespaced: true,
