@@ -4,12 +4,16 @@ import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface
 import { setDebugProperty } from '../Utils/Debug';
 
 /**
+ * This action is performed when a player logs out.
+ * For just despawning a player (on switching to builder mode, for example) DespawnPlayerAction
+ * is used.
+ *
  * @param {number} clientId
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function DespawnClientPlayersAction(clientId, timeOccurred = 0, senderId = null) {
+function DespawnClientPlayerAction(clientId, timeOccurred = 0, senderId = null) {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -23,15 +27,7 @@ function DespawnClientPlayersAction(clientId, timeOccurred = 0, senderId = null)
     },
   });
 
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
-    getSenderId: () => parameters.senderId,
-
-    setSenderId: (newSenderId) => {
-      parameters.senderId = newSenderId;
-      setDebugProperty(this, 'senderId', newSenderId);
-      return this;
-    },
-  });
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
 
   // CLASS IMPLEMENTATION.
   /**
@@ -45,11 +41,10 @@ function DespawnClientPlayersAction(clientId, timeOccurred = 0, senderId = null)
   this.broadcastedActionInterface.setSenderId(senderId);
 }
 
-DespawnClientPlayersAction.serializableInterface =
-  new SerializableInterface(DespawnClientPlayersAction, {
+DespawnClientPlayerAction.serializableInterface =
+  new SerializableInterface(DespawnClientPlayerAction, {
     /**
-     * @param {DespawnClientPlayersAction} action
-     * @returns {{playerHashId: string, timeOccurred: number, senderId: number|null}}
+     * @param {DespawnClientPlayerAction} action
      */
     serialize: action => ({
       clientId: () => action.getClientId(),
@@ -57,11 +52,11 @@ DespawnClientPlayersAction.serializableInterface =
       senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
-    deserialize: json => new DespawnClientPlayersAction(
+    deserialize: json => new DespawnClientPlayerAction(
       json.clientId,
       new Date(json.timeOccurred),
       json.senderId,
     ),
   });
 
-export default DespawnClientPlayersAction;
+export default DespawnClientPlayerAction;

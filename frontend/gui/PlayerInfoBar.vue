@@ -58,7 +58,7 @@ export default {
         </vk-navbar-item>
 
         <vk-navbar-item v-on:click="showHelp = !showHelp" slot="right">
-            Players Online ({{playersOnlineCount}}) <span class="hotkey">F2</span>
+            Online Players ({{playersOnlineCount}}) <span class="hotkey">F2</span>
         </vk-navbar-item>
 
         <vk-navbar-item slot="right">
