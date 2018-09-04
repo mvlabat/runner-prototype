@@ -5,6 +5,7 @@
       "alias": {
         "common": "../common"
       }
-    }]
+    }],
+    ["transform-object-rest-spread"]
   ]
 }

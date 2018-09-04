@@ -8,6 +8,7 @@ import VuikitIcons from '@vuikit/icons';
 // eslint-disable-next-line import/extensions
 import '@vuikit/theme';
 
+import store from './store';
 import App from './gui/App.vue';
 
 import Game from './game/Game';
@@ -17,6 +18,7 @@ const game = new Game();
 // eslint-disable-next-line no-new
 new Vue({
   el: '#app',
+  store,
   render: h => h(App),
 });
 Vue.use(Vuelidate);

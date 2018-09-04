@@ -26,7 +26,7 @@ const LocalGameState = (() => {
     getPlayerModel: () => localPlayerModel,
 
     /**
-     * @return {FrontendNetworkController}
+     * @return {ClientNetworkController}
      */
     getNetworkController: () => localNetworkController,
 

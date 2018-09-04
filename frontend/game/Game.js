@@ -9,7 +9,7 @@ import Sandbox from './Sandbox';
 import CanvasWrapper from './Models/CanvasWrapper';
 import CameraWrapper from './Models/CameraWrapper';
 import MainUiController from './Controllers/MainUiController';
-import FrontendNetworkController from './Controllers/FrontendNetworkController';
+import ClientNetworkController from './Controllers/ClientNetworkController';
 import LocalGameState from './LocalGameState';
 
 function Game() {
@@ -23,7 +23,7 @@ function Game() {
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameState);
 
-  const networkController = new FrontendNetworkController(actionController, playerModel);
+  const networkController = new ClientNetworkController(actionController, playerModel);
   actionController.setNetworkController(networkController);
 
   LocalGameState.initialize(gameState, playerModel, networkController, actionController);

@@ -1,5 +1,5 @@
 <script>
-import AuthenticationModal from './AuthenticationModal.vue';
+import AuthenticationModal from './modals/AuthenticationModal.vue';
 import PlayerInfoBar from './PlayerInfoBar.vue';
 
 export default {

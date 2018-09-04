@@ -8,7 +8,7 @@ import VkNotification from 'vuikit/src/library/notification/components/notificat
 
 import AuthenticationRequestMessage from 'common/NetworkMessages/AuthenticationRequestMessage';
 
-import LocalGameState from '../game/LocalGameState';
+import LocalGameState from '../../game/LocalGameState';
 
 export default {
   name: 'AuthenticationModal',
@@ -29,7 +29,7 @@ export default {
 
   computed: {
     showAuthenticate() {
-      return !this.playerModel.authenticated;
+      return !process.env.DISPLAY_NAME && !this.playerModel.authenticated;
     },
     clientId() {
       return this.playerModel.clientId;
@@ -52,6 +52,7 @@ export default {
       if (this.$v.$anyError) {
         return;
       }
+      this.playerModel.displayName = this.displayName;
       LocalGameState
         .getNetworkController()
         .send(new AuthenticationRequestMessage(this.displayName));
@@ -65,6 +66,15 @@ export default {
       maxLength: maxLength(20),
     },
   },
+
+  mounted() {
+    if (process.env.DISPLAY_NAME) {
+      this.displayName = process.env.DISPLAY_NAME;
+      this.sendAuthenticationRequest();
+    } else {
+      this.displayName = localStorage.getItem('displayName');
+    }
+  },
 };
 </script>
 
@@ -77,7 +87,8 @@ export default {
                 Welcome to the Muddle! Enjoy your time here ;)
             </p>
 
-            <form ref="loginForm" onsubmit="event.preventDefault();">
+            <form ref="loginForm"
+                  v-on:submit.prevent="sendAuthenticationRequest">
                 <div class="uk-form-row">
                     <label for="input-name" class="uk-form-label">Display name</label>
                     <input v-model.trim="$v.displayName.$model"
