@@ -24,7 +24,7 @@ function NetworkController(actionController, gameState) {
 
   const wss = new WebSocket.Server({
     port: 8080,
-    // perMessageDeflate: false,
+    perMessageDeflate: false,
   });
   const serverNetworkMessageSystem = new ServerNetworkMessageSystem(actionController, gameState);
   const networkMessageSystem = new NetworkMessageSystem(actionController);
