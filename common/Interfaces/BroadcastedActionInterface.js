@@ -2,6 +2,9 @@ import InterfaceImplementation, {
   assertInterface,
   isInterface,
 } from '../Utils/InterfaceImplementation';
+import { setDebugProperty } from '../Utils/Debug';
+
+export const SERVER_SENDER_ID = -1;
 
 /**
  * @param action
@@ -9,11 +12,16 @@ import InterfaceImplementation, {
  * @constructor
  */
 function BroadcastedActionInterface(action, interfaceImplementation) {
+  let senderId = null;
+
   const implementation = new InterfaceImplementation(this, action, interfaceImplementation);
 
-  this.getSenderId = () => implementation.callMethod('getSenderId');
+  this.getSenderId = () => senderId;
 
-  this.setSenderId = senderId => implementation.callMethod('setSenderId', senderId);
+  this.setSenderId = (newSenderId) => {
+    senderId = newSenderId;
+    setDebugProperty(action, 'senderId', senderId);
+  };
 
   this.isBroadcastedAfterExecution = () => (
     implementation.callMethodOr(false, 'isBroadcastedAfterExecution')

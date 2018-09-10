@@ -10,8 +10,10 @@ import BroadcastPlayersLatencyMessage from 'common/NetworkMessages/BroadcastPlay
 import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage';
 import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
 import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
+import { SERVER_SENDER_ID } from 'common/Interfaces/BroadcastedActionInterface';
 
-import Store from '../../store';
+import store from '../../store';
+import UiManager from '../UiManager';
 
 /**
  * @param {WebSocket} ws
@@ -44,9 +46,10 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
     player.clientId = message.getResponse();
     if (typeof message.getResponse() === 'number') {
       ActivePlayersRegistry.registerPlayer(player);
-      Store.commit('players/addPlayer', player);
+      store.commit('players/addPlayer', player);
       player.authenticated = true;
       localStorage.setItem('displayName', player.displayName);
+      UiManager.activatePlayerMode();
     }
   }
 
@@ -54,8 +57,8 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
    * @param {BroadcastPlayersLatencyMessage} message
    */
   function processBroadcastPlayersLatencyMessage(message) {
-    for (const [playerId, latency] of Object.entries(message.getPlayersLatency())) {
-      ActivePlayersRegistry.getPlayerById(parseInt(playerId, 10)).latency = latency;
+    for (const [clientId, latency] of Object.entries(message.getPlayersLatency())) {
+      ActivePlayersRegistry.getPlayerById(parseInt(clientId, 10)).latency = latency;
     }
   }
 
@@ -65,15 +68,16 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
   function processGameStateMessage(message) {
     for (const player of message.getActivePlayers()) {
       ActivePlayersRegistry.registerPlayer(player);
-      Store.commit('players/addPlayer', player);
+      store.commit('players/addPlayer', player);
     }
-    for (const playerObject of message.getPlayerObjects()) {
-      const spawnPlayerAction = new SpawnPlayerAction(playerObject, 0, -1);
-      actionController.addAction(spawnPlayerAction);
+    for (const [clientIdStr, playerObject] of Object.entries(message.getPlayerObjects())) {
+      const clientId = parseInt(clientIdStr, 10);
+      const action = new SpawnPlayerAction(playerObject, clientId, 0, SERVER_SENDER_ID);
+      actionController.addAction(action);
     }
     for (const buildableObject of message.getBuildableObjects()) {
-      const spawnBuildableObjectAction = new SaveBuildableObjectAction(buildableObject, 0, -1);
-      actionController.addAction(spawnBuildableObjectAction);
+      const action = new SaveBuildableObjectAction(buildableObject, 0, SERVER_SENDER_ID);
+      actionController.addAction(action);
     }
   }
 
@@ -92,7 +96,7 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
   function processPlayerLoggedInMessage(message) {
     const player = message.getPlayer();
     player.authenticated = true;
-    Store.commit('players/addPlayer', player);
+    store.commit('players/addPlayer', player);
     ActivePlayersRegistry.registerPlayer(player);
   }
 
@@ -100,9 +104,9 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
    * @param {PlayerLoggedOutMessage} message
    */
   function processPlayerLoggedOutMessage(message) {
-    // We actually remove the player on DespawnClientPlayersAction.
+    // We actually remove the player on DespawnClientPlayerAction.
     const player = ActivePlayersRegistry.getPlayerById(message.getClientId());
-    Store.commit('players/removePlayerWithId', player.clientId);
+    store.commit('players/removePlayerWithId', player.clientId);
     player.online = false;
   }
 }

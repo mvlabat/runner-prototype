@@ -6,8 +6,9 @@ import SystemInterface from '../Interfaces/SystemInterface';
 import SpawnPlayerAction from '../Actions/SpawnPlayerAction';
 import DespawnPlayerAction from '../Actions/DespawnPlayerAction';
 import { replaying } from '../Utils/SystemHelpers';
-import DespawnClientPlayersAction from '../Actions/DespawnClientPlayersAction';
+import DespawnClientPlayerAction from '../Actions/DespawnClientPlayerAction';
 import ActivePlayersRegistry from '../Registries/ActivePlayersRegistry';
+import EngineConfig from '../EngineConfig';
 
 /**
  * @param {GameScene} gameScene
@@ -18,7 +19,7 @@ function PlayerSystem(gameScene, playerModel) {
   const actionProcessors = new Map([
     [SpawnPlayerAction, spawnPlayer],
     [DespawnPlayerAction, despawnPlayer],
-    [DespawnClientPlayersAction, despawnClientPlayers],
+    [DespawnClientPlayerAction, despawnClientPlayers],
   ]);
 
   this.systemInterface = new SystemInterface(this, {
@@ -28,12 +29,6 @@ function PlayerSystem(gameScene, playerModel) {
   });
 
   /**
-   * Players by client ID. Don't confuse its value type with PlayerModel.
-   * @type {Map<number, Player>}
-   */
-  const playersByClientIds = new Map();
-
-  /**
    * @param {SpawnPlayerAction} action
    */
   function spawnPlayer(action) {
@@ -41,8 +36,10 @@ function PlayerSystem(gameScene, playerModel) {
       return;
     }
 
-    playersByClientIds.set(action.broadcastedActionInterface.getSenderId(), action.getPlayer());
-    gameScene.addPlayer(action.getPlayer());
+    if (EngineConfig.isServer() && !action.getClientId()) {
+      action.setClientId(action.broadcastedActionInterface.getSenderId());
+    }
+    gameScene.addPlayer(action.getClientId(), action.getPlayer());
   }
 
   /**
@@ -53,26 +50,21 @@ function PlayerSystem(gameScene, playerModel) {
       return;
     }
 
-    playersByClientIds.delete(action.broadcastedActionInterface.getSenderId());
     gameScene.removePlayer(action.getPlayerHashId());
   }
 
   /**
-   * @param {DespawnClientPlayersAction} action
+   * @param {DespawnClientPlayerAction} action
    */
   function despawnClientPlayers(action) {
     if (replaying(action, playerModel)) {
       return;
     }
 
-    const playerId = action.getClientId();
-    const player = playersByClientIds.get(playerId);
-    if (player) {
-      playersByClientIds.delete(playerId);
-      gameScene.removePlayer(player.hashableIdInterface.getHashId());
-    }
+    const clientId = action.getClientId();
+    gameScene.removePlayerByClientId(clientId);
 
-    ActivePlayersRegistry.removePlayerWithId(playerId);
+    ActivePlayersRegistry.removePlayerWithId(clientId);
   }
 }
 

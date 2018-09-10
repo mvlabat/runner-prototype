@@ -32,20 +32,15 @@ function PlayerSetMovingAction(
     },
   });
 
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
-    getSenderId: () => parameters.senderId,
-
-    setSenderId: (newSenderId) => {
-      parameters.senderId = newSenderId;
-      setDebugProperty(this, 'senderId', newSenderId);
-      return this;
-    },
-  });
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
 
   // CLASS IMPLEMENTATION.
   this.getPlayerHashId = () => playerHashId;
   this.getPosition = () => position;
   this.getDirection = () => direction;
+  setDebugProperty(this, 'playerHashId', playerHashId);
+  setDebugProperty(this, 'position', position);
+  setDebugProperty(this, 'direction', direction);
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.setTimeOccurred(timeOccurred);

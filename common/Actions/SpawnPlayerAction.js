@@ -6,11 +6,12 @@ import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {Player} player
+ * @param {number|null} clientId
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function SpawnPlayerAction(player, timeOccurred = 0, senderId = null) {
+function SpawnPlayerAction(player, clientId = null, timeOccurred = 0, senderId = null) {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -25,21 +26,21 @@ function SpawnPlayerAction(player, timeOccurred = 0, senderId = null) {
   });
 
   this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
-    getSenderId: () => parameters.senderId,
-
-    setSenderId: (newSenderId) => {
-      parameters.senderId = newSenderId;
-      setDebugProperty(this, 'senderId', newSenderId);
-      return this;
-    },
-
     isBroadcastedAfterExecution: () => true,
   });
 
   // CLASS IMPLEMENTATION.
   this.getPlayer = () => player;
+  setDebugProperty(this, 'player', player);
+
+  this.getClientId = () => clientId;
+  this.setClientId = (newClientId) => {
+    parameters.clientId = newClientId;
+    setDebugProperty(this, 'clientId', newClientId);
+  };
 
   // INITIALIZE DEFAULT PARAMETERS.
+  this.setClientId(clientId);
   this.actionInterface.setTimeOccurred(timeOccurred);
   this.broadcastedActionInterface.setSenderId(senderId);
 }
@@ -48,16 +49,17 @@ SpawnPlayerAction.serializableInterface =
   new SerializableInterface(SpawnPlayerAction, {
     /**
      * @param {SpawnPlayerAction} action
-     * @returns {{actionType: string, playerHashId: string, timeOccurred: number}}
      */
     serialize: action => ({
       player: () => serialize(action.getPlayer()),
+      clientId: () => action.getClientId(),
       timeOccurred: () => action.actionInterface.getTimeOccurred(),
       senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new SpawnPlayerAction(
       deserialize(json.player),
+      json.clientId,
       new Date(json.timeOccurred),
       json.senderId,
     ),

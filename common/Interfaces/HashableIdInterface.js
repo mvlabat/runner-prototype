@@ -21,7 +21,6 @@ function HashableIdInterface(entity, predefinedHashId, interfaceImplementation) 
   this.calculateHashId = () => {
     const hashedContent = implementation.callMethodOr('', 'getHashedContent', entity);
     hashId = sha256(hashedContent + generateNonce()).toString();
-    return this;
   };
 
   this.getHashId = () => hashId;

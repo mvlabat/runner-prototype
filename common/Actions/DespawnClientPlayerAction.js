@@ -27,7 +27,9 @@ function DespawnClientPlayerAction(clientId, timeOccurred = 0, senderId = null) 
     },
   });
 
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
+    isBroadcastedAfterExecution: () => true,
+  });
 
   // CLASS IMPLEMENTATION.
   /**

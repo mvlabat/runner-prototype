@@ -1,9 +1,14 @@
 import SerializableInterface from '../Interfaces/SerializableInterface';
-import { deserializeArray, serializeArray } from '../Utils/SerializationHelper';
+import {
+  deserializeArray,
+  deserializeObjectMap,
+  serializeArray,
+  serializeObjectMap,
+} from '../Utils/SerializationHelper';
 
 /**
  * @param {Iterable<PlayerModel>} activePlayers
- * @param {Iterable<Player>} playerObjects
+ * @param {Object} playerObjects - Key is Client ID, value is Player.
  * @param {Iterable<*>} buildableObjects
  * @constructor
  */
@@ -21,13 +26,13 @@ GameStateMessage.serializableInterface = new SerializableInterface(GameStateMess
    */
   serialize: message => ({
     activePlayers: () => serializeArray(message.getActivePlayers()),
-    playerObjects: () => serializeArray(message.getPlayerObjects()),
+    playerObjects: () => serializeObjectMap(message.getPlayerObjects()),
     buildableObjects: () => serializeArray(message.getBuildableObjects()),
   }),
 
   deserialize: json => new GameStateMessage(
     deserializeArray(json.activePlayers),
-    deserializeArray(json.playerObjects),
+    deserializeObjectMap(json.playerObjects),
     deserializeArray(json.buildableObjects),
   ),
 });

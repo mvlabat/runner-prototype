@@ -9,6 +9,7 @@ import DespawnPlayerAction from 'common/Actions/DespawnPlayerAction';
 import PlayerSetMovingAction from 'common/Actions/PlayerSetMovingAction';
 
 import MovementDirections from '../Utils/MovementDirections';
+import LocalGameState from '../LocalGameState';
 
 /**
  * @param {ActionController} actionController
@@ -62,12 +63,15 @@ function PlayerController(actionController, cameraWrapper) {
    */
   function addPlayer(position) {
     player = new Player(position);
-    actionController.addAction(new SpawnPlayerAction(player));
+    const { clientId } = LocalGameState.getPlayerModel();
+    actionController.addAction(new SpawnPlayerAction(player, clientId));
   }
 
   function removePlayer() {
-    actionController.addAction(new DespawnPlayerAction(player.hashableIdInterface.getHashId()));
-    player = null;
+    if (player) {
+      actionController.addAction(new DespawnPlayerAction(player.hashableIdInterface.getHashId()));
+      player = null;
+    }
   }
 }
 

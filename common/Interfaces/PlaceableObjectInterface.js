@@ -25,7 +25,6 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
   let objectScene = null;
   this.setScene = (scene) => {
     objectScene = scene;
-    return this;
   };
   this.getScene = () => objectScene;
 }

@@ -15,6 +15,7 @@ function GameState(gameScene) {
 
   this.getPlayer = hashId => gameScene.getPlayer(hashId);
   this.getAllPlayers = () => gameScene.getAllPlayers();
+  this.getAllPlayersWithClientIds = () => gameScene.getAllPlayersWithClientIds();
 }
 
 export default GameState;

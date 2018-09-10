@@ -33,6 +33,9 @@ function BuilderController(actionController, canvasWrapper) {
 
   this.deactivateBuilderMode = () => {
     activated = false;
+    if (!placedObject) {
+      return;
+    }
     const action = new RemoveBuildableObjectAction(placedObject.hashableIdInterface.getHashId());
     actionController.addAction(action);
     placedObject = null;

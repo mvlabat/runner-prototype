@@ -62,6 +62,7 @@ function ClientNetworkController(actionController, playerModel) {
       }
     } catch (e) {
       log(`Not processable message: ${e.message}`);
+      throw e;
     }
   });
 }

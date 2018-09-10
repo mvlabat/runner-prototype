@@ -25,19 +25,12 @@ function SaveBuildableObjectAction(buildableObject, timeOccurred = 0, senderId =
   });
 
   this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
-    getSenderId: () => parameters.senderId,
-
-    setSenderId: (newSenderId) => {
-      parameters.senderId = newSenderId;
-      setDebugProperty(this, 'senderId', newSenderId);
-      return this;
-    },
-
     isBroadcastedAfterExecution: () => true,
   });
 
   // CLASS IMPLEMENTATION.
   this.getBuildableObject = () => buildableObject;
+  setDebugProperty(this, 'buildableObject', buildableObject);
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.setTimeOccurred(timeOccurred);
