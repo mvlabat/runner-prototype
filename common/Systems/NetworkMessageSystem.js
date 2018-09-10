@@ -23,7 +23,7 @@ function NetworkMessageSystem(actionController) {
   function processActionMessage(message) {
     const action = message.networkMessageInterface.getPayload();
     const senderId = message.networkMessageInterface.getSenderId();
-    if (EngineConfig.isServer() && senderId !== null) {
+    if (EngineConfig.isServer()) {
       action.broadcastedActionInterface.setSenderId(senderId);
     }
     actionController.addAction(action);

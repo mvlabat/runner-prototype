@@ -23,18 +23,11 @@ function RemoveBuildableObjectAction(buildableObjectHashId, timeOccurred = 0, se
     },
   });
 
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
-    getSenderId: () => parameters.senderId,
-
-    setSenderId: (newSenderId) => {
-      parameters.senderId = newSenderId;
-      setDebugProperty(this, 'senderId', newSenderId);
-      return this;
-    },
-  });
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
 
   // CLASS IMPLEMENTATION.
   this.getBuildableObjectHashId = () => buildableObjectHashId;
+  setDebugProperty(this, 'buildableObjectHashId', buildableObjectHashId);
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.setTimeOccurred(timeOccurred);

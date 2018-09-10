@@ -23,18 +23,11 @@ function DespawnPlayerAction(playerHashId, timeOccurred = 0, senderId = null) {
     },
   });
 
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {
-    getSenderId: () => parameters.senderId,
-
-    setSenderId: (newSenderId) => {
-      parameters.senderId = newSenderId;
-      setDebugProperty(this, 'senderId', newSenderId);
-      return this;
-    },
-  });
+  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
 
   // CLASS IMPLEMENTATION.
   this.getPlayerHashId = () => playerHashId;
+  setDebugProperty(this, 'playerHashId', playerHashId);
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.setTimeOccurred(timeOccurred);
@@ -45,7 +38,6 @@ DespawnPlayerAction.serializableInterface =
   new SerializableInterface(DespawnPlayerAction, {
     /**
      * @param {DespawnPlayerAction} action
-     * @returns {{playerHashId: string, timeOccurred: number, senderId: number|null}}
      */
     serialize: action => ({
       playerHashId: () => action.getPlayerHashId(),

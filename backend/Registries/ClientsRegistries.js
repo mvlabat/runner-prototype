@@ -61,7 +61,8 @@ const ClientsRegistry = (() => {
       const ws = socketsByClientId.get(clientId);
       clientIdsBySocket.delete(ws);
       socketsByClientId.delete(clientId);
-      ActivePlayersRegistry.removePlayerWithId(clientId);
+      // We do not remove player from ActivePlayersRegistry yet,
+      // as we need to process DespawnClientPlayerAction. PlayerSystem will take care of it.
     },
   };
 })();

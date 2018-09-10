@@ -23,12 +23,19 @@ function Game() {
 
   const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameState);
 
+  const mainUiController = new MainUiController(actionController, cameraWrapper, canvasWrapper);
+
   const networkController = new ClientNetworkController(actionController, playerModel);
   actionController.setNetworkController(networkController);
 
-  LocalGameState.initialize(gameState, playerModel, networkController, actionController);
-
-  const mainUiController = new MainUiController(actionController, cameraWrapper, canvasWrapper);
+  LocalGameState.initialize(
+    gameState,
+    playerModel,
+    networkController,
+    actionController,
+    mainUiController.getBuilderController(),
+    mainUiController.getPlayerController(),
+  );
 
   if (EngineConfig.debugIsEnabled()) {
     window.THREE = THREE;

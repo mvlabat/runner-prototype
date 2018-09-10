@@ -43,6 +43,7 @@ module.exports = {
       ignorePropertyModificationsFor: [
         'acc', // for reduce accumulators
         'e', // for e.returnvalue
+        'state', // for vuex
         'rendererMesh',
       ]
     }],

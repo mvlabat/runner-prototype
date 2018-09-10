@@ -14,11 +14,10 @@ function MainUiController(actionController, cameraWrapper, canvasWrapper) {
   const canvas = canvasWrapper.getCanvas();
 
   const cameraController = new CameraController(cameraWrapper, canvasWrapper);
-  // We define these controllers here, because UI state (may) effects
+  // We define these controllers here, because UI state (may) effect
   // what is updated and what is not.
   const builderController = new BuilderController(actionController, canvasWrapper);
   const playerController = new PlayerController(actionController, cameraWrapper);
-  playerController.activatePlayerMode();
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: (timeDelta) => {
@@ -28,6 +27,16 @@ function MainUiController(actionController, cameraWrapper, canvasWrapper) {
       playerController.updatableInterface.update(timeDelta);
     },
   });
+
+  /**
+   * @return {BuilderController}
+   */
+  this.getBuilderController = () => builderController;
+
+  /**
+   * @return {PlayerController}
+   */
+  this.getPlayerController = () => playerController;
 
   const uiInputActions = new UiInputActions(cameraController, builderController, playerController);
 

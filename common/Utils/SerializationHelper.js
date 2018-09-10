@@ -23,3 +23,17 @@ export function serializeArray(array, serializer = serialize) {
 export function deserializeArray(array, deserializer = deserialize) {
   return Array.from(array).map(entity => deserializer(entity));
 }
+
+export function serializeObjectMap(objectMap, serializer = serialize) {
+  return Object.keys(objectMap).reduce((acc, key) => {
+    acc[key] = serializer(objectMap[key]);
+    return acc;
+  }, {});
+}
+
+export function deserializeObjectMap(serializedObjectMap, deserializer = deserialize) {
+  return Object.keys(serializedObjectMap).reduce((acc, key) => {
+    acc[key] = deserializer(serializedObjectMap[key]);
+    return acc;
+  }, {});
+}

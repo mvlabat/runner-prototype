@@ -7,13 +7,14 @@ import { log } from 'common/Utils/Debug';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import PingMessage from 'common/NetworkMessages/PingMessage';
 import { send } from 'common/Utils/NetworkUtils';
-import DespawnClientPlayersAction from 'common/Actions/DespawnClientPlayersAction';
+import DespawnClientPlayerAction from 'common/Actions/DespawnClientPlayerAction';
 import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
 import AuthenticationRequestMessage from 'common/NetworkMessages/AuthenticationRequestMessage';
 import BroadcastPlayersLatencyMessage from 'common/NetworkMessages/BroadcastPlayersLatencyMessage';
 import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
 import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage';
 import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
+import { SERVER_SENDER_ID } from 'common/Interfaces/BroadcastedActionInterface';
 
 import { broadcastToEveryone, broadcastToOthers } from '../Utils/ServerNetworkUtils';
 import ClientsRegistry from '../Registries/ClientsRegistries';
@@ -123,9 +124,14 @@ function ServerNetworkMessageSystem(actionController, gameState) {
         .filter(activePlayer => activePlayer.authenticated)
         .toArray();
 
+      const playerObjects = {};
+      for (const [playerClientId, playerObject] of gameState.getAllPlayersWithClientIds()) {
+        playerObjects[playerClientId] = playerObject;
+      }
+
       const gameStateMessage = new GameStateMessage(
         activePlayers,
-        gameState.getAllPlayers(),
+        playerObjects,
         gameState.getAllBuildableObjects(),
       );
       send(currentPlayerSocket, gameStateMessage);
@@ -196,7 +202,7 @@ function ServerNetworkMessageSystem(actionController, gameState) {
     }
 
     ClientsRegistry.removeClientWithId(player.clientId);
-    actionController.addAction(new DespawnClientPlayersAction(player.clientId, 0, -1));
+    actionController.addAction(new DespawnClientPlayerAction(player.clientId, 0, SERVER_SENDER_ID));
     broadcastToOthers(ws, new PlayerLoggedOutMessage(player.clientId));
   }
 
