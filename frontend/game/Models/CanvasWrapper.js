@@ -1,13 +1,21 @@
 import * as THREE from 'three';
 
 /**
- * @param {HTMLCanvasElement} canvas
  * @constructor
  */
-function CanvasWrapper(canvas) {
-  const canvasWrapper = document.getElementById('canvas-wrapper');
+function CanvasWrapper() {
+  let canvas;
+  let domCanvasWrapper;
   const mousePosition = new THREE.Vector2();
   const mouseWorldPosition = new THREE.Vector3();
+
+  /**
+   * @param {HTMLCanvasElement} newCanvas
+   */
+  this.initialize = (newCanvas) => {
+    canvas = newCanvas;
+    domCanvasWrapper = document.getElementById('canvas-wrapper');
+  };
 
   /**
    * @returns {HTMLCanvasElement}
@@ -18,7 +26,7 @@ function CanvasWrapper(canvas) {
    * @returns {Vector2}
    */
   this.getCanvasSize = () => (
-    new THREE.Vector2(canvasWrapper.clientWidth, canvasWrapper.clientHeight)
+    new THREE.Vector2(domCanvasWrapper.clientWidth, domCanvasWrapper.clientHeight)
   );
 
   /**

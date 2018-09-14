@@ -1,15 +1,17 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Engine from 'common';
-import NetworkController from './Controllers/NetworkController';
+import ServerMuddle from './ServerMuddle';
+import ServerNetworkController from './Controllers/ServerNetworkController';
 
 function Server() {
   process.env.FORCE_DEBUG = true;
 
   const engine = new Engine(true);
-  const actionController = engine.getActionController();
-  const gameState = engine.getGameState();
-  const networkController = new NetworkController(actionController, gameState);
-  actionController.setNetworkController(networkController);
+
+  /**
+   * @type ServerNetworkController
+   */
+  const networkController = ServerMuddle[ServerNetworkController];
 
   // Gameloop.
 

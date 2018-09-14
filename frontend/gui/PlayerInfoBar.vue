@@ -4,11 +4,15 @@ import VkNavbarItem from 'vuikit/src/library/navbar/components/navbar--item';
 import VkNavbarLogo from 'vuikit/src/library/navbar/components/navbar--logo';
 import { createNamespacedHelpers } from 'vuex';
 
-import LocalGameState from '../game/LocalGameState';
+import PlayerModel from 'common/Models/PlayerModel';
+
 import HelpModal from './modals/HelpModal.vue';
 import OnlinePlayersModal from './modals/OnlinePlayersModal.vue';
+import ClientMuddle from '../ClientMuddle';
 
 const { mapGetters } = createNamespacedHelpers('players');
+
+const playerModel = ClientMuddle.common[PlayerModel];
 
 export default {
   name: 'PlayerInfoBar',
@@ -20,7 +24,7 @@ export default {
     VkNavbar,
   },
   data: () => ({
-    playerModel: LocalGameState.getPlayerModel(),
+    playerModel,
     showHelp: false,
     showOnlinePlayers: false,
   }),

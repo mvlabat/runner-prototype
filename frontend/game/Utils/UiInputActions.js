@@ -31,9 +31,10 @@ const LEFT_MOUSE_CLICK = 'leftMouseClick';
  * @param {CameraController} cameraController
  * @param {BuilderController} builderController
  * @param {PlayerController} playerController
+ * @param {UiManager} uiManager
  * @constructor
  */
-function UiInputActions(cameraController, builderController, playerController) {
+function UiInputActions(cameraController, builderController, playerController, uiManager) {
   const actions = new Map();
   const builderActions = UI_INPUT_ACTIONS[UI_STATES.BUILDER];
   const playerActions = UI_INPUT_ACTIONS[UI_STATES.PLAYER];
@@ -116,8 +117,7 @@ function UiInputActions(cameraController, builderController, playerController) {
     action: builderActions.SWITCH_MODE,
     onKeyPress: () => {
       currentUiState = UI_STATES.PLAYER;
-      builderController.deactivateBuilderMode();
-      playerController.activatePlayerMode();
+      uiManager.activatePlayerMode();
     },
   });
 
@@ -151,8 +151,7 @@ function UiInputActions(cameraController, builderController, playerController) {
     action: playerActions.SWITCH_MODE,
     onKeyPress: () => {
       currentUiState = UI_STATES.BUILDER;
-      playerController.deactivatePlayerMode();
-      builderController.activateBuilderMode();
+      uiManager.activateBuilderMode();
     },
   });
 

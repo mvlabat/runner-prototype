@@ -1,7 +1,13 @@
 import * as THREE from 'three';
+
+import GameState from 'common/Models/GameState';
+
 import CircleRenderer from './Renderers/CircleRenderer';
 import PlayerRenderer from './Renderers/PlayerRender';
 import RectangleRenderer from './Renderers/RectangleRenderer';
+import ClientMuddle from '../ClientMuddle';
+import CameraWrapper from './Models/CameraWrapper';
+import CanvasWrapper from './Models/CanvasWrapper';
 
 const objectRendererConstructors = {
   circle: CircleRenderer,
@@ -11,12 +17,24 @@ const objectRendererConstructors = {
 
 /**
  * @param {WebGLRenderer} renderer
- * @param {GameState} gameState
- * @param {CanvasWrapper} canvasWrapper
- * @param {CameraWrapper} cameraWrapper
  * @constructor
  */
-function Renderer(renderer, gameState, canvasWrapper, cameraWrapper) {
+function Renderer(renderer) {
+  /**
+   * @type CameraWrapper
+   */
+  const cameraWrapper = ClientMuddle[CameraWrapper];
+
+  /**
+   * @type CanvasWrapper
+   */
+  const canvasWrapper = ClientMuddle[CanvasWrapper];
+
+  /**
+   * @type GameState
+   */
+  const gameState = ClientMuddle.common[GameState];
+
   const scene = new THREE.Scene();
 
   this.render = () => {

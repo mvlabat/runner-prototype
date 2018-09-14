@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 
+/**
+ * @constructor
+ */
 function CameraWrapper() {
   const camera = new THREE.OrthographicCamera();
 

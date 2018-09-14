@@ -19,7 +19,7 @@ import { broadcastToEveryone } from '../Utils/ServerNetworkUtils';
  * @param {GameState} gameState
  * @constructor
  */
-function NetworkController(actionController, gameState) {
+function ServerNetworkController(actionController, gameState) {
   let clientIdCount = 0;
 
   const wss = new WebSocket.Server({
@@ -75,4 +75,4 @@ function NetworkController(actionController, gameState) {
   });
 }
 
-export default NetworkController;
+export default ServerNetworkController;

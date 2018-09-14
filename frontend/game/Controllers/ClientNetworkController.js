@@ -4,21 +4,17 @@ import NetworkMessageSystem from 'common/Systems/NetworkMessageSystem';
 import BroadcastActionMessage from 'common/NetworkMessages/BroadcastActionMessage';
 import { log } from 'common/Utils/Debug';
 import PsonSerializationHelper from 'common/Utils/PsonSerializationHelper';
-import ClientNetworkMessageSystem from '../Systems/ClientNetworkMessageSystem';
 
 /**
+ * @param {ClientNetworkMessageSystem} clientNetworkMessageSystem
  * @param {ActionController} actionController
- * @param {PlayerModel} playerModel
  * @constructor
  */
-function ClientNetworkController(actionController, playerModel) {
+function ClientNetworkController(clientNetworkMessageSystem, actionController) {
   const ws = new WebSocket(process.env.WEBSOCKET_ADDRESS);
   ws.binaryType = 'arraybuffer';
-  const clientNetworkMessageSystem = new ClientNetworkMessageSystem(
-    ws,
-    actionController,
-    playerModel,
-  );
+  clientNetworkMessageSystem.setWebSocket(ws);
+
   const networkMessageSystem = new NetworkMessageSystem(actionController);
   const messageQueue = [];
 

@@ -13,15 +13,16 @@ import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
 import { SERVER_SENDER_ID } from 'common/Interfaces/BroadcastedActionInterface';
 
 import store from '../../store';
-import UiManager from '../UiManager';
 
 /**
- * @param {WebSocket} ws
+ * @param {UiManager} uiManager
  * @param {ActionController} actionController
  * @param {PlayerModel} playerModel
  * @constructor
  */
-function ClientNetworkMessageSystem(ws, actionController, playerModel) {
+function ClientNetworkMessageSystem(uiManager, actionController, playerModel) {
+  let ws;
+
   const parameters = { playerModel };
   const messageProcessors = new Map([
     [AuthenticationResponseMessage, processAuthenticationResponse],
@@ -31,6 +32,10 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
     [PlayerLoggedInMessage, processPlayerLoggedInMessage],
     [PlayerLoggedOutMessage, processPlayerLoggedOutMessage],
   ]);
+
+  this.setWebSocket = (webSocket) => {
+    ws = webSocket;
+  };
 
   this.systemInterface = new SystemInterface(this, {
     canProcess: message => messageProcessors.has(message.constructor),
@@ -49,7 +54,7 @@ function ClientNetworkMessageSystem(ws, actionController, playerModel) {
       store.commit('players/addPlayer', player);
       player.authenticated = true;
       localStorage.setItem('displayName', player.displayName);
-      UiManager.activatePlayerMode();
+      uiManager.activatePlayerMode();
     }
   }
 
