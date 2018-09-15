@@ -6,7 +6,19 @@ import VkTable from 'vuikit/src/library/table/components/table';
 import VkTableColumn from 'vuikit/src/library/table/components/table--column';
 import { createNamespacedHelpers } from 'vuex';
 
+import PlayerModel from 'common/Models/PlayerModel';
+
+import { modalWatchHelper } from '../utils/modal';
+import StoreMuddle from '../../StoreMuddle';
+
 const { mapState, mapGetters } = createNamespacedHelpers('players');
+
+const muddle = new StoreMuddle();
+
+/**
+ * @type PlayerModel
+ */
+const playerModel = muddle.common[PlayerModel];
 
 export default {
   name: 'OnlinePlayersModal',
@@ -22,8 +34,13 @@ export default {
   ],
 
   data: () => ({
+    showModal: false,
     test: [],
   }),
+
+  watch: {
+    ...modalWatchHelper('show', 'showModal'),
+  },
 
   computed: {
     arr() {
@@ -38,15 +55,26 @@ export default {
       playersOnlineCount: 'count',
     }),
   },
+
+  methods: {
+    /**
+     * @param {PlayerModel} row
+     * @return {string}
+     */
+    isCurrentPlayer(row) {
+      return row.clientId === playerModel.clientId ? 'current-player' : '';
+    },
+  },
 };
 </script>
 
 <template>
-    <vk-modal center :show.sync="show">
+    <vk-modal center :show.sync="showModal">
         <vk-modal-close></vk-modal-close>
         <vk-modal-title>Online Players ({{ playersOnlineCount }})</vk-modal-title>
 
-        <vk-table :data="activePlayers" narrowed>
+        <div id="online-players-table-wrapper">
+            <vk-table :data="activePlayers" :rowClass="isCurrentPlayer" narrowed>
             <vk-table-column title="ID" cell="clientId"></vk-table-column>
             <vk-table-column title="Display Name" cell="displayName"></vk-table-column>
             <vk-table-column title="Latency" cell="latency">
@@ -54,6 +82,13 @@ export default {
                     {{ cell }} ms
                 </div>
             </vk-table-column>
-        </vk-table>
+            </vk-table>
+        </div>
     </vk-modal>
 </template>
+
+<style lang="scss">
+    .current-player {
+        font-weight: bold;
+    }
+</style>

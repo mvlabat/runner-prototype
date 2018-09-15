@@ -10,8 +10,12 @@ import HelpModal from './modals/HelpModal.vue';
 import OnlinePlayersModal from './modals/OnlinePlayersModal.vue';
 import ClientMuddle from '../ClientMuddle';
 
-const { mapGetters } = createNamespacedHelpers('players');
+const { mapGetters: mapPlayersGetters } = createNamespacedHelpers('players');
+const { mapMutations: mapGameUiMutations } = createNamespacedHelpers('gameUi');
 
+/**
+ * @type PlayerModel
+ */
 const playerModel = ClientMuddle.common[PlayerModel];
 
 export default {
@@ -34,16 +38,16 @@ export default {
       return `${Math.round(this.playerModel.latency)} ms`;
     },
 
-    ...mapGetters({
+    ...mapGameUiMutations(['showModal', 'hideModal']),
+
+    ...mapPlayersGetters({
       playersOnlineCount: 'count',
     }),
   },
 
   mounted() {
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'F1') {
-        this.showHelp = !this.showHelp;
-      } else if (e.key === 'F2') {
+      if (e.key === 'F2' && playerModel.authenticated) {
         this.showOnlinePlayers = !this.showOnlinePlayers;
       }
     });
@@ -58,7 +62,7 @@ export default {
         </vk-navbar-logo>
 
         <vk-navbar-item v-on:click="showHelp = !showHelp" slot="right">
-            Help <span class="hotkey">F1</span>
+            Help
         </vk-navbar-item>
 
         <vk-navbar-item v-on:click="showHelp = !showHelp" slot="right">
