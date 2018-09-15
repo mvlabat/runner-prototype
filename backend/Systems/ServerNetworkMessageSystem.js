@@ -187,8 +187,8 @@ function ServerNetworkMessageSystem(actionController, gameState) {
    * @param {PlayerModel} player
    */
   function dropPlayer(player) {
-    // Firstly we emit close signal for ws (NetworkController), after that, on next network tick,
-    // we can clean up the player.
+    // Firstly we emit close signal for ws (ServerNetworkController),
+    // after that, on next network tick, we can clean up the player.
     const ws = ClientsRegistry.getSocketByClientId(player.clientId);
     if (ws.readyState === ws.OPEN) {
       ws.terminate();

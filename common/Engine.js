@@ -1,35 +1,20 @@
-import ActionController from './Controllers/ActionController';
-import GameScene from './Models/GameScene';
-import GameState from './Models/GameState';
+import CommonMuddle from './Muddle';
+
 import { log } from './Utils/Debug';
-import PlayerModel from './Models/PlayerModel';
 import EngineConfig from './EngineConfig';
 import PsonDictionary from './Utils/PsonDictionary';
+
+import ActionController from './Controllers/ActionController';
 
 function Engine(isServer) {
   EngineConfig.initialize(isServer);
   log('Debug mode is enabled');
   PsonDictionary.commitDictionary();
 
-  const gameScene = new GameScene();
-  const playerModel = new PlayerModel();
-  const actionController = new ActionController(gameScene, playerModel);
-  const gameState = new GameState(gameScene);
-
   /**
-   * @return ActionController
+   * @type ActionController
    */
-  this.getActionController = () => actionController;
-
-  /**
-   * @return GameState
-   */
-  this.getGameState = () => gameState;
-
-  /**
-   * @return PlayerModel
-   */
-  this.getPlayerModel = () => playerModel;
+  const actionController = CommonMuddle[ActionController];
 
   this.tick = (timeDelta) => {
     actionController.updatableInterface.update(timeDelta);

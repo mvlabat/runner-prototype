@@ -1,18 +1,22 @@
 import store from '../store';
-import LocalGameState from './LocalGameState';
 
-const UiManager = (() => ({
-  activatePlayerMode: () => {
-    LocalGameState.getPlayerController().activatePlayerMode();
-    LocalGameState.getBuilderController().deactivateBuilderMode();
+/**
+ * @constructor
+ * @param {PlayerController} playerController
+ * @param {BuilderController} builderController
+ */
+function UiManager(playerController, builderController) {
+  this.activatePlayerMode = () => {
+    playerController.activatePlayerMode();
+    builderController.deactivateBuilderMode();
     store.commit('gameUi/activatePlayerMode');
-  },
+  };
 
-  activateBuilderMode: () => {
-    LocalGameState.getPlayerController().deactivatePlayerMode();
-    LocalGameState.getBuilderController().activateBuilderMode();
+  this.activateBuilderMode = () => {
+    playerController.deactivatePlayerMode();
+    builderController.activateBuilderMode();
     store.commit('gameUi/activateBuilderMode');
-  },
-}))();
+  };
+}
 
 export default UiManager;

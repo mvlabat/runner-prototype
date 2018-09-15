@@ -3,39 +3,31 @@ import * as THREE from 'three';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import Engine from 'common';
 import EngineConfig from 'common/EngineConfig';
+import ActionController from 'common/Controllers/ActionController';
 
 import Renderer from './Renderer';
 import Sandbox from './Sandbox';
 import CanvasWrapper from './Models/CanvasWrapper';
-import CameraWrapper from './Models/CameraWrapper';
 import MainUiController from './Controllers/MainUiController';
 import ClientNetworkController from './Controllers/ClientNetworkController';
-import LocalGameState from './LocalGameState';
+import ClientMuddle from '../ClientMuddle';
 
 function Game() {
   const engine = new Engine(false);
-  const actionController = engine.getActionController();
 
-  const gameState = engine.getGameState();
-  const playerModel = engine.getPlayerModel();
+  Sandbox(ClientMuddle.common[ActionController]);
 
-  Sandbox(actionController);
+  const renderer = createRenderer();
 
-  const { renderer, canvasWrapper, cameraWrapper } = initializeRenderer(gameState);
+  /**
+   * @type MainUiController
+   */
+  const mainUiController = ClientMuddle[MainUiController];
 
-  const mainUiController = new MainUiController(actionController, cameraWrapper, canvasWrapper);
-
-  const networkController = new ClientNetworkController(actionController, playerModel);
-  actionController.setNetworkController(networkController);
-
-  LocalGameState.initialize(
-    gameState,
-    playerModel,
-    networkController,
-    actionController,
-    mainUiController.getBuilderController(),
-    mainUiController.getPlayerController(),
-  );
+  /**
+   * @type ClientNetworkController
+   */
+  const networkController = ClientMuddle[ClientNetworkController];
 
   if (EngineConfig.debugIsEnabled()) {
     window.THREE = THREE;
@@ -86,18 +78,18 @@ function Game() {
   };
 }
 
-function initializeRenderer(gameState) {
+function createRenderer() {
+  /**
+   * @type CanvasWrapper
+   */
+  const canvasWrapper = ClientMuddle[CanvasWrapper];
+
   const renderer = new THREE.WebGLRenderer();
-  const cameraWrapper = new CameraWrapper();
-  const canvasWrapper = new CanvasWrapper(renderer.domElement);
+  canvasWrapper.initialize(renderer.domElement);
 
   document.getElementById('canvas-wrapper').appendChild(renderer.domElement);
 
-  return {
-    renderer: new Renderer(renderer, gameState, canvasWrapper, cameraWrapper),
-    canvasWrapper,
-    cameraWrapper,
-  };
+  return new Renderer(renderer);
 }
 
 export default Game;

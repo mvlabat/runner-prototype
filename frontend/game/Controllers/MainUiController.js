@@ -1,23 +1,27 @@
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 import CameraController from './CameraController';
-import BuilderController from './BuilderController';
-import PlayerController from './PlayerController';
 import UiInputActions from '../Utils/UiInputActions';
 
 /**
  * @param {ActionController} actionController
  * @param {CameraWrapper} cameraWrapper
  * @param {CanvasWrapper} canvasWrapper
+ * @param {BuilderController} builderController
+ * @param {PlayerController} playerController
+ * @param {UiManager} uiManager
  * @constructor
  */
-function MainUiController(actionController, cameraWrapper, canvasWrapper) {
+function MainUiController(
+  actionController,
+  cameraWrapper,
+  canvasWrapper,
+  builderController,
+  playerController,
+  uiManager,
+) {
   const canvas = canvasWrapper.getCanvas();
 
   const cameraController = new CameraController(cameraWrapper, canvasWrapper);
-  // We define these controllers here, because UI state (may) effect
-  // what is updated and what is not.
-  const builderController = new BuilderController(actionController, canvasWrapper);
-  const playerController = new PlayerController(actionController, cameraWrapper);
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: (timeDelta) => {
@@ -28,17 +32,12 @@ function MainUiController(actionController, cameraWrapper, canvasWrapper) {
     },
   });
 
-  /**
-   * @return {BuilderController}
-   */
-  this.getBuilderController = () => builderController;
-
-  /**
-   * @return {PlayerController}
-   */
-  this.getPlayerController = () => playerController;
-
-  const uiInputActions = new UiInputActions(cameraController, builderController, playerController);
+  const uiInputActions = new UiInputActions(
+    cameraController,
+    builderController,
+    playerController,
+    uiManager,
+  );
 
   canvas.addEventListener('mousemove', (event) => {
     canvasWrapper.registerMousePosition(event);

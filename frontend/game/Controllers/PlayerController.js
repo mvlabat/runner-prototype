@@ -9,14 +9,14 @@ import DespawnPlayerAction from 'common/Actions/DespawnPlayerAction';
 import PlayerSetMovingAction from 'common/Actions/PlayerSetMovingAction';
 
 import MovementDirections from '../Utils/MovementDirections';
-import LocalGameState from '../LocalGameState';
 
 /**
  * @param {ActionController} actionController
  * @param {CameraWrapper} cameraWrapper
+ * @param {PlayerModel} playerModel
  * @constructor
  */
-function PlayerController(actionController, cameraWrapper) {
+function PlayerController(actionController, cameraWrapper, playerModel) {
   let activated = false;
   /**
    * @type {Player}
@@ -63,7 +63,7 @@ function PlayerController(actionController, cameraWrapper) {
    */
   function addPlayer(position) {
     player = new Player(position);
-    const { clientId } = LocalGameState.getPlayerModel();
+    const { clientId } = playerModel;
     actionController.addAction(new SpawnPlayerAction(player, clientId));
   }
 

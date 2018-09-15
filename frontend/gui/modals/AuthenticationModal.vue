@@ -7,8 +7,20 @@ import VkButton from 'vuikit/src/library/button/components/button';
 import VkNotification from 'vuikit/src/library/notification/components/notification';
 
 import AuthenticationRequestMessage from 'common/NetworkMessages/AuthenticationRequestMessage';
+import PlayerModel from 'common/Models/PlayerModel';
 
-import LocalGameState from '../../game/LocalGameState';
+import ClientMuddle from '../../ClientMuddle';
+import ClientNetworkController from '../../game/Controllers/ClientNetworkController';
+
+/**
+ * @type PlayerModel
+ */
+const playerModel = ClientMuddle.common[PlayerModel];
+
+/**
+ * @type ClientNetworkController
+ */
+const clientNetworkController = ClientMuddle[ClientNetworkController];
 
 export default {
   name: 'AuthenticationModal',
@@ -22,7 +34,7 @@ export default {
 
   data: () => ({
     displayName: '',
-    playerModel: LocalGameState.getPlayerModel(),
+    playerModel,
     messages: [],
     messageCounter: 0,
   }),
@@ -53,9 +65,7 @@ export default {
         return;
       }
       this.playerModel.displayName = this.displayName;
-      LocalGameState
-        .getNetworkController()
-        .send(new AuthenticationRequestMessage(this.displayName));
+      clientNetworkController.send(new AuthenticationRequestMessage(this.displayName));
     },
   },
 
@@ -105,7 +115,7 @@ export default {
                     </div>
                     <div class="error" v-if="!$v.displayName.maxLength">
                         Display name can't have more than
-                        {{$v.displayName.$params.maxLength.min}} letters.
+                        {{$v.displayName.$params.maxLength.max}} letters.
                     </div>
                 </div>
             </form>
