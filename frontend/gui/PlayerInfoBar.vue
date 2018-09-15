@@ -84,11 +84,12 @@ export default {
             muddle.run
         </vk-navbar-logo>
 
-        <vk-navbar-item v-on:click="showHelp = !showHelp" slot="right">
+        <vk-navbar-item v-on:click="showHelp = !showHelp" slot="right" class="nav-clickable">
             Help
         </vk-navbar-item>
 
-        <vk-navbar-item v-on:click="showHelp = !showHelp" slot="right">
+        <vk-navbar-item v-on:click="showOnlinePlayers = !showOnlinePlayers" slot="right"
+                        class="nav-clickable">
             Online Players ({{playersOnlineCount}}) <span class="hotkey">F2</span>
         </vk-navbar-item>
 
@@ -121,6 +122,14 @@ export default {
 
             &:last-child {
                 border-right: none;
+            }
+        }
+
+        .nav-clickable {
+            cursor: pointer;
+            transition: background-color .3s ease-out;
+            &:hover {
+                background-color: #eee;
             }
         }
     }
