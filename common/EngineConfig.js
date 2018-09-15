@@ -1,26 +1,24 @@
+let isServer;
+let debugIsEnabled;
+
+function boolean(string) {
+  return string === 'true';
+}
+
 /**
  * @constructor
  */
-const EngineConfig = (() => {
-  let isServer;
-  let debugIsEnabled;
+const EngineConfig = {
+  initialize: (isServerParam) => {
+    isServer = isServerParam;
+    debugIsEnabled = boolean(process.env.DEBUG_ENABLED) || boolean(process.env.FORCE_DEBUG);
+  },
 
-  function boolean(string) {
-    return string === 'true';
-  }
+  debugIsEnabled: () => debugIsEnabled,
 
-  return {
-    initialize: (isServerParam) => {
-      isServer = isServerParam;
-      debugIsEnabled = boolean(process.env.DEBUG_ENABLED) || boolean(process.env.FORCE_DEBUG);
-    },
+  isServer: () => isServer,
 
-    debugIsEnabled: () => debugIsEnabled,
-
-    isServer: () => isServer,
-
-    isClient: () => !isServer,
-  };
-})();
+  isClient: () => !isServer,
+};
 
 export default EngineConfig;
