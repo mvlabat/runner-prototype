@@ -12,15 +12,14 @@ import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessag
 import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
 import { SERVER_SENDER_ID } from 'common/Interfaces/BroadcastedActionInterface';
 
-import store from '../../store';
-
 /**
  * @param {UiManager} uiManager
  * @param {ActionController} actionController
  * @param {PlayerModel} playerModel
+ * @param {Store} vuexStore
  * @constructor
  */
-function ClientNetworkMessageSystem(uiManager, actionController, playerModel) {
+function ClientNetworkMessageSystem(uiManager, actionController, playerModel, vuexStore) {
   let ws;
 
   const parameters = { playerModel };
@@ -51,7 +50,7 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel) {
     player.clientId = message.getResponse();
     if (typeof message.getResponse() === 'number') {
       ActivePlayersRegistry.registerPlayer(player);
-      store.commit('players/addPlayer', player);
+      vuexStore.commit('players/addPlayer', player);
       player.authenticated = true;
       localStorage.setItem('displayName', player.displayName);
       uiManager.activatePlayerMode();
@@ -73,7 +72,7 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel) {
   function processGameStateMessage(message) {
     for (const player of message.getActivePlayers()) {
       ActivePlayersRegistry.registerPlayer(player);
-      store.commit('players/addPlayer', player);
+      vuexStore.commit('players/addPlayer', player);
     }
     for (const [clientIdStr, playerObject] of Object.entries(message.getPlayerObjects())) {
       const clientId = parseInt(clientIdStr, 10);
@@ -101,7 +100,7 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel) {
   function processPlayerLoggedInMessage(message) {
     const player = message.getPlayer();
     player.authenticated = true;
-    store.commit('players/addPlayer', player);
+    vuexStore.commit('players/addPlayer', player);
     ActivePlayersRegistry.registerPlayer(player);
   }
 
@@ -111,7 +110,7 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel) {
   function processPlayerLoggedOutMessage(message) {
     // We actually remove the player on DespawnClientPlayerAction.
     const player = ActivePlayersRegistry.getPlayerById(message.getClientId());
-    store.commit('players/removePlayerWithId', player.clientId);
+    vuexStore.commit('players/removePlayerWithId', player.clientId);
     player.online = false;
   }
 }

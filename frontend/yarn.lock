@@ -1179,10 +1179,6 @@ commander@*, commander@^2.11.0, commander@~2.17.1:
   version "2.17.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
 
-common@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/common/-/common-0.2.5.tgz#3c7182f678bd1e3681cd5cc348c759fe8dd22394"
-
 component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
@@ -2876,7 +2872,6 @@ ms@2.0.0:
   dependencies:
     bottlejs "^1.7.1"
     bytebuffer "^5.0.1"
-    common "^0.2.5"
     crypto-js "^3.1.9-1"
     nonce "^1.0.4"
     pson "^2.0.0"
