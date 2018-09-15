@@ -1,4 +1,5 @@
 <script>
+import ResizeSensor from 'vue-resizesensor';
 import VkNavbar from 'vuikit/src/library/navbar/components/navbar';
 import VkNavbarItem from 'vuikit/src/library/navbar/components/navbar--item';
 import VkNavbarLogo from 'vuikit/src/library/navbar/components/navbar--logo';
@@ -18,11 +19,15 @@ const { mapMutations: mapGameUiMutations } = createNamespacedHelpers('gameUi');
  */
 const playerModel = ClientMuddle.common[PlayerModel];
 
+const LARGE_WIDTH = 1000;
+const MEDIUM_WIDTH = 600;
+
 export default {
   name: 'PlayerInfoBar',
   components: {
     OnlinePlayersModal,
     HelpModal,
+    ResizeSensor,
     VkNavbarItem,
     VkNavbarLogo,
     VkNavbar,
@@ -31,9 +36,11 @@ export default {
     playerModel,
     showHelp: false,
     showOnlinePlayers: false,
+    navbarWidth: 0,
   }),
 
   computed: {
+    // Data fields.
     playerPing() {
       return `${Math.round(this.playerModel.latency)} ms`;
     },
@@ -43,6 +50,21 @@ export default {
     ...mapPlayersGetters({
       playersOnlineCount: 'count',
     }),
+
+    // Style props.
+    logoSlot() {
+      return this.navbarWidth > LARGE_WIDTH ? 'center' : 'left';
+    },
+
+    logoIsShown() {
+      return this.navbarWidth > MEDIUM_WIDTH;
+    },
+  },
+
+  methods: {
+    updateNavbarWidth() {
+      this.navbarWidth = this.$refs.navbar.offsetWidth;
+    },
   },
 
   mounted() {
@@ -56,8 +78,9 @@ export default {
 </script>
 
 <template>
-    <vk-navbar id="navbar">
-        <vk-navbar-logo slot="center">
+    <vk-navbar ref="navbar" id="navbar">
+        <resize-sensor @resized="updateNavbarWidth"></resize-sensor>
+        <vk-navbar-logo :slot="logoSlot" v-show="logoIsShown">
             muddle.run
         </vk-navbar-logo>
 
@@ -87,6 +110,10 @@ export default {
         .uk-navbar-item,
         .uk-navbar-toggle {
             height: 4em;
+
+            &.uk-logo {
+                height: auto;
+            }
         }
 
         .uk-navbar-right > * {
@@ -108,5 +135,4 @@ export default {
         border: 1px solid #ddd;
         border-radius: 4px;
     }
-
 </style>
