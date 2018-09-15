@@ -97,8 +97,7 @@ export default {
                 Welcome to the Muddle! Enjoy your time here ;)
             </p>
 
-            <form ref="loginForm"
-                  v-on:submit.prevent="sendAuthenticationRequest">
+            <form v-on:submit.prevent="sendAuthenticationRequest">
                 <div class="uk-form-row">
                     <label for="input-name" class="uk-form-label">Display name</label>
                     <input v-model.trim="$v.displayName.$model"
