@@ -142,6 +142,7 @@ export default {
         padding: 0 2px;
         margin-left: 5px;
         border: 1px solid #ddd;
+        background-color: #f8f8f8;
         border-radius: 4px;
     }
 </style>
