@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "license": "LGPL-3.0",
   "main": "index.js",
+  "scripts": {
+    "test": "NODE_ENV=test jest"
+  },
   "dependencies": {
     "bottlejs": "^1.7.1",
     "bytebuffer": "^5.0.1",
@@ -10,5 +13,12 @@
     "nonce": "^1.0.4",
     "pson": "^2.0.0",
     "three": "^0.97.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-core": "^7.0.0-bridge",
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0"
   }
 }

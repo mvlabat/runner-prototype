@@ -1,11 +1,12 @@
 {
+  "presets": ["@babel/preset-env"],
   "plugins": [
-    ["module-resolver", {
+    ["babel-plugin-module-resolver", {
       "root": ["."],
       "alias": {
         "common": "../common"
       }
     }],
-    ["transform-object-rest-spread"]
+    ["@babel/plugin-syntax-object-rest-spread"]
   ]
 }

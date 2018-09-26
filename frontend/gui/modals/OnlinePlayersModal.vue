@@ -74,7 +74,7 @@ export default {
         <vk-modal-title>Online Players ({{ playersOnlineCount }})</vk-modal-title>
 
         <div id="online-players-table-wrapper">
-            <vk-table :data="activePlayers" :rowClass="isCurrentPlayer" narrowed>
+            <vk-table :data="activePlayers" :row-class="isCurrentPlayer" narrowed>
             <vk-table-column title="ID" cell="clientId"></vk-table-column>
             <vk-table-column title="Display Name" cell="displayName"></vk-table-column>
             <vk-table-column title="Latency" cell="latency">
