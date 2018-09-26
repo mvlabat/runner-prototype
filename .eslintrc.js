@@ -2,6 +2,7 @@ module.exports = {
   'extends': [
     'airbnb-base',
     'plugin:vue/essential',
+    'plugin:jest/recommended',
   ],
   'parserOptions': {
     'ecmaVersion': 2018,
@@ -10,12 +11,21 @@ module.exports = {
   'env': {
     'browser': true,
     "jquery": true,
+    "jest/globals": true,
   },
   'settings': {
     'import/resolver': {
-      "babel-module": {},
+      "babel-module": {
+        // FIXME: https://github.com/tleunen/eslint-import-resolver-babel-module/issues/95
+        "alias": {
+          "common": "../common"
+        }
+      },
     },
   },
+  'plugins': [
+    'jest',
+  ],
   'rules': {
     'import/extensions': ['error', 'always', {
       js: 'never',

@@ -4,13 +4,13 @@
   "license": "LGPL-3.0",
   "scripts": {
     "serve": "parcel index.html --no-hmr",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html",
+    "test": "NODE_ENV=test jest"
   },
   "dependencies": {
     "@vuikit/icons": "^0.8.1",
     "@vuikit/theme": "^0.8.1",
     "autoprefixer": "^9.1.5",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "muddle-common": "file:../common",
     "three": "^0.97.0",
     "vue": "^2.5.17",
@@ -20,7 +20,12 @@
     "vuikit": "^0.8.10"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
     "@vue/component-compiler-utils": "^2.2.0",
+    "babel-core": "^7.0.0-bridge",
+    "babel-jest": "^23.6.0",
+    "jest": "^23.6.0",
     "node-sass": "^4.8.3",
     "parcel-bundler": "*",
     "vue-template-compiler": "^2.5.16"

@@ -1,6 +1,7 @@
 {
+  "presets": ["@babel/preset-env"],
   "plugins": [
-    ["module-resolver", {
+    ["babel-plugin-module-resolver", {
       "root": ["."],
       "alias": {
         "common": "../common"
