@@ -4,7 +4,8 @@
   "license": "LGPL-3.0",
   "scripts": {
     "serve": "node bundler.js run",
-    "build": "NODE_ENV=production node bundler.js"
+    "build": "NODE_ENV=production node bundler.js",
+    "test": "NODE_ENV=test jest"
   },
   "dependencies": {
     "express": "^4.16.3",
@@ -13,7 +14,11 @@
     "wu": "^2.1.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "babel-core": "^7.0.0-bridge",
+    "babel-jest": "^23.6.0",
     "babel-plugin-module-resolver": "^3.1.1",
+    "jest": "^23.6.0",
     "parcel-bundler": "*"
   }
 }
