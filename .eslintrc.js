@@ -1,32 +1,43 @@
 module.exports = {
-  'extends': [
+  extends: [
     'airbnb-base',
     'plugin:vue/essential',
+    // FIXME: https://github.com/eslint/eslint/issues/8813
     'plugin:jest/recommended',
   ],
-  'parserOptions': {
-    'ecmaVersion': 2018,
-    'sourceType': 'module',
+  parserOptions: {
+    ecmaVersion: 2018,
+    sourceType: 'module',
   },
-  'env': {
-    'browser': true,
-    "jquery": true,
-    "jest/globals": true,
+  env: {
+    browser: true,
+    jquery: true,
   },
-  'settings': {
+  settings: {
     'import/resolver': {
       "babel-module": {
         // FIXME: https://github.com/tleunen/eslint-import-resolver-babel-module/issues/95
-        "alias": {
-          "common": "../common"
+        alias: {
+          common: "../common"
         }
       },
     },
   },
-  'plugins': [
-    'jest',
+
+  overrides: [
+    {
+      files: ['**/*.test.js'],
+      env: {
+        'jest': true,
+      },
+      plugins: ['jest'],
+      rules: {
+        'no-undef': 'off',
+      },
+    },
   ],
-  'rules': {
+
+  rules: {
     'import/extensions': ['error', 'always', {
       js: 'never',
       mjs: 'never',
