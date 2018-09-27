@@ -18,7 +18,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^21.22.1",
     "eslint-plugin-vue": "^5.0.0-beta.3",
-    "husky": "^1.0.0",
+    "husky": "^1.0.1",
     "lint-staged": "^7.3.0"
   }
 }
