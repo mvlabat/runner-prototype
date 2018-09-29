@@ -16,7 +16,7 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-import-resolver-babel-module": "^5.0.0-0",
     "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jest": "^21.22.1",
+    "eslint-plugin-jest": "^21.23.0",
     "eslint-plugin-vue": "^5.0.0-beta.3",
     "husky": "^1.0.1",
     "lint-staged": "^7.3.0"
