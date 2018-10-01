@@ -1,31 +1,30 @@
 import PSON from 'pson/dist/PSON';
-import { log } from './Debug';
-
-const initialList = [
-  'constructorName',
-];
-
-const words = new Set(initialList);
-let dictionary;
 
 /**
+ * @param {string[]} initialList
  * @constructor
  */
-const PsonDictionary = {
-  addWord: (word) => {
-    words.add(word);
-  },
+function PsonDictionary(initialList) {
+  const words = new Set(initialList);
+  let dictionary;
 
-  commitDictionary: () => {
+  this.addWord = (word) => {
+    words.add(word);
+  };
+
+  this.hasWord = word => words.has(word);
+
+  this.getDictionaryLength = () => words.size;
+
+  this.commitDictionary = () => {
     if (dictionary) {
       throw new Error('Committing PsonDictionary twice is prohibited');
     }
     const sortedWords = [...(words)].sort();
     dictionary = new PSON.StaticPair(sortedWords);
-    log(`Committed ${sortedWords.length} words to PsonDictionary`);
-  },
+  };
 
-  getDictionary: () => dictionary,
-};
+  this.getDictionary = () => dictionary;
+}
 
 export default PsonDictionary;

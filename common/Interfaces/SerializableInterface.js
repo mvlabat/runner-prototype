@@ -3,7 +3,7 @@ import InterfaceImplementation, {
   isInterface,
 } from '../Utils/InterfaceImplementation';
 import SerializableRegistry from '../Registries/SerializableRegistry';
-import PsonDictionary from '../Utils/PsonDictionary';
+import GlobalPsonDictionary from '../Utils/GlobalPsonDictionary';
 
 /**
  * @param constructor
@@ -31,9 +31,9 @@ function SerializableInterface(constructor, interfaceImplementation) {
 
   const schema = implementation.callMethod('serialize');
   for (const field of Object.keys(schema)) {
-    PsonDictionary.addWord(field);
+    GlobalPsonDictionary.addWord(field);
   }
-  PsonDictionary.addWord(constructor.name);
+  GlobalPsonDictionary.addWord(constructor.name);
 }
 
 SerializableInterface.assert = (entity) => {

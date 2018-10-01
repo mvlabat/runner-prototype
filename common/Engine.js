@@ -2,14 +2,19 @@ import CommonMuddle from './Muddle';
 
 import { log } from './Utils/Debug';
 import EngineConfig from './EngineConfig';
-import PsonDictionary from './Utils/PsonDictionary';
+import GlobalPsonDictionary from './Utils/GlobalPsonDictionary';
 
 import ActionController from './Controllers/ActionController';
 
+/**
+ * @param {boolean} isServer
+ * @constructor
+ */
 function Engine(isServer) {
   EngineConfig.initialize(isServer);
   log('Debug mode is enabled');
-  PsonDictionary.commitDictionary();
+  GlobalPsonDictionary.commitDictionary();
+  log(`Committed ${GlobalPsonDictionary.getDictionaryLength()} words to GlobalPsonDictionary`);
 
   /**
    * @type ActionController
