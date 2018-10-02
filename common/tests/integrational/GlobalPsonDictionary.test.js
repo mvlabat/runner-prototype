@@ -16,7 +16,7 @@ SomethingSerialized.serializableInterface = new SerializableInterface(SomethingS
   deserialize: () => new SomethingSerialized(),
 });
 
-SomethingElseSerialized.serializableInterface = new SerializableInterface(SomethingSerialized, {
+SomethingElseSerialized.serializableInterface = new SerializableInterface(SomethingElseSerialized, {
   serialize: () => ({
     [someFieldName]: () => null,
     [anotherFieldName]: () => null,
@@ -27,9 +27,9 @@ SomethingElseSerialized.serializableInterface = new SerializableInterface(Someth
 
 describe('GlobalPsonDictionary', () => {
   it('has words added from SerializableInterface', () => {
-    GlobalPsonDictionary.hasWord(someFieldName);
-    GlobalPsonDictionary.hasWord(anotherFieldName);
-    GlobalPsonDictionary.hasWord(SomethingSerialized.constructor.name);
-    GlobalPsonDictionary.hasWord(SomethingElseSerialized.constructor.name);
+    expect(GlobalPsonDictionary.hasWord(someFieldName)).toBe(true);
+    expect(GlobalPsonDictionary.hasWord(anotherFieldName)).toBe(true);
+    expect(GlobalPsonDictionary.hasWord(SomethingSerialized.name)).toBe(true);
+    expect(GlobalPsonDictionary.hasWord(SomethingElseSerialized.name)).toBe(true);
   });
 });
