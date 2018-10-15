@@ -10,4 +10,4 @@ rules:
             - continuous-integration/travis-ci
         restrictions:
           users:
-           - dependabot-bot
+           - dependabot[bot]
