@@ -5,11 +5,11 @@ export class NotImplementedMethodError extends Error {
     this.interfaceImplementer = interfaceImplementer;
     this.interfaceClass = interfaceClass;
     this.method = method;
-    const implementerClassName = typeof interfaceImplementer === 'function'
-      ? interfaceImplementer.name
-      : interfaceImplementer.constructor.name;
+
+    const implementerClassName = getImplementerClassName(interfaceImplementer);
     const methodName = `${interfaceClass.constructor.name}::${method}`;
-    this.message = message || `'${methodName}' method is not implemented in ${implementerClassName}`;
+    this.message = message
+      || `'${methodName}' method is not implemented in ${implementerClassName}`;
     Error.captureStackTrace(this, NotImplementedMethodError);
   }
 }
@@ -20,12 +20,23 @@ export class NotImplementedInterfaceError extends Error {
     this.name = 'NotImplementedMethodError';
     this.interfaceImplementer = interfaceImplementer;
     this.interfaceClass = interfaceClass;
-    const implementerClassName = typeof interfaceImplementer === 'function'
-      ? interfaceImplementer.name
-      : interfaceImplementer.constructor.name;
-    this.message = message || `'${interfaceClass.name}' interface is not implemented for ${implementerClassName}`;
+
+    const implementerClassName = getImplementerClassName(interfaceImplementer);
+    this.message = message
+      || `'${interfaceClass.name}' interface is not implemented for ${implementerClassName}`;
     Error.captureStackTrace(this, NotImplementedInterfaceError);
   }
+}
+
+function getImplementerClassName(interfaceImplementer) {
+  const type = typeof interfaceImplementer;
+  if (type === 'function') {
+    return interfaceImplementer.name;
+  }
+  if (type === 'object') {
+    return interfaceImplementer.constructor.name;
+  }
+  return type;
 }
 
 /**

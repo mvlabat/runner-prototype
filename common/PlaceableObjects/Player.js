@@ -1,23 +1,24 @@
-import * as THREE from 'three';
-
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
-import {
-  vector2Serialize,
-  vector2Deserialize, colorSerialize, colorDeserialize,
-} from '../Utils/ThreeJsonSerializes';
+import Paper from '../Paper';
+import CommonVector2 from '../Math/CommonVector2';
+import CommonColor from '../Math/CommonColor';
+import { deserialize, serialize } from '../Utils/SerializationHelper';
+
+const BASE_PLAYER_RADIUS = 5;
 
 /**
- * @param position
- * @param isAstralShifted
- * @param color
- * @param predefinedHashId
+ * @param {CommonVector2} position
+ * @param {boolean} isPlaced
+ * @param {CommonColor} color
+ * @param {string} predefinedHashId
  * @constructor
  */
-function Player(position, isAstralShifted, color = null, predefinedHashId = '') {
+function Player(position, isPlaced, color = null, predefinedHashId = '') {
   const parameters = {};
+  let path;
 
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
     getHashedContent: () => (
@@ -35,10 +36,10 @@ function Player(position, isAstralShifted, color = null, predefinedHashId = '') 
       return this;
     },
 
-    isAstralShifted: () => isAstralShifted,
-    setAstralShifted: (newIsAstralShifted) => {
-      parameters.isAstralShifted = newIsAstralShifted;
-      setDebugProperty(this, 'isAstralShifted', newIsAstralShifted);
+    isPlaced: () => parameters.isPlaced,
+    setPlaced: (newIsPlaced) => {
+      parameters.isPlaced = newIsPlaced;
+      setDebugProperty(this, 'isPlaced', newIsPlaced);
       return this;
     },
 
@@ -48,46 +49,37 @@ function Player(position, isAstralShifted, color = null, predefinedHashId = '') 
       setDebugProperty(this, 'color', newColor);
       return this;
     },
+
+    recalculatePath: () => {
+      path = new Paper.Path.Circle(parameters.position, BASE_PLAYER_RADIUS);
+    },
+    getPath: () => path,
   });
 
-  this.getRadius = () => 5;
+  this.getRadius = () => BASE_PLAYER_RADIUS;
 
-  let movementDirection = new THREE.Vector2();
-
-  /**
-   * @return {Vector2}
-   */
-  this.getMovementDirection = () => movementDirection;
-
-  /**
-   * @param {Vector2} newMovementDirection
-   * @returns {Player}
-   */
-  this.setMovementDirection = (newMovementDirection) => {
-    movementDirection = newMovementDirection;
-    setDebugProperty(this, 'movementDirection', newMovementDirection);
-    return this;
-  };
+  this.movementDirection = new CommonVector2();
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.placeableObjectInterface.setPosition(position);
-  this.placeableObjectInterface.setAstralShifted(isAstralShifted);
-  this.placeableObjectInterface.setColor(color || new THREE.Color(Math.random() * 0xffffff));
+  this.placeableObjectInterface.setPlaced(isPlaced);
+  this.placeableObjectInterface.setColor(color || CommonColor.random());
+  this.placeableObjectInterface.recalculatePath();
 }
 
 Player.serializableInterface = new SerializableInterface(Player, {
-  serialize: object => ({
-    hashId: () => object.hashableIdInterface.getHashId(),
-    position: () => vector2Serialize(object.placeableObjectInterface.getPosition()),
-    isAstralShifted: () => object.placeableObjectInterface.isAstralShifted(),
-    color: () => colorSerialize(object.placeableObjectInterface.getColor()),
+  serialize: player => ({
+    position: () => serialize(player.placeableObjectInterface.getPosition()),
+    isPlaced: () => player.placeableObjectInterface.isPlaced(),
+    color: () => serialize(player.placeableObjectInterface.getColor()),
+    hashId: () => player.hashableIdInterface.getHashId(),
   }),
 
-  deserialize: json => new Player(
-    vector2Deserialize(json.position),
-    json.isAstralShifted,
-    colorDeserialize(json.color),
-    json.hashId,
+  deserialize: object => new Player(
+    deserialize(object.position),
+    object.isPlaced,
+    deserialize(object.color),
+    object.hashId,
   ),
 });
 

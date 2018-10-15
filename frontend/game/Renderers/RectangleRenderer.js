@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 
+import { threeFromCommonColor } from 'common/Utils/ThreeConverters';
 import ObjectRendererInterface from '../Interfaces/ObjectRendererInterface';
 
 /**
@@ -20,7 +21,7 @@ function RectangleRenderer() {
         1,
       );
       const rectangleMaterial = new THREE.MeshBasicMaterial({
-        color: rectangle.placeableObjectInterface.getColor().getHex(),
+        color: threeFromCommonColor(rectangle.placeableObjectInterface.getColor()),
         side: THREE.DoubleSide,
       });
       mesh = new THREE.Mesh(rectangleGeometry, rectangleMaterial);
@@ -32,7 +33,7 @@ function RectangleRenderer() {
       const position = rectangle.placeableObjectInterface.getPosition();
       mesh.position.x = position.x;
       mesh.position.y = position.y;
-      mesh.material.color = rectangle.placeableObjectInterface.getColor();
+      mesh.material.color = threeFromCommonColor(rectangle.placeableObjectInterface.getColor());
     },
 
   });

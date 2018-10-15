@@ -24,6 +24,29 @@ function MovementSystem(gameScene, playerModel) {
       for (const player of gameScene.getAllPlayers()) {
         movePlayer(player, timeDelta);
       }
+
+      // TODO: Implement collision prototype.
+      // These loops do nothing useful yet.
+      for (const player of gameScene.getAllPlayers()) {
+        for (const object of gameScene.getAllBuildableObjects()) {
+          if (!object.placeableObjectInterface.isPlaced()) {
+            continue;
+          }
+
+          const playerPosition = [] || player.placeableObjectInterface
+            .getPosition()
+            .getCrossings();
+
+          // const objectClosestPoint = object.placeableObjectInterface
+          //   .getPath()
+          //   .getNearestLocation();
+
+          if (playerPosition.length) {
+            console.log(`Player(${player.hashableIdInterface.getHashId()} intersects with`
+              + `Object(${object.hashableIdInterface.getHashId()}`);
+          }
+        }
+      }
     },
   });
 
@@ -38,7 +61,8 @@ function MovementSystem(gameScene, playerModel) {
     const player = gameScene.getPlayer(action.getPlayerHashId());
     if (player) {
       player.placeableObjectInterface.setPosition(action.getPosition());
-      player.setMovementDirection(action.getDirection());
+      player.placeableObjectInterface.recalculatePath();
+      player.movementDirection = action.getDirection();
     }
   }
 
@@ -50,11 +74,11 @@ function MovementSystem(gameScene, playerModel) {
    */
   function movePlayer(player, timeDelta) {
     const offsetVector = player
-      .getMovementDirection()
+      .movementDirection
       .clone()
       .multiplyScalar(PLAYER_SPEED * timeDelta);
-    const newPosition = player.placeableObjectInterface.getPosition().add(offsetVector);
-    player.placeableObjectInterface.setPosition(newPosition);
+    player.placeableObjectInterface.getPosition().add(offsetVector);
+    player.placeableObjectInterface.recalculatePath();
   }
 }
 

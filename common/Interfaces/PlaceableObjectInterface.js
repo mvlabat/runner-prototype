@@ -14,13 +14,19 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
   this.getType = () => implementation.callMethod('getType');
 
   this.setPosition = position => implementation.callMethod('setPosition', position);
+  /**
+   * @return {CommonVector2}
+   */
   this.getPosition = () => implementation.callMethod('getPosition');
 
   this.setColor = color => implementation.callMethod('setColor', color);
   this.getColor = () => implementation.callMethod('getColor');
 
-  this.setAstralShifted = isAstralShifted => implementation.callMethod('setAstralShifted', isAstralShifted);
-  this.isAstralShifted = () => implementation.callMethod('isAstralShifted');
+  this.setPlaced = isPlaced => implementation.callMethod('setPlaced', isPlaced);
+  this.isPlaced = () => implementation.callMethod('isPlaced');
+
+  this.recalculatePath = () => implementation.callMethod('recalculatePath');
+  this.getPath = () => implementation.callMethod('getPath');
 
   let objectScene = null;
   this.setScene = (scene) => {

@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
 
 import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
@@ -6,6 +5,9 @@ import RemoveBuildableObjectAction from 'common/Actions/RemoveBuildableObjectAct
 import Rectangle from 'common/PlaceableObjects/Rectangle';
 import Circle from 'common/PlaceableObjects/Circle';
 import { log } from 'common/Utils/Debug';
+import CommonVector2 from 'common/Math/CommonVector2';
+import CommonColor from 'common/Math/CommonColor';
+import { threeToCommonVector } from '../../../common/Utils/ThreeConverters';
 
 /**
  * @param {ActionController} actionController
@@ -22,7 +24,7 @@ function BuilderController(actionController, canvasWrapper) {
         return;
       }
 
-      movePlacedObject(canvasWrapper.getMouseWorldPosition());
+      movePlacedObject(threeToCommonVector(canvasWrapper.getMouseWorldPosition()));
     },
   });
 
@@ -42,31 +44,35 @@ function BuilderController(actionController, canvasWrapper) {
   };
 
   this.placeObject = () => {
-    placedObject.placeableObjectInterface.setAstralShifted(false);
+    placedObject.placeableObjectInterface.setPlaced(true);
     actionController.addAction(new SaveBuildableObjectAction(placedObject));
     // We create a new object on update.
     placedObject = null;
   };
 
+  /**
+   * @param {CommonVector2} position
+   */
   function movePlacedObject(position) {
     if (placedObject === null) {
       if (Math.random() >= 0.5) {
         placedObject = new Rectangle(
           position,
-          new THREE.Vector2(3, 3),
-          new THREE.Color(Math.random() * 0xffffff),
-          true,
+          new CommonVector2(3, 3),
+          CommonColor.random(),
+          false,
         );
       } else {
         placedObject = new Circle(
           position,
           1.5,
-          new THREE.Color(Math.random() * 0xffffff),
-          true,
+          CommonColor.random(),
+          false,
         );
       }
+    } else {
+      placedObject.placeableObjectInterface.setPosition(position);
     }
-    placedObject.placeableObjectInterface.setPosition(position);
     actionController.addAction(new SaveBuildableObjectAction(placedObject));
   }
 }

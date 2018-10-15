@@ -2,27 +2,24 @@ import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
-import {
-  vector2Serialize,
-  vector2Deserialize,
-  colorSerialize,
-  colorDeserialize,
-} from '../Utils/ThreeJsonSerializes';
 import SavableInterface from '../Interfaces/SavableInterface';
+import Paper from '../Paper';
+import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 /**
- * @param position
- * @param size
- * @param color
- * @param isAstralShifted
- * @param predefinedHashid
+ * @param {CommonVector2} position
+ * @param {CommonVector2} size
+ * @param {CommonColor} color
+ * @param {boolean} isPlaced
+ * @param {string} predefinedHashId
  * @constructor
  */
-function Rectangle(position, size, color, isAstralShifted, predefinedHashid = '') {
+function Rectangle(position, size, color, isPlaced, predefinedHashId = '') {
   const parameters = {};
+  let path;
 
   // INTERFACES IMPLEMENTATION.
-  this.hashableIdInterface = new HashableIdInterface(this, predefinedHashid, {
+  this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
     getHashedContent: () => (
       this.placeableObjectInterface.getScene().hashableIdInterface.getHashId()
     ),
@@ -45,12 +42,17 @@ function Rectangle(position, size, color, isAstralShifted, predefinedHashid = ''
       return this;
     },
 
-    isAstralShifted: () => isAstralShifted,
-    setAstralShifted: (newIsAstralShifted) => {
-      parameters.isAstralShifted = newIsAstralShifted;
-      setDebugProperty(this, 'isAstralShifted', newIsAstralShifted);
+    isPlaced: () => parameters.isPlaced,
+    setPlaced: (newIsPlaced) => {
+      parameters.isPlaced = newIsPlaced;
+      setDebugProperty(this, 'isPlaced', newIsPlaced);
       return this;
     },
+
+    recalculatePath: () => {
+      path = new Paper.Path.Rectangle(parameters.position, parameters.size);
+    },
+    getPath: () => path,
   });
 
   this.savableInterface = new SavableInterface(this, {
@@ -73,9 +75,9 @@ function Rectangle(position, size, color, isAstralShifted, predefinedHashid = ''
         this.setSize(newSize);
       }
 
-      const newIsAstralShifted = newEntity.placeableObjectInterface.isAstralShifted();
-      if (newIsAstralShifted !== undefined) {
-        this.placeableObjectInterface.setAstralShifted(newIsAstralShifted);
+      const newIsPlaced = newEntity.placeableObjectInterface.isPlaced();
+      if (newIsPlaced !== undefined) {
+        this.placeableObjectInterface.setPlaced(newIsPlaced);
       }
       return this;
     },
@@ -93,24 +95,24 @@ function Rectangle(position, size, color, isAstralShifted, predefinedHashid = ''
   this.placeableObjectInterface.setPosition(position);
   this.setSize(size);
   this.placeableObjectInterface.setColor(color);
-  this.placeableObjectInterface.setAstralShifted(isAstralShifted);
+  this.placeableObjectInterface.setPlaced(isPlaced);
+  this.placeableObjectInterface.recalculatePath();
 }
 
 Rectangle.serializableInterface = new SerializableInterface(Rectangle, {
   serialize: object => ({
+    position: () => serialize(object.placeableObjectInterface.getPosition()),
+    size: () => serialize(object.getSize()),
+    color: () => serialize(object.placeableObjectInterface.getColor()),
+    isPlaced: () => object.placeableObjectInterface.isPlaced(),
     hashId: () => object.hashableIdInterface.getHashId(),
-    position: () => vector2Serialize(object.placeableObjectInterface.getPosition()),
-    size: () => vector2Serialize(object.getSize()),
-    color: () => colorSerialize(object.placeableObjectInterface.getColor()),
-    isAstralShifted: () => object.placeableObjectInterface.isAstralShifted(),
-    type: () => object.placeableObjectInterface.getType(),
   }),
 
   deserialize: json => new Rectangle(
-    vector2Deserialize(json.position),
-    vector2Deserialize(json.size),
-    colorDeserialize(json.color),
-    json.isAstralShifted,
+    deserialize(json.position),
+    deserialize(json.size),
+    deserialize(json.color),
+    json.isPlaced,
     json.hashId,
   ),
 });
