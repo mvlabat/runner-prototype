@@ -8,3 +8,6 @@ rules:
           strict: true
           contexts:
             - continuous-integration/travis-ci
+        restrictions:
+          users:
+           - dependabot-bot
