@@ -40,7 +40,7 @@ SerializableInterface.assert = (entity) => {
   assertInterface(entity.serializableInterface, SerializableInterface);
 };
 
-SerializableInterface.has = entity => (
+SerializableInterface.isImplementedFor = entity => (
   isInterface(entity.serializableInterface, SerializableInterface)
 );
 

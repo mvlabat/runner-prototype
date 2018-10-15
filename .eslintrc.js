@@ -66,6 +66,7 @@ module.exports = {
         'e', // for e.returnvalue
         'state', // for vuex
         'rendererMesh',
+        'proxyTarget', // for Proxy
       ]
     }],
     'no-console': 'off',

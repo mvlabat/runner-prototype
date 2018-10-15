@@ -1,8 +1,7 @@
-import * as THREE from 'three';
-
 import Player from 'common/PlaceableObjects/Player';
 import { log } from 'common/Utils/Debug';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
+import CommonVector2 from 'common/Math/CommonVector2';
 
 import SpawnPlayerAction from 'common/Actions/SpawnPlayerAction';
 import DespawnPlayerAction from 'common/Actions/DespawnPlayerAction';
@@ -39,7 +38,7 @@ function PlayerController(actionController, cameraWrapper, playerModel) {
   this.activatePlayerMode = () => {
     activated = true;
     log('Player mode activated.');
-    addPlayer(new THREE.Vector2());
+    addPlayer(new CommonVector2());
   };
 
   this.deactivatePlayerMode = () => {
@@ -59,10 +58,10 @@ function PlayerController(actionController, cameraWrapper, playerModel) {
   };
 
   /**
-   * @param {Vector2} position
+   * @param {CommonVector2} position
    */
   function addPlayer(position) {
-    player = new Player(position);
+    player = new Player(position, true);
     const { clientId } = playerModel;
     actionController.addAction(new SpawnPlayerAction(player, clientId));
   }

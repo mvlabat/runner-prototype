@@ -1,13 +1,13 @@
 import SerializableInterface from '../Interfaces/SerializableInterface';
-import { vector2Deserialize, vector2Serialize } from '../Utils/ThreeJsonSerializes';
 import ActionInterface from '../Interfaces/ActionInterface';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 import { setDebugProperty } from '../Utils/Debug';
+import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 /**
  * @param {string} playerHashId
- * @param {Vector2} position
- * @param {Vector2} direction
+ * @param {CommonVector2} position
+ * @param {CommonVector2} direction
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor
@@ -54,16 +54,16 @@ PlayerSetMovingAction.serializableInterface =
      */
     serialize: action => ({
       playerHashId: () => action.getPlayerHashId(),
-      position: () => vector2Serialize(action.getPosition()),
-      direction: () => vector2Serialize(action.getDirection()),
+      position: () => serialize(action.getPosition()),
+      direction: () => serialize(action.getDirection()),
       timeOccurred: () => action.actionInterface.getTimeOccurred(),
       senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
     deserialize: json => new PlayerSetMovingAction(
       json.playerHashId,
-      vector2Deserialize(json.position),
-      vector2Deserialize(json.direction),
+      deserialize(json.position),
+      deserialize(json.direction),
       new Date(json.timeOccurred),
       json.senderId,
     ),

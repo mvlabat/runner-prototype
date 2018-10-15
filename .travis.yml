@@ -18,7 +18,13 @@ install:
 - cd ../frontend && yarn install
 - cd .. && yarn install
 script:
-- cd common && yarn test
-- cd ../backend && yarn build && yarn test
-- cd ../frontend && yarn build && yarn test
-- cd .. && yarn eslint
+- cd common
+- yarn test --verbose
+- cd ../backend
+- yarn build
+- yarn test --verbose
+- cd ../frontend
+- yarn build
+- yarn test --verbose
+- cd ..
+- yarn eslint
