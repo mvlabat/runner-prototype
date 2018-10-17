@@ -3324,10 +3324,15 @@ paper-jsdom@^0.11.5:
     paper "0.11.5"
     source-map-support "^0.4.0"
 
-paper@0.11.5, paper@^0.11.5:
+paper@0.11.5:
   version "0.11.5"
   resolved "https://registry.yarnpkg.com/paper/-/paper-0.11.5.tgz#d662de67bce8218c287bfe17586d099d2cc48040"
   integrity sha512-nvzLB10Ll0gE6MZ7lMOTiJMGVuwF1iGSTGkndCxIs6aar8TQnjxlgYMGP3IkuKpIE9mJ4Op5VTquyroB4BDK6Q==
+
+paper@^0.11.8:
+  version "0.11.8"
+  resolved "https://registry.yarnpkg.com/paper/-/paper-0.11.8.tgz#c395269e23e3bb456c9f9e88a2f87f4421bfef23"
+  integrity sha512-3O5o8SntwieIlBmHjWS4hAYESiZ0yb++Outz9Rr5AN/ZFK7jfVGLANjqyIvEKIpGMImf2fQCkW64n8dkYheP5g==
 
 parse-glob@^3.0.4:
   version "3.0.4"
