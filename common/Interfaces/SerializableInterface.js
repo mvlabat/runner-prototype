@@ -1,9 +1,7 @@
-import InterfaceImplementation, {
-  assertInterface,
-  isInterface,
-} from '../Utils/InterfaceImplementation';
 import SerializableRegistry from '../Registries/SerializableRegistry';
 import GlobalPsonDictionary from '../Utils/GlobalPsonDictionary';
+import { deserializeObjectFields, serialize } from '../Utils/SerializationHelpers';
+import InterfaceImplementation from '../Utils/InterfaceImplementation';
 
 /**
  * @param constructor
@@ -21,13 +19,19 @@ function SerializableInterface(constructor, interfaceImplementation) {
     const schema = implementation.callMethod('serialize', object);
     const plainObject = {};
     for (const field of Object.keys(schema)) {
-      plainObject[field] = schema[field]();
+      if (typeof schema[field] !== 'function') {
+        throw new TypeError(`SerializableInterface: field '${field}' of ${constructor.name} serialize method must be a function`);
+      }
+
+      const value = schema[field]();
+      plainObject[field] = serialize(value);
     }
     plainObject.constructorName = constructor.name;
     return plainObject;
   };
 
-  this.deserialize = json => implementation.callMethod('deserialize', json);
+  this.deserialize =
+      object => implementation.callMethod('deserialize', deserializeObjectFields(object));
 
   const schema = implementation.callMethod('serialize');
   for (const field of Object.keys(schema)) {
@@ -35,13 +39,5 @@ function SerializableInterface(constructor, interfaceImplementation) {
   }
   GlobalPsonDictionary.addWord(constructor.name);
 }
-
-SerializableInterface.assert = (entity) => {
-  assertInterface(entity.serializableInterface, SerializableInterface);
-};
-
-SerializableInterface.isImplementedFor = entity => (
-  isInterface(entity.serializableInterface, SerializableInterface)
-);
 
 export default SerializableInterface;

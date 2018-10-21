@@ -1,3 +1,5 @@
+import InterfacesRegistry from '../Registries/InterfacesRegistry';
+
 export class NotImplementedMethodError extends Error {
   constructor(interfaceImplementer, interfaceClass, method, message) {
     super();
@@ -16,14 +18,18 @@ export class NotImplementedMethodError extends Error {
 
 export class NotImplementedInterfaceError extends Error {
   constructor(interfaceImplementer, interfaceClass, message) {
+    const constructor = typeof interfaceClass === 'function'
+      ? interfaceClass
+      : InterfacesRegistry.getInterface(interfaceClass);
+
     super();
     this.name = 'NotImplementedMethodError';
     this.interfaceImplementer = interfaceImplementer;
-    this.interfaceClass = interfaceClass;
+    this.interfaceClass = constructor;
 
     const implementerClassName = getImplementerClassName(interfaceImplementer);
     this.message = message
-      || `'${interfaceClass.name}' interface is not implemented for ${implementerClassName}`;
+      || `'${constructor.name}' interface is not implemented for ${implementerClassName}`;
     Error.captureStackTrace(this, NotImplementedInterfaceError);
   }
 }
@@ -41,16 +47,27 @@ function getImplementerClassName(interfaceImplementer) {
 
 /**
  * @param {object} interfaceInstance
- * @param {Function} InterfaceConstructor
+ * @param {Function|string} InterfaceConstructor - May contain either a constructor or its name.
  * @returns {boolean}
  */
 export function isInterface(interfaceInstance, InterfaceConstructor) {
-  return interfaceInstance && interfaceInstance.constructor === InterfaceConstructor;
+  if (!interfaceInstance) {
+    return false;
+  }
+  const constructor = typeof InterfaceConstructor === 'function'
+    ? InterfaceConstructor
+    : InterfacesRegistry.getInterface(InterfaceConstructor);
+
+  if (!constructor) {
+    throw new Error(`Interface '${InterfaceConstructor}' doesn't exist`);
+  }
+
+  return interfaceInstance.constructor === constructor;
 }
 
 /**
  * @param {object} interfaceInstance
- * @param {Function} InterfaceConstructor
+ * @param {Function|string} InterfaceConstructor - May contain either a constructor or its name.
  */
 export function assertInterface(interfaceInstance, InterfaceConstructor) {
   if (!isInterface(interfaceInstance, InterfaceConstructor)) {
@@ -59,6 +76,10 @@ export function assertInterface(interfaceInstance, InterfaceConstructor) {
 }
 
 function InterfaceImplementation(interfaceClass, implementerClass, implementation) {
+  if (!InterfacesRegistry.hasInterface(interfaceClass.constructor.name)) {
+    InterfacesRegistry.registerInterface(interfaceClass.constructor);
+  }
+
   this.callMethod = (method, ...args) => {
     if (methodIsImplemented(implementation, method)) {
       return implementation[method].call(interfaceClass, ...args);

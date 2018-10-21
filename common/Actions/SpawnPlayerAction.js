@@ -1,6 +1,5 @@
 import ActionInterface from '../Interfaces/ActionInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
 import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 import { setDebugProperty } from '../Utils/Debug';
 
@@ -51,17 +50,17 @@ SpawnPlayerAction.serializableInterface =
      * @param {SpawnPlayerAction} action
      */
     serialize: action => ({
-      player: () => serialize(action.getPlayer()),
+      player: () => action.getPlayer(),
       clientId: () => action.getClientId(),
       timeOccurred: () => action.actionInterface.getTimeOccurred(),
       senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
-    deserialize: json => new SpawnPlayerAction(
-      deserialize(json.player),
-      json.clientId,
-      new Date(json.timeOccurred),
-      json.senderId,
+    deserialize: object => new SpawnPlayerAction(
+      object.player,
+      object.clientId,
+      new Date(object.timeOccurred),
+      object.senderId,
     ),
   });
 

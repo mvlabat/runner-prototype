@@ -5,7 +5,6 @@ import { setDebugProperty } from '../Utils/Debug';
 import Paper from '../Paper';
 import CommonVector2 from '../Math/CommonVector2';
 import CommonColor from '../Math/CommonColor';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 const BASE_PLAYER_RADIUS = 5;
 
@@ -69,16 +68,16 @@ function Player(position, isPlaced, color = null, predefinedHashId = '') {
 
 Player.serializableInterface = new SerializableInterface(Player, {
   serialize: player => ({
-    position: () => serialize(player.placeableObjectInterface.getPosition()),
+    position: () => player.placeableObjectInterface.getPosition(),
     isPlaced: () => player.placeableObjectInterface.isPlaced(),
-    color: () => serialize(player.placeableObjectInterface.getColor()),
+    color: () => player.placeableObjectInterface.getColor(),
     hashId: () => player.hashableIdInterface.getHashId(),
   }),
 
   deserialize: object => new Player(
-    deserialize(object.position),
+    object.position,
     object.isPlaced,
-    deserialize(object.color),
+    object.color,
     object.hashId,
   ),
 });

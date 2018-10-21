@@ -24,7 +24,7 @@ PlayerModel.serializableInterface = new SerializableInterface(PlayerModel, {
     latency: () => player.latency,
   }),
 
-  deserialize: json => new PlayerModel(json.clientId, json.displayName, json.latency),
+  deserialize: object => new PlayerModel(object.clientId, object.displayName, object.latency),
 });
 
 export default PlayerModel;

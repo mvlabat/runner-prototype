@@ -4,7 +4,6 @@ import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import SavableInterface from '../Interfaces/SavableInterface';
 import Paper from '../Paper';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 /**
  * @param {CommonVector2} position
@@ -101,17 +100,17 @@ function Rectangle(position, size, color, isPlaced, predefinedHashId = '') {
 
 Rectangle.serializableInterface = new SerializableInterface(Rectangle, {
   serialize: object => ({
-    position: () => serialize(object.placeableObjectInterface.getPosition()),
-    size: () => serialize(object.getSize()),
-    color: () => serialize(object.placeableObjectInterface.getColor()),
+    position: () => object.placeableObjectInterface.getPosition(),
+    size: () => object.getSize(),
+    color: () => object.placeableObjectInterface.getColor(),
     isPlaced: () => object.placeableObjectInterface.isPlaced(),
     hashId: () => object.hashableIdInterface.getHashId(),
   }),
 
   deserialize: json => new Rectangle(
-    deserialize(json.position),
-    deserialize(json.size),
-    deserialize(json.color),
+    json.position,
+    json.size,
+    json.color,
     json.isPlaced,
     json.hashId,
   ),

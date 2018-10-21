@@ -21,7 +21,7 @@ PongMessage.serializableInterface = new SerializableInterface(
       pingId: () => message.getPingId(),
     }),
 
-    deserialize: json => new PongMessage(json.pingId),
+    deserialize: object => new PongMessage(object.pingId),
   },
 );
 

@@ -21,7 +21,7 @@ PingMessage.serializableInterface = new SerializableInterface(
       lastLatency: () => message.getLastLatency(),
     }),
 
-    deserialize: json => new PingMessage(json.pingId, json.lastLatency),
+    deserialize: object => new PingMessage(object.pingId, object.lastLatency),
   },
 );
 
