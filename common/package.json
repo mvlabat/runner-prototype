@@ -4,7 +4,7 @@
   "license": "LGPL-3.0",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest --verbose"
   },
   "dependencies": {
     "bottlejs": "^1.7.1",
