@@ -4,7 +4,6 @@ import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import SavableInterface from '../Interfaces/SavableInterface';
 import Paper from '../Paper';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 /**
  * @param {CommonVector2} position
@@ -101,17 +100,17 @@ function Circle(position, radius, color, isPlaced, predefinedHashId = '') {
 
 Circle.serializableInterface = new SerializableInterface(Circle, {
   serialize: circle => ({
-    position: () => serialize(circle.placeableObjectInterface.getPosition()),
+    position: () => circle.placeableObjectInterface.getPosition(),
     radius: () => circle.getRadius(),
-    color: () => serialize(circle.placeableObjectInterface.getColor()),
+    color: () => circle.placeableObjectInterface.getColor(),
     isPlaced: () => circle.placeableObjectInterface.isPlaced(),
     hashId: () => circle.hashableIdInterface.getHashId(),
   }),
 
   deserialize: object => new Circle(
-    deserialize(object.position),
+    object.position,
     object.radius,
-    deserialize(object.color),
+    object.color,
     object.isPlaced,
     object.hashId,
   ),

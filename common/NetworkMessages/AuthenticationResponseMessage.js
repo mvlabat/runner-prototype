@@ -18,7 +18,7 @@ AuthenticationResponseMessage.serializableInterface = new SerializableInterface(
       response: () => message.getResponse(),
     }),
 
-    deserialize: json => new AuthenticationResponseMessage(json.response),
+    deserialize: object => new AuthenticationResponseMessage(object.response),
   },
 );
 

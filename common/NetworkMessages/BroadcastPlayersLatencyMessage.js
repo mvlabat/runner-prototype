@@ -18,7 +18,7 @@ BroadcastPlayersLatencyMessage.serializableInterface = new SerializableInterface
       playersLatency: () => message.getPlayersLatency(),
     }),
 
-    deserialize: json => new BroadcastPlayersLatencyMessage(json.playersLatency),
+    deserialize: object => new BroadcastPlayersLatencyMessage(object.playersLatency),
   },
 );
 

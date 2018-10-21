@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { threeFromCommonColor, threeFromCommonVector } from 'common/Utils/ThreeConverters';
+import { threeFromCommonColor } from 'common/Utils/ThreeConverters';
 import ObjectRendererInterface from '../Interfaces/ObjectRendererInterface';
 
 /**
@@ -28,7 +28,7 @@ function CircleRenderer() {
       const position = circle.placeableObjectInterface.getPosition();
       mesh.position.x = position.x;
       mesh.position.y = position.y;
-      mesh.material.color = threeFromCommonVector(circle.placeableObjectInterface.getColor());
+      mesh.material.color = threeFromCommonColor(circle.placeableObjectInterface.getColor());
     },
 
   });
