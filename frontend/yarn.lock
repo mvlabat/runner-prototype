@@ -652,10 +652,10 @@
   resolved "https://registry.yarnpkg.com/@types/semver/-/semver-5.5.0.tgz#146c2a29ee7d3bae4bf2fcb274636e264c813c45"
   integrity sha512-41qEJgBH/TWgo5NFSvBCJ1qkoi3Q6ONSF2avrHq1LVEZfYpdHmj0y9SuTK+u9ZhG1sYQKBL1AWXKyLWP4RaUoQ==
 
-"@vue/component-compiler-utils@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@vue/component-compiler-utils/-/component-compiler-utils-2.2.0.tgz#bbbb7ed38a9a8a7c93abe7ef2e54a90a04b631b4"
-  integrity sha512-pS4zlcdD7BvedyB+IfiTfrbi6C977UMIfulSk8r6uL0BU46ZE2+fUj/zbSNSfVxeaj9ElmnSni5OMwF9np+b+w==
+"@vue/component-compiler-utils@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@vue/component-compiler-utils/-/component-compiler-utils-2.3.0.tgz#4f580f1b28fc7685859d87ea0e92a1c0271c93da"
+  integrity sha512-4RB1mow8IO2X0/86plKhflMJYSiSn3sWHiqVob8s/LCADFMHSaFRTQp5GdqvjvlGmwjhdn2dzDQik+RLjTx/5g==
   dependencies:
     consolidate "^0.15.1"
     hash-sum "^1.0.2"
@@ -4569,8 +4569,8 @@ ms@^2.1.1:
     bytebuffer "^5.0.1"
     crypto-js "^3.1.9-1"
     nonce "^1.0.4"
-    paper "^0.11.5"
-    paper-jsdom "^0.11.5"
+    paper "^0.11.8"
+    paper-jsdom "^0.11.8"
     pson "^2.0.0"
     three "^0.97.0"
 
@@ -5046,19 +5046,19 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
   integrity sha512-lQe48YPsMJAig+yngZ87Lus+NF+3mtu7DVOBu6b/gHO1YpKwIj5AWjZ/TOS7i46HD/UixzWb1zeWDZfGZ3iYcg==
 
-paper-jsdom@^0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/paper-jsdom/-/paper-jsdom-0.11.5.tgz#f530cb0eb7c02981c9cf5f9934c222ead0779caf"
-  integrity sha512-jKAj8cASk1Ncp6RG9NTQvBmjxn3PsxTgE5blwL4QVWe29uAMXf9YccEY7Pe07a90cFCm/7ABqxcO7q6GwmzElA==
+paper-jsdom@^0.11.8:
+  version "0.11.8"
+  resolved "https://registry.yarnpkg.com/paper-jsdom/-/paper-jsdom-0.11.8.tgz#37359ad24bc045300ff85328e38298746f3f3712"
+  integrity sha512-RmMDmVP9UQuxPlH4xYQ8F0kNm/o/hpCrupKdjm3evwxr27cVMTjuYSWoglmfNu82meYbxVLHwOav4JTlT3AxEg==
   dependencies:
     jsdom "^9.4.0"
-    paper "0.11.5"
+    paper "0.11.8"
     source-map-support "^0.4.0"
 
-paper@0.11.5, paper@^0.11.5:
-  version "0.11.5"
-  resolved "https://registry.yarnpkg.com/paper/-/paper-0.11.5.tgz#d662de67bce8218c287bfe17586d099d2cc48040"
-  integrity sha512-nvzLB10Ll0gE6MZ7lMOTiJMGVuwF1iGSTGkndCxIs6aar8TQnjxlgYMGP3IkuKpIE9mJ4Op5VTquyroB4BDK6Q==
+paper@0.11.8, paper@^0.11.8:
+  version "0.11.8"
+  resolved "https://registry.yarnpkg.com/paper/-/paper-0.11.8.tgz#c395269e23e3bb456c9f9e88a2f87f4421bfef23"
+  integrity sha512-3O5o8SntwieIlBmHjWS4hAYESiZ0yb++Outz9Rr5AN/ZFK7jfVGLANjqyIvEKIpGMImf2fQCkW64n8dkYheP5g==
 
 parcel-bundler@*:
   version "1.10.3"
