@@ -10,7 +10,7 @@
   "dependencies": {
     "@vuikit/icons": "^0.8.1",
     "@vuikit/theme": "^0.8.1",
-    "autoprefixer": "^9.3.0",
+    "autoprefixer": "^9.3.1",
     "muddle-common": "file:../common",
     "three": "^0.97.0",
     "vue": "^2.5.17",
