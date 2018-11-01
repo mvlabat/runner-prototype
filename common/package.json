@@ -14,7 +14,7 @@
     "paper": "^0.11.8",
     "paper-jsdom": "^0.11.8",
     "pson": "^2.0.0",
-    "three": "^0.97.0"
+    "three": "^0.98.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
