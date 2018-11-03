@@ -1,13 +1,14 @@
 import * as THREE from 'three';
 
+import CommonVector2 from 'common/Math/CommonVector2';
+import CommonColor from 'common/Math/CommonColor';
+
 import {
   threeFromCommonColor,
   threeFromCommonVector,
   threeToCommonColor,
   threeToCommonVector,
 } from './ThreeConverters';
-import CommonVector2 from '../Math/CommonVector2';
-import CommonColor from '../Math/CommonColor';
 
 describe('ThreeConverters', () => {
   describe(threeFromCommonVector, () => {

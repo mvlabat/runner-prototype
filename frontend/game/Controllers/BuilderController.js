@@ -7,7 +7,7 @@ import Circle from 'common/PlaceableObjects/Circle';
 import { log } from 'common/Utils/Debug';
 import CommonVector2 from 'common/Math/CommonVector2';
 import CommonColor from 'common/Math/CommonColor';
-import { threeToCommonVector } from '../../../common/Utils/ThreeConverters';
+import { threeToCommonVector } from '../Utils/ThreeConverters';
 
 /**
  * @param {ActionController} actionController

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-import CommonVector2 from '../Math/CommonVector2';
-import CommonColor from '../Math/CommonColor';
+import CommonVector2 from 'common/Math/CommonVector2';
+import CommonColor from 'common/Math/CommonColor';
 
 /**
  * @param {Vector2} threeVector
