@@ -1,5 +1,4 @@
 import SerializableInterface from '../Interfaces/SerializableInterface';
-import { deserializeSerializable, serializeSerializable } from '../Utils/SerializationHelpers';
 
 /**
  * @param {PlayerModel} player
@@ -16,10 +15,10 @@ PlayerLoggedInMessage.serializableInterface = new SerializableInterface(
      * @param {PlayerLoggedInMessage} message
      */
     serialize: message => ({
-      player: () => serializeSerializable(message.getPlayer()),
+      player: () => message.getPlayer(),
     }),
 
-    deserialize: object => new PlayerLoggedInMessage(deserializeSerializable(object.player)),
+    deserialize: object => new PlayerLoggedInMessage(object.player),
   },
 );
 

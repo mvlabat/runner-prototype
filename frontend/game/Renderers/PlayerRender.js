@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { threeFromCommonColor } from 'common/Utils/ThreeConverters';
+import { threeFromCommonColor } from '../Utils/ThreeConverters';
 import ObjectRendererInterface from '../Interfaces/ObjectRendererInterface';
 
 /**

@@ -1,4 +1,4 @@
-import CommonVector2 from '../../../common/Math/CommonVector2';
+import CommonVector2 from 'common/Math/CommonVector2';
 
 function MovementDirections() {
   this.up = false;

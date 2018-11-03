@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
-import { threeFromCommonVector } from 'common/Utils/ThreeConverters';
+import { threeFromCommonVector } from '../Utils/ThreeConverters';
 import MovementDirections from '../Utils/MovementDirections';
 
 /**
