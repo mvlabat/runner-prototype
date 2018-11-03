@@ -75,6 +75,34 @@ export function assertInterface(interfaceInstance, InterfaceConstructor) {
   }
 }
 
+/**
+ * Every interface constructor must create its own instance of InterfaceImplementation.
+ * It's important because it adds interfaces to InterfaceRegistry, which is needed for
+ * `assertInterface` and `isInterface` to work.
+ *
+ * InterfaceImplementation is a wrapper for the passed object (`interfaceImplementation`),
+ * containing defined methods. It provides `callMethod` and `callMethodOr` helpers that should be
+ * used when declaring an interface method.
+ *
+ * InterfaceImplementation of an interface shouldn't be accessible outside,
+ * so the best way to go is to define it as `const` inside a constructor local scope.
+ *
+ * @example
+ * function MyInterface(implementingObject, interfaceImplementation) {
+ *   const implementation
+ *     = new InterfaceImplementation(this, implementingObject, interfaceImplementation);
+ *
+ *   this.someMethod = () => implementation.callMethod('someMethod');
+ *
+ *   // A method with default implementation.
+ *   this.anotherMethod = () => implementation.callMethodOr('defaultReturnValue', 'anotherMethod');
+ * }
+ *
+ * @param interfaceClass - Interface itself, passed with `this` reference.
+ * @param implementerClass - Entity implementing the interface.
+ * @param implementation - Object containing method implementations { methodName: implementation }.
+ * @constructor
+ */
 function InterfaceImplementation(interfaceClass, implementerClass, implementation) {
   if (!InterfacesRegistry.hasInterface(interfaceClass.constructor.name)) {
     InterfacesRegistry.registerInterface(interfaceClass.constructor);

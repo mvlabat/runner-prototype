@@ -4,6 +4,22 @@ import InterfaceImplementation, {
 } from '../Utils/InterfaceImplementation';
 
 /**
+ * PlaceableObjectInterface must be implemented for instances (inside a constructor).
+ * Required methods:
+ * - getType
+ * - setPosition
+ * - getPosition
+ * - setColor
+ * - getColor
+ * - setPlaced
+ * - isPlaced
+ * - recalculatePath
+ * - getPath
+ *
+ * PlaceableObjectInterface has to be implemented for all the objects placed on a game scene.
+ * This interface is used for collision detection, rendering and other systems that are somehow
+ * related to placeable objects processing.
+ *
  * @param object
  * @param interfaceImplementation
  * @constructor
