@@ -17,29 +17,39 @@ bundler.on('bundled', (compiledBundle) => {
 
 bundler.on('buildEnd', () => {
   if (runBundle && bundle !== null) {
+    const bundleName = bundle.name;
     if (child) {
-      child.stdout.removeAllListeners('data');
-      child.stderr.removeAllListeners('data');
       child.removeAllListeners('exit');
+
+      child.on('exit', () => {
+        child = spawnProcess(bundleName);
+      });
       child.kill();
+    } else {
+      child = spawnProcess(bundleName);
     }
-    child = childProcess.spawn('node', [bundle.name]);
-
-    child.stdout.on('data', (data) => {
-      process.stdout.write(data);
-    });
-
-    child.stderr.on('data', (data) => {
-      process.stdout.write(data);
-    });
-
-    child.on('exit', (code) => {
-      console.log(`Child process exited with code ${code}`);
-      child = null;
-    });
   }
 
   bundle = null;
 });
+
+function spawnProcess(bundleName) {
+  const newProcess = childProcess.spawn(process.argv[0], [bundleName]);
+
+  newProcess.stdout.on('data', (data) => {
+    process.stdout.write(data);
+  });
+
+  newProcess.stderr.on('data', (data) => {
+    process.stdout.write(data);
+  });
+
+  newProcess.on('exit', (code, signal) => {
+    console.log(`Child process exited with code ${code} (${signal})`);
+    child = spawnProcess(bundleName);
+  });
+
+  return newProcess;
+}
 
 bundler.bundle();
