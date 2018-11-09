@@ -5,4 +5,6 @@ require('./PlaceableObjects/Circle');
 require('./PlaceableObjects/Rectangle');
 require('./PlaceableObjects/Player');
 
+require('./Utils/ThreeSerializers');
+
 export default Engine;

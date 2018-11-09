@@ -3,19 +3,17 @@ import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import SavableInterface from '../Interfaces/SavableInterface';
-import Paper from '../Paper';
 
 /**
- * @param {CommonVector2} position
+ * @param {Vector2} position
  * @param {number} radius
- * @param {CommonColor} color
+ * @param color
  * @param {boolean} isPlaced
  * @param {string} predefinedHashId
  * @constructor
  */
 function Circle(position, radius, color, isPlaced, predefinedHashId = '') {
   const parameters = {};
-  let path;
 
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
@@ -47,11 +45,6 @@ function Circle(position, radius, color, isPlaced, predefinedHashId = '') {
       setDebugProperty(this, 'isPlaced', newIsPlaced);
       return this;
     },
-
-    recalculatePath: () => {
-      path = new Paper.Path.Circle(parameters.position, parameters.radius);
-    },
-    getPath: () => path,
   });
 
   this.savableInterface = new SavableInterface(this, {
@@ -95,7 +88,6 @@ function Circle(position, radius, color, isPlaced, predefinedHashId = '') {
   this.setRadius(radius);
   this.placeableObjectInterface.setColor(color);
   this.placeableObjectInterface.setPlaced(isPlaced);
-  this.placeableObjectInterface.recalculatePath();
 }
 
 Circle.serializableInterface = new SerializableInterface(Circle, {

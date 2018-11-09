@@ -1,4 +1,4 @@
-import CommonVector2 from 'common/Math/CommonVector2';
+import * as THREE from 'three';
 
 function MovementDirections() {
   this.up = false;
@@ -7,32 +7,32 @@ function MovementDirections() {
   this.right = false;
 
   /**
-   * @returns {CommonVector2}
+   * @returns {Vector2}
    */
   this.getDirectionVector = () => {
-    const directionVector = new CommonVector2(1, 0);
+    let angle = 0;
 
     if (this.up && this.right && !this.down && !this.left) {
-      directionVector.angle = 45;
+      angle = 45;
     } else if (this.up && !this.right && !this.down && this.left) {
-      directionVector.angle = 135;
+      angle = 135;
     } else if (!this.up && !this.right && this.down && this.left) {
-      directionVector.angle = 225;
+      angle = 225;
     } else if (!this.up && this.right && this.down && !this.left) {
-      directionVector.angle = 315;
+      angle = 315;
     } else if (this.right && !this.left) {
-      directionVector.angle = 0;
+      angle = 0;
     } else if (this.up && !this.down) {
-      directionVector.angle = 90;
+      angle = 90;
     } else if (!this.right && this.left) {
-      directionVector.angle = 180;
+      angle = 180;
     } else if (!this.up && this.down) {
-      directionVector.angle = 270;
+      angle = 270;
     } else {
-      directionVector.set(0, 0);
+      return new THREE.Vector2();
     }
 
-    return directionVector;
+    return new THREE.Vector2(1, 0).rotateAround(new THREE.Vector2(), angle * THREE.Math.DEG2RAD);
   };
 }
 
