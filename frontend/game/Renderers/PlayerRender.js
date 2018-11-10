@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 
-import { threeFromCommonColor } from '../Utils/ThreeConverters';
 import ObjectRendererInterface from '../Interfaces/ObjectRendererInterface';
 
 /**
@@ -19,7 +18,7 @@ function PlayerRenderer() {
       player = renderedObject;
       const circleGeometry = new THREE.CircleBufferGeometry(player.getRadius(), 32);
       const circleMaterial = new THREE.MeshBasicMaterial({
-        color: threeFromCommonColor(player.placeableObjectInterface.getColor()),
+        color: player.placeableObjectInterface.getColor(),
         side: THREE.DoubleSide,
       });
       mesh = new THREE.Mesh(circleGeometry, circleMaterial);
@@ -32,7 +31,7 @@ function PlayerRenderer() {
       mesh.position.x = position.x;
       mesh.position.y = position.y;
       mesh.position.z = 1;
-      mesh.material.color = threeFromCommonColor(player.placeableObjectInterface.getColor());
+      mesh.material.color = player.placeableObjectInterface.getColor();
     },
 
   });

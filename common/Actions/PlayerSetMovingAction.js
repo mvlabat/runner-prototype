@@ -5,8 +5,8 @@ import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {string} playerHashId
- * @param {CommonVector2} position
- * @param {CommonVector2} direction
+ * @param {Vector2} position
+ * @param {Vector2} direction
  * @param timeOccurred
  * @param {number|null} senderId
  * @constructor

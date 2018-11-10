@@ -13,8 +13,6 @@ import InterfaceImplementation, {
  * - getColor
  * - setPlaced
  * - isPlaced
- * - recalculatePath
- * - getPath
  *
  * PlaceableObjectInterface has to be implemented for all the objects placed on a game scene.
  * This interface is used for collision detection, rendering and other systems that are somehow
@@ -30,9 +28,6 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
   this.getType = () => implementation.callMethod('getType');
 
   this.setPosition = position => implementation.callMethod('setPosition', position);
-  /**
-   * @return {CommonVector2}
-   */
   this.getPosition = () => implementation.callMethod('getPosition');
 
   this.setColor = color => implementation.callMethod('setColor', color);
@@ -40,9 +35,6 @@ function PlaceableObjectInterface(object, interfaceImplementation) {
 
   this.setPlaced = isPlaced => implementation.callMethod('setPlaced', isPlaced);
   this.isPlaced = () => implementation.callMethod('isPlaced');
-
-  this.recalculatePath = () => implementation.callMethod('recalculatePath');
-  this.getPath = () => implementation.callMethod('getPath');
 
   let objectScene = null;
   this.setScene = (scene) => {

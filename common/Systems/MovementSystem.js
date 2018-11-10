@@ -61,7 +61,6 @@ function MovementSystem(gameScene, playerModel) {
     const player = gameScene.getPlayer(action.getPlayerHashId());
     if (player) {
       player.placeableObjectInterface.setPosition(action.getPosition());
-      player.placeableObjectInterface.recalculatePath();
       player.movementDirection = action.getDirection();
     }
   }
@@ -77,8 +76,8 @@ function MovementSystem(gameScene, playerModel) {
       .movementDirection
       .clone()
       .multiplyScalar(PLAYER_SPEED * timeDelta);
-    player.placeableObjectInterface.getPosition().add(offsetVector);
-    player.placeableObjectInterface.recalculatePath();
+    const newPosition = player.placeableObjectInterface.getPosition().add(offsetVector);
+    player.placeableObjectInterface.setPosition(newPosition);
   }
 }
 
