@@ -2,7 +2,7 @@ import set from 'jest-plugin-set';
 
 import PsonDictionary from './PsonDictionary';
 
-describe(PsonDictionary, () => {
+describe('PsonDictionary', () => {
   set('emptyDictionary', () => new PsonDictionary());
   beforeEach(() => {
     emptyDictionary.commitDictionary();

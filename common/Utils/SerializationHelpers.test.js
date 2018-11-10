@@ -25,7 +25,7 @@ describe('SerializationHelpers', () => {
 
   set('someObjectSerialized', () => ({ value: 1, constructorName: 'SomeObject' }));
 
-  describe(isIterable, () => {
+  describe('isIterable', () => {
     it('returns true for Array', () => {
       expect(isIterable(new Array(1))).toBe(true);
     });
