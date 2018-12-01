@@ -12,7 +12,7 @@
     "@vuikit/theme": "^0.8.1",
     "autoprefixer": "^9.3.1",
     "muddle-common": "file:../common",
-    "three": "^0.98.0",
+    "three": "^0.99.0",
     "vue": "^2.5.17",
     "vue-resizesensor": "^0.2.1",
     "vuelidate": "^0.7.4",
