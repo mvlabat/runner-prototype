@@ -28,6 +28,6 @@
     "jest": "^23.6.0",
     "node-sass": "^4.10.0",
     "parcel-bundler": "*",
-    "vue-template-compiler": "^2.5.16"
+    "vue-template-compiler": "^2.5.18"
   }
 }
