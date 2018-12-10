@@ -13,7 +13,7 @@
     "autoprefixer": "^9.4.2",
     "muddle-common": "file:../common",
     "three": "^0.99.0",
-    "vue": "^2.5.19",
+    "vue": "^2.5.20",
     "vue-resizesensor": "^0.2.1",
     "vuelidate": "^0.7.4",
     "vuex": "^3.0.1",
