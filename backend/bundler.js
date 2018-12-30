@@ -46,7 +46,8 @@ function spawnProcess(bundleName) {
 
   newProcess.on('exit', (code, signal) => {
     console.log(`Child process exited with code ${code} (${signal})`);
-    child = spawnProcess(bundleName);
+    child = null;
+    // child = spawnProcess(bundleName);
   });
 
   return newProcess;

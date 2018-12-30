@@ -5,7 +5,7 @@
   "author": "mvlabat <mvlabat@gmail.com>",
   "license": "LGPL-3.0",
   "scripts": {
-    "eslint": "eslint --ext .js,.vue .",
+    "eslint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "precommit": "lint-staged"
   },
   "devDependencies": {
