@@ -8,8 +8,10 @@ INSTALL_NODE_VIA_NVM: &INSTALL_NODE_VIA_NVM
     source ~/.nvm/nvm.sh
     nvm install v11.6
 cache:
-  yarn: true
   directories:
+  - $HOME/.cargo
+  - $HOME/.local
+  - $HOME/.cache/yarn
   - node_modules
   - common/node_modules
   - backend/node_modules
@@ -18,13 +20,19 @@ cache:
   - frontend/node_modules
   - frontend/.cache
   - frontend/dist
+  - rust_common/target
 install:
 - *INSTALL_NODE_VIA_NVM
+- rustup component add rustfmt --toolchain nightly
+- rustup component add clippy --toolchain=nightly || cargo install --git https://github.com/rust-lang/rust-clippy/ --force clippy
 - cargo install wasm-pack
 - cd common && yarn install
 - cd ../backend && yarn install
 - cd ../frontend && yarn install
 - cd .. && yarn install
+- cd rust_common
+- cargo fmt --all -- --check
+- cargo clippy
 script:
 - cd common
 - yarn test --verbose
