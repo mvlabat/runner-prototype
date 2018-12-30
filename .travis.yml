@@ -7,6 +7,12 @@ INSTALL_NODE_VIA_NVM: &INSTALL_NODE_VIA_NVM
     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
     source ~/.nvm/nvm.sh
     nvm install v11.6
+INSTALL_RUST_LINTS: &INSTALL_RUST_LINTS
+  |
+    rustup component add rustfmt --toolchain nightly || true
+    rustup component add clippy --toolchain=nightly \
+      || cargo install --git https://github.com/rust-lang/rust-clippy/ --force clippy \
+      || true
 cache:
   directories:
   - $HOME/.cargo
@@ -23,16 +29,15 @@ cache:
   - rust_common/target
 install:
 - *INSTALL_NODE_VIA_NVM
-- rustup component add rustfmt --toolchain nightly
-- rustup component add clippy --toolchain=nightly || cargo install --git https://github.com/rust-lang/rust-clippy/ --force clippy
+- *INSTALL_RUST_LINTS
 - cargo install wasm-bindgen-cli
 - cd common && yarn install
 - cd ../backend && yarn install
 - cd ../frontend && yarn install
 - cd .. && yarn install
 - cd rust_common
-- cargo fmt --all -- --check
-- cargo clippy
+- if cargo fmt --version; then cargo fmt --all -- --check; else true; fi
+- if cargo clippy --version; then cargo clippy; else true; fi
 script:
 - cd common
 - yarn test --verbose
