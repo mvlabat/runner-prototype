@@ -30,7 +30,7 @@ cache:
 install:
 - *INSTALL_NODE_VIA_NVM
 - *INSTALL_RUST_LINTS
-- cargo install wasm-bindgen-cli
+- cargo install --git https://github.com/mvlabat/wasm-bindgen.git --branch default-support wasm-bindgen-cli --force
 - cd common && yarn install
 - cd ../backend && yarn install
 - cd ../frontend && yarn install
