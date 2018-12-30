@@ -39,7 +39,7 @@ install:
 - if cargo fmt --version; then cargo fmt --all -- --check; else true; fi
 - if cargo clippy --version; then cargo clippy; else true; fi
 script:
-- cd common
+- cd ../common
 - yarn test --verbose
 - cd ../backend
 - yarn build
