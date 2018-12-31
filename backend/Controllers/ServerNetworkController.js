@@ -73,6 +73,16 @@ function ServerNetworkController(actionController, gameState) {
       broadcastToEveryone(new BroadcastActionMessage(action));
     },
   });
+
+  process.on('SIGTERM', () => {
+    log('Closing WebSocket...');
+
+    wss.on('close', () => {
+      log('Closed... Exit');
+      process.exit();
+    });
+    wss.close();
+  });
 }
 
 export default ServerNetworkController;

@@ -18,7 +18,7 @@ PlayerLoggedOutMessage.serializableInterface = new SerializableInterface(
       clientId: () => message.getClientId(),
     }),
 
-    deserialize: json => new PlayerLoggedOutMessage(json.clientId),
+    deserialize: object => new PlayerLoggedOutMessage(object.clientId),
   },
 );
 

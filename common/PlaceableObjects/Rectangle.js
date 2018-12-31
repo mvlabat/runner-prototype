@@ -3,20 +3,17 @@ import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
 import SavableInterface from '../Interfaces/SavableInterface';
-import Paper from '../Paper';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
 
 /**
- * @param {CommonVector2} position
- * @param {CommonVector2} size
- * @param {CommonColor} color
+ * @param {Vector2} position
+ * @param {Vector2} size
+ * @param color
  * @param {boolean} isPlaced
  * @param {string} predefinedHashId
  * @constructor
  */
 function Rectangle(position, size, color, isPlaced, predefinedHashId = '') {
   const parameters = {};
-  let path;
 
   // INTERFACES IMPLEMENTATION.
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
@@ -48,11 +45,6 @@ function Rectangle(position, size, color, isPlaced, predefinedHashId = '') {
       setDebugProperty(this, 'isPlaced', newIsPlaced);
       return this;
     },
-
-    recalculatePath: () => {
-      path = new Paper.Path.Rectangle(parameters.position, parameters.size);
-    },
-    getPath: () => path,
   });
 
   this.savableInterface = new SavableInterface(this, {
@@ -96,22 +88,21 @@ function Rectangle(position, size, color, isPlaced, predefinedHashId = '') {
   this.setSize(size);
   this.placeableObjectInterface.setColor(color);
   this.placeableObjectInterface.setPlaced(isPlaced);
-  this.placeableObjectInterface.recalculatePath();
 }
 
 Rectangle.serializableInterface = new SerializableInterface(Rectangle, {
   serialize: object => ({
-    position: () => serialize(object.placeableObjectInterface.getPosition()),
-    size: () => serialize(object.getSize()),
-    color: () => serialize(object.placeableObjectInterface.getColor()),
+    position: () => object.placeableObjectInterface.getPosition(),
+    size: () => object.getSize(),
+    color: () => object.placeableObjectInterface.getColor(),
     isPlaced: () => object.placeableObjectInterface.isPlaced(),
     hashId: () => object.hashableIdInterface.getHashId(),
   }),
 
   deserialize: json => new Rectangle(
-    deserialize(json.position),
-    deserialize(json.size),
-    deserialize(json.color),
+    json.position,
+    json.size,
+    json.color,
     json.isPlaced,
     json.hashId,
   ),

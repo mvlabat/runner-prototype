@@ -1,7 +1,5 @@
-/**
- * @param {GameScene} gameScene
- * @constructor
- */
+import RustCommon from '../../rust_common/Cargo.toml';
+
 import SystemInterface from '../Interfaces/SystemInterface';
 import SaveBuildableObjectAction from '../Actions/SaveBuildableObjectAction';
 import RemoveBuildableObjectAction from '../Actions/RemoveBuildableObjectAction';
@@ -36,9 +34,17 @@ function BuildableObjectSystem(gameScene, playerModel) {
     const existingBuildableObject =
       gameScene.getBuildableObject(buildableObject.hashableIdInterface.getHashId());
     if (existingBuildableObject) {
+      const isJustAdded = existingBuildableObject.placeableObjectInterface.isPlaced()
+        !== buildableObject.placeableObjectInterface.isPlaced();
+      if (isJustAdded && buildableObject.placeableObjectInterface.isPlaced()) {
+        RustCommon.addBuildableObject(buildableObject);
+      }
       existingBuildableObject.savableInterface.save(buildableObject);
     } else {
       gameScene.addBuildableObject(buildableObject);
+      if (buildableObject.placeableObjectInterface.isPlaced()) {
+        RustCommon.addBuildableObject(buildableObject);
+      }
     }
   }
 

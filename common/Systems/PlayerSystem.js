@@ -1,7 +1,5 @@
-/**
- * @param {GameScene} gameScene
- * @constructor
- */
+import RustCommon from '../../rust_common/Cargo.toml';
+
 import SystemInterface from '../Interfaces/SystemInterface';
 import SpawnPlayerAction from '../Actions/SpawnPlayerAction';
 import DespawnPlayerAction from '../Actions/DespawnPlayerAction';
@@ -40,6 +38,7 @@ function PlayerSystem(gameScene, playerModel) {
       action.setClientId(action.broadcastedActionInterface.getSenderId());
     }
     gameScene.addPlayer(action.getClientId(), action.getPlayer());
+    RustCommon.addPlayer(action.getPlayer());
   }
 
   /**

@@ -1,24 +1,22 @@
+import * as THREE from 'three';
+
 import HashableIdInterface from '../Interfaces/HashableIdInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
 import PlaceableObjectInterface from '../Interfaces/PlaceableObjectInterface';
 import { setDebugProperty } from '../Utils/Debug';
-import Paper from '../Paper';
-import CommonVector2 from '../Math/CommonVector2';
-import CommonColor from '../Math/CommonColor';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
+import { randomColor } from '../Utils/InitializeHelpers';
 
 const BASE_PLAYER_RADIUS = 5;
 
 /**
- * @param {CommonVector2} position
+ * @param {Vector2} position
  * @param {boolean} isPlaced
- * @param {CommonColor} color
+ * @param color
  * @param {string} predefinedHashId
  * @constructor
  */
 function Player(position, isPlaced, color = null, predefinedHashId = '') {
   const parameters = {};
-  let path;
 
   this.hashableIdInterface = new HashableIdInterface(this, predefinedHashId, {
     getHashedContent: () => (
@@ -49,36 +47,30 @@ function Player(position, isPlaced, color = null, predefinedHashId = '') {
       setDebugProperty(this, 'color', newColor);
       return this;
     },
-
-    recalculatePath: () => {
-      path = new Paper.Path.Circle(parameters.position, BASE_PLAYER_RADIUS);
-    },
-    getPath: () => path,
   });
 
   this.getRadius = () => BASE_PLAYER_RADIUS;
 
-  this.movementDirection = new CommonVector2();
+  this.movementDirection = new THREE.Vector2();
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.placeableObjectInterface.setPosition(position);
   this.placeableObjectInterface.setPlaced(isPlaced);
-  this.placeableObjectInterface.setColor(color || CommonColor.random());
-  this.placeableObjectInterface.recalculatePath();
+  this.placeableObjectInterface.setColor(color || randomColor());
 }
 
 Player.serializableInterface = new SerializableInterface(Player, {
   serialize: player => ({
-    position: () => serialize(player.placeableObjectInterface.getPosition()),
+    position: () => player.placeableObjectInterface.getPosition(),
     isPlaced: () => player.placeableObjectInterface.isPlaced(),
-    color: () => serialize(player.placeableObjectInterface.getColor()),
+    color: () => player.placeableObjectInterface.getColor(),
     hashId: () => player.hashableIdInterface.getHashId(),
   }),
 
   deserialize: object => new Player(
-    deserialize(object.position),
+    object.position,
     object.isPlaced,
-    deserialize(object.color),
+    object.color,
     object.hashId,
   ),
 });

@@ -5,9 +5,12 @@ import InterfaceImplementation, {
 import EngineConfig from '../EngineConfig';
 
 /**
- * This interface is meant to be used only when a message is supposed to be sent to server,
+ * NetworkMessageInterface must be implemented for instances (inside a constructor).
+ * It has no methods to implement.
+ *
+ * NetworkMessageInterface is meant to be used only when a message is supposed to be sent to server,
  * including (but not mandatory) messages that are broadcasted to all other clients by server.
- * You shouldn't use it for messages that originate only from server (like PingMessage).
+ * You shouldn't use it for messages that originate only from server (like `PingMessage`).
  *
  * @param message
  * @param interfaceImplementation

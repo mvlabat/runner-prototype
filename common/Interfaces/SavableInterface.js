@@ -4,6 +4,16 @@ import InterfaceImplementation, {
 } from '../Utils/InterfaceImplementation';
 
 /**
+ * SaveableInterface must be implemented for instances (inside a constructor).
+ * Required methods:
+ * - save
+ *
+ * SavableInterface is implemented for objects that have to be able to copy properties of another
+ * object of the same class.
+ *
+ * A common usage case: processing a network message, containing an object that reflects changes
+ * to another existing object.
+ *
  * @param entity
  * @param interfaceImplementation
  * @constructor

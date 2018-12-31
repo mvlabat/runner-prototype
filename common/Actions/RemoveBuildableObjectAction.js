@@ -45,10 +45,10 @@ RemoveBuildableObjectAction.serializableInterface =
       senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
-    deserialize: json => new RemoveBuildableObjectAction(
-      json.buildableObjectHashId,
-      new Date(json.timeOccurred),
-      json.senderId,
+    deserialize: object => new RemoveBuildableObjectAction(
+      object.buildableObjectHashId,
+      new Date(object.timeOccurred),
+      object.senderId,
     ),
   });
 

@@ -30,9 +30,9 @@ function CanvasWrapper() {
   );
 
   /**
-   * @returns {Vector3}
+   * @returns {Vector2}
    */
-  this.getMouseWorldPosition = () => mouseWorldPosition.clone();
+  this.getMouseWorldPosition = () => new THREE.Vector2(mouseWorldPosition.x, mouseWorldPosition.y);
 
   /**
    * @param {CameraWrapper} cameraWrapper

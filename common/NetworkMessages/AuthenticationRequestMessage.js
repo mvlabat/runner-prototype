@@ -21,7 +21,7 @@ AuthenticationRequestMessage.serializableInterface = new SerializableInterface(
       displayName: () => message.getDisplayName(),
     }),
 
-    deserialize: json => new AuthenticationRequestMessage(json.displayName),
+    deserialize: object => new AuthenticationRequestMessage(object.displayName),
   },
 );
 

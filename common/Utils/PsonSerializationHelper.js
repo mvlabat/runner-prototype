@@ -1,4 +1,4 @@
-import { deserialize, serialize } from './SerializationHelper';
+import { deserializeSerializable, serializeSerializable } from './SerializationHelpers';
 import GlobalPsonDictionary from './GlobalPsonDictionary';
 
 /**
@@ -7,11 +7,11 @@ import GlobalPsonDictionary from './GlobalPsonDictionary';
 const PsonSerializationHelper = (() => (
   {
     serialize: object => (
-      GlobalPsonDictionary.getDictionary().encode(serialize(object)).toBuffer()
+      GlobalPsonDictionary.getDictionary().encode(serializeSerializable(object)).toBuffer()
     ),
 
     deserialize: data => (
-      deserialize(GlobalPsonDictionary.getDictionary().decode(data))
+      deserializeSerializable(GlobalPsonDictionary.getDictionary().decode(data))
     ),
   }
 ))();

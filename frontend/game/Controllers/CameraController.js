@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import UpdatableInterface from 'common/Interfaces/UpdatableInterface';
-import { threeFromCommonVector } from 'common/Utils/ThreeConverters';
 import MovementDirections from '../Utils/MovementDirections';
 
 /**
@@ -30,10 +29,7 @@ function CameraController(cameraWrapper, canvasWrapper) {
       .getDirectionVector()
       .clone()
       .multiplyScalar(CAMERA_SPEED * timeDelta);
-    const newPosition = cameraWrapper
-      .getPosition()
-      .clone()
-      .add(threeFromCommonVector(offsetVector));
+    const newPosition = cameraWrapper.getPosition().clone().add(offsetVector);
     cameraWrapper.setPosition(newPosition);
   }
 }

@@ -15,10 +15,11 @@ module.exports = {
   },
   settings: {
     'import/resolver': {
-      "babel-module": {
+      'babel-module': {
         // FIXME: https://github.com/tleunen/eslint-import-resolver-babel-module/issues/95
         alias: {
-          common: "../common"
+          common: '../common',
+          "rust-common": '../rust_common',
         }
       },
     },

@@ -1,6 +1,5 @@
 import NetworkMessageInterface from '../Interfaces/NetworkMessageInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
-import { deserialize, serialize } from '../Utils/SerializationHelper';
 import { setDebugProperty } from '../Utils/Debug';
 
 /**
@@ -22,10 +21,10 @@ BroadcastActionMessage.serializableInterface = new SerializableInterface(
      * @param {BroadcastActionMessage} message
      */
     serialize: message => ({
-      payload: () => serialize(message.networkMessageInterface.getPayload()),
+      payload: () => message.networkMessageInterface.getPayload(),
     }),
 
-    deserialize: json => new BroadcastActionMessage(deserialize(json.payload)),
+    deserialize: object => new BroadcastActionMessage(object.payload),
   },
 );
 

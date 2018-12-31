@@ -45,10 +45,10 @@ DespawnPlayerAction.serializableInterface =
       senderId: () => action.broadcastedActionInterface.getSenderId(),
     }),
 
-    deserialize: json => new DespawnPlayerAction(
-      json.playerHashId,
-      new Date(json.timeOccurred),
-      json.senderId,
+    deserialize: object => new DespawnPlayerAction(
+      object.playerHashId,
+      new Date(object.timeOccurred),
+      object.senderId,
     ),
   });
 
