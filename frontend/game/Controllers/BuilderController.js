@@ -8,6 +8,8 @@ import Circle from 'common/PlaceableObjects/Circle';
 import { log } from 'common/Utils/Debug';
 import { randomColor } from '../../../common/Utils/InitializeHelpers';
 
+import RustCommon from '../../../rust_common/Cargo.toml';
+
 /**
  * @param {ActionController} actionController
  * @param {CanvasWrapper} canvasWrapper
@@ -45,6 +47,7 @@ function BuilderController(actionController, canvasWrapper) {
   this.placeObject = () => {
     placedObject.placeableObjectInterface.setPlaced(true);
     actionController.addAction(new SaveBuildableObjectAction(placedObject));
+    RustCommon.addBuildableObject(placedObject);
     // We create a new object on update.
     placedObject = null;
   };
@@ -52,9 +55,9 @@ function BuilderController(actionController, canvasWrapper) {
   function movePlacedObject(position) {
     if (placedObject === null) {
       if (Math.random() >= 0.5) {
-        placedObject = new Rectangle(position, new THREE.Vector2(3, 3), randomColor(), true);
+        placedObject = new Rectangle(position, new THREE.Vector2(3, 3), randomColor(), false);
       } else {
-        placedObject = new Circle(position, 1.5, randomColor(), true);
+        placedObject = new Circle(position, 1.5, randomColor(), false);
       }
     }
     placedObject.placeableObjectInterface.setPosition(position);

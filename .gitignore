@@ -9,4 +9,8 @@ yarn-error.log
 /frontend/.cache
 /frontend/dist
 
+/rust_common/target
+/rust_common/pkg
+/rust_common/wasm-pack.log
+
 .env

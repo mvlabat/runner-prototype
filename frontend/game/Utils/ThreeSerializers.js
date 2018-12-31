@@ -1,12 +1,6 @@
-/**
- * IMPORTANT!!!
- *
- * If editing this file, remember to do the same changes to frontend/game/Utils/ThreeSerializers.js.
- */
-
 /* eslint-disable no-mixed-operators,no-bitwise */
 import * as THREE from 'three';
-import SerializableInterface from '../Interfaces/SerializableInterface';
+import SerializableInterface from 'common/Interfaces/SerializableInterface';
 
 THREE.Vector2.serializableInterface = new SerializableInterface(THREE.Vector2, {
   serialize: object => ({

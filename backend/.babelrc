@@ -4,7 +4,8 @@
     ["babel-plugin-module-resolver", {
       "root": ["."],
       "alias": {
-        "common": "../common"
+        "common": "../common",
+        "rust-common": "../rust_common"
       }
     }]
   ]

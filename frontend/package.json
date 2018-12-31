@@ -27,7 +27,9 @@
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
     "node-sass": "^4.11.0",
-    "parcel-bundler": "*",
+    "parcel-bundler": "^1.11.0",
+    "parcel-plugin-wasm.rs": "^1.2.8",
+    "sass": "^1.15.1",
     "vue-template-compiler": "^2.5.21"
   }
 }
