@@ -158,7 +158,6 @@ impl MuddleWorld {
             player
                 .placeable_object_interface()
                 .set_position(position.into());
-            muddle_timed_log_hashable!(player, "pos", 1, "plyr pos: {:?}", position);
         }
     }
 
