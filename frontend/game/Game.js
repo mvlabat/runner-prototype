@@ -35,42 +35,29 @@ function Game() {
 
   // Gameloop.
 
-  const GAMEPLAY_UPDATE_INTERVAL = 15;
-  const NETWORK_UPDATE_INTERVAL = 45;
-  const RENDER_UPDATE_INTERVAL = 1000 / 60;
+  const GAMEPLAY_UPDATE_INTERVAL = 1000 / 60;
+  const NETWORK_UPDATE_INTERVAL = 50;
 
   let lastGameplayUpdate = 0;
   let lastNetworkUpdate = 0;
-  let lastRenderUpdate = 0;
-  let crashed = false;
 
   function tick(now) {
-    if (crashed) return;
-    requestAnimationFrame(tick);
-
     const gameplayTimeDelta = now - lastGameplayUpdate;
-    const renderTimeDelta = now - lastRenderUpdate;
     const networkTimeDelta = now - lastNetworkUpdate;
 
-    try {
-      const gameplayTimeDeltaSecs = gameplayTimeDelta / 1000;
-      if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
-        lastGameplayUpdate = now;
-        engine.tick(gameplayTimeDeltaSecs);
-        mainUiController.updatableInterface.update(gameplayTimeDeltaSecs);
-      }
-      if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
-        lastNetworkUpdate = now;
-        networkController.updatableInterface.update(gameplayTimeDeltaSecs);
-      }
-      if (renderTimeDelta >= RENDER_UPDATE_INTERVAL) {
-        lastRenderUpdate = now;
-        renderer.render();
-      }
-    } catch (error) {
-      crashed = true;
-      throw error;
+    if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
+      lastGameplayUpdate = now;
+      engine.tick(GAMEPLAY_UPDATE_INTERVAL / 1000);
+      mainUiController.updatableInterface.update(GAMEPLAY_UPDATE_INTERVAL);
+      renderer.render();
     }
+    if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
+      lastNetworkUpdate = now;
+      const networkTimeDeltaSecs = networkTimeDelta / 1000;
+      networkController.updatableInterface.update(networkTimeDeltaSecs);
+    }
+
+    requestAnimationFrame(tick);
   }
 
   this.startGameLoop = () => {

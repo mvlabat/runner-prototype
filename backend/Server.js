@@ -15,37 +15,39 @@ function Server() {
 
   // Gameloop.
 
-  // TODO: maybe there's more clever way to tick without setImmediate performance impact.
-  const TICK_INTERVAL = 5;
-  const GAMEPLAY_UPDATE_INTERVAL = 15;
-  const NETWORK_UPDATE_INTERVAL = 45;
+  const GAMEPLAY_UPDATE_INTERVAL = 1000 / 60;
+  const NETWORK_UPDATE_INTERVAL = 50;
 
   let lastGameplayUpdate = 0;
   let lastNetworkUpdate = 0;
-  let crashed = false;
 
   function tick() {
-    if (crashed) return;
-    setTimeout(tick, TICK_INTERVAL);
     const now = new Date();
 
     const gameplayTimeDelta = now - lastGameplayUpdate;
     const networkTimeDelta = now - lastNetworkUpdate;
 
-    try {
-      const gameplayTimeDeltaSecs = gameplayTimeDelta / 1000;
+    if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
+      lastGameplayUpdate = now;
+      engine.tick(GAMEPLAY_UPDATE_INTERVAL / 1000);
+    }
+    if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
+      lastNetworkUpdate = now;
       const networkTimeDeltaSecs = networkTimeDelta / 1000;
-      if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
-        lastGameplayUpdate = now;
-        engine.tick(gameplayTimeDeltaSecs);
-      }
-      if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
-        lastNetworkUpdate = now;
-        networkController.updatableInterface.update(networkTimeDeltaSecs);
-      }
-    } catch (error) {
-      crashed = true;
-      throw error;
+      networkController.updatableInterface.update(networkTimeDeltaSecs);
+    }
+
+    const gameplayTimeDeltaAfter = now - lastGameplayUpdate;
+    const networkTimeDeltaAfter = now - lastNetworkUpdate;
+
+    const closestTickInterval = Math.min(
+      GAMEPLAY_UPDATE_INTERVAL - gameplayTimeDeltaAfter,
+      NETWORK_UPDATE_INTERVAL - networkTimeDeltaAfter,
+    ) - 1;
+    if (closestTickInterval > 1) {
+      setTimeout(tick, closestTickInterval);
+    } else {
+      setImmediate(tick, closestTickInterval);
     }
   }
 
