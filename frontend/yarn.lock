@@ -4598,7 +4598,7 @@ ms@^2.1.1:
     crypto-js "^3.1.9-1"
     nonce "^1.0.4"
     pson "^2.0.0"
-    three "^0.99.0"
+    three "^0.100.0"
 
 nan@^2.10.0, nan@^2.9.2:
   version "2.12.1"
@@ -6358,10 +6358,10 @@ sass-graph@^2.2.4:
     scss-tokenizer "^0.2.3"
     yargs "^7.0.0"
 
-sass@^1.15.1:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.15.2.tgz#539f464a61e29a9e4f560ec9dc2ccc5236db8474"
-  integrity sha512-YFncPpx3ewKEhMg9sWdCxKUpPN/jwVLa0Q9iO2tcV5Y5Z/YAlFV6k6JaQwq3tmbN6FXKjUYElXRHcG0g4D1zkQ==
+sass@^1.15.3:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.15.3.tgz#12c8c62f707a9cd28856e9463914fcb5a7f556c7"
+  integrity sha512-9e6zdkLEjMAX/zXUWKs9GreDLFYozFOEu4gMZBZpkp+AiQgaofimqGZm9qMhS5V+4V2OWBapnM5xoJn2Rw9pQg==
   dependencies:
     chokidar "^2.0.0"
 
@@ -6945,11 +6945,6 @@ three@^0.100.0:
   version "0.100.0"
   resolved "https://registry.yarnpkg.com/three/-/three-0.100.0.tgz#262841c0b7d88ebd62af73f28d9f578963b3aa00"
   integrity sha512-/lN2rdE1OqIwJr4/HcSaOisiCY0uVA0sqPpbCG5nil2uICEdS0LfGwSVYTtZDsIpR76r3++h5H3Hzg5D+SJBRQ==
-
-three@^0.99.0:
-  version "0.99.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.99.0.tgz#65711fda7a16501da83948121437d824df1fea19"
-  integrity sha512-DmNNq6H6nRGaqxScJ8x7v5VjdtDZR72oTVwDdKbB2BYNFxCkAoo9vdFAznEsMu9YzTV2yFvbVs7qHRzvJZzTIg==
 
 throat@^4.0.0:
   version "4.1.0"
