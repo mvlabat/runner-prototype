@@ -4,6 +4,12 @@ import * as THREE from 'three';
 import Engine from 'common';
 import EngineConfig from 'common/EngineConfig';
 import ActionController from 'common/Controllers/ActionController';
+import GameState from 'common/Models/GameState';
+import {
+  GAMEPLAY_UPDATE_INTERVAL,
+  NETWORK_UPDATE_INTERVAL,
+  GAMEPLAY_UPDATE_INTERVAL_SECS,
+} from 'common/Constants';
 
 import Renderer from './Renderer';
 import Sandbox from './Sandbox';
@@ -29,15 +35,16 @@ function Game() {
    */
   const networkController = ClientMuddle[ClientNetworkController];
 
+  /**
+   * @type GameState
+   */
+  const gameState = ClientMuddle.common[GameState];
+
   if (EngineConfig.debugIsEnabled()) {
     window.THREE = THREE;
   }
 
   // Gameloop.
-
-  const GAMEPLAY_UPDATE_INTERVAL = 1000 / 60;
-  const NETWORK_UPDATE_INTERVAL = 50;
-
   let lastGameplayUpdate = 0;
   let lastNetworkUpdate = 0;
 
@@ -45,10 +52,16 @@ function Game() {
     const gameplayTimeDelta = now - lastGameplayUpdate;
     const networkTimeDelta = now - lastNetworkUpdate;
 
-    if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL) {
-      lastGameplayUpdate = now;
-      engine.tick(GAMEPLAY_UPDATE_INTERVAL / 1000);
-      mainUiController.updatableInterface.update(GAMEPLAY_UPDATE_INTERVAL);
+    const timeBeforeNetworkUpdate = gameState.getServerTime() - GAMEPLAY_UPDATE_INTERVAL_SECS;
+    const clientLagsBehind = gameState.getPlayedTime() < timeBeforeNetworkUpdate;
+
+    if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL || clientLagsBehind) {
+      const waitingForNetwork = !engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
+      if (!waitingForNetwork) {
+        lastGameplayUpdate = now;
+        mainUiController.updatableInterface.update(GAMEPLAY_UPDATE_INTERVAL);
+      }
+      // TODO: skip frames if lagging to much.
       renderer.render();
     }
     if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {

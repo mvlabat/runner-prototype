@@ -8,6 +8,19 @@ function GameScene() {
   this.hashableIdInterface = new HashableIdInterface(this, '', {});
 
   // CLASSES IMPLEMENTATION.
+  /**
+   * @type {number}
+   */
+  this.playedTime = 0;
+  /**
+   * @type {number}
+   */
+  this.serverTime = 0;
+  /**
+   * @type {number}
+   */
+  this.previousServerTime = 0;
+
   const objects = new Map();
   this.getAllObjects = () => objects.values();
   this.getObject = hashId => objects.get(hashId);

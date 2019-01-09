@@ -10,16 +10,25 @@ import BroadcastPlayersLatencyMessage from 'common/NetworkMessages/BroadcastPlay
 import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage';
 import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
 import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
-import { SERVER_SENDER_ID } from 'common/Interfaces/BroadcastedActionInterface';
+import { SERVER_SENDER_ID } from 'common/Constants';
+import GameStateUpdateMessage from 'common/NetworkMessages/GameStateUpdateMessage';
+import { log } from 'common/Utils/Debug';
 
 /**
  * @param {UiManager} uiManager
  * @param {ActionController} actionController
  * @param {PlayerModel} playerModel
+ * @param {GameScene} gameScene
  * @param {Store} vuexStore
  * @constructor
  */
-function ClientNetworkMessageSystem(uiManager, actionController, playerModel, vuexStore) {
+function ClientNetworkMessageSystem(
+  uiManager,
+  actionController,
+  playerModel,
+  gameScene,
+  vuexStore,
+) {
   let ws;
 
   const parameters = { playerModel };
@@ -27,6 +36,7 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel, vu
     [AuthenticationResponseMessage, processAuthenticationResponse],
     [BroadcastPlayersLatencyMessage, processBroadcastPlayersLatencyMessage],
     [GameStateMessage, processGameStateMessage],
+    [GameStateUpdateMessage, processGameStateUpdateMessage],
     [PingMessage, processPingMessage],
     [PlayerLoggedInMessage, processPlayerLoggedInMessage],
     [PlayerLoggedOutMessage, processPlayerLoggedOutMessage],
@@ -53,7 +63,6 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel, vu
       vuexStore.commit('players/addPlayer', player);
       player.authenticated = true;
       localStorage.setItem('displayName', player.displayName);
-      uiManager.activatePlayerMode();
     }
   }
 
@@ -70,19 +79,37 @@ function ClientNetworkMessageSystem(uiManager, actionController, playerModel, vu
    * @param {GameStateMessage} message
    */
   function processGameStateMessage(message) {
+    gameScene.serverTime = message.getServerTime();
+    gameScene.playedTime = gameScene.serverTime;
     for (const player of message.getActivePlayers()) {
       ActivePlayersRegistry.registerPlayer(player);
       vuexStore.commit('players/addPlayer', player);
     }
     for (const [clientIdStr, playerObject] of Object.entries(message.getPlayerObjects())) {
       const clientId = parseInt(clientIdStr, 10);
-      const action = new SpawnPlayerAction(playerObject, clientId, 0, SERVER_SENDER_ID);
+      const action = new SpawnPlayerAction(playerObject, clientId, null, SERVER_SENDER_ID);
       actionController.addAction(action);
     }
     for (const buildableObject of message.getBuildableObjects()) {
-      const action = new SaveBuildableObjectAction(buildableObject, 0, SERVER_SENDER_ID);
+      const action = new SaveBuildableObjectAction(buildableObject, null, SERVER_SENDER_ID);
       actionController.addAction(action);
     }
+    for (const action of message.getActions()) {
+      actionController.addAction(action);
+    }
+
+    log(`Processed GameStateMessage. Server time: ${gameScene.serverTime}`);
+    uiManager.activatePlayerMode();
+  }
+
+  /**
+   * @param {GameStateUpdateMessage} message
+   */
+  function processGameStateUpdateMessage(message) {
+    for (const action of message.getActions()) {
+      actionController.addAction(action);
+    }
+    gameScene.serverTime = message.getServerTime();
   }
 
   /**

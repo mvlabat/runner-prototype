@@ -5,6 +5,7 @@ import EngineConfig from './EngineConfig';
 import GlobalPsonDictionary from './Utils/GlobalPsonDictionary';
 
 import ActionController from './Controllers/ActionController';
+import GameScene from './Models/GameScene';
 
 /**
  * @param {boolean} isServer
@@ -21,8 +22,18 @@ function Engine(isServer) {
    */
   const actionController = CommonMuddle[ActionController];
 
+  /**
+   * @type GameScene
+   */
+  const gameScene = CommonMuddle[GameScene];
+
   this.tick = (timeDelta) => {
+    if (EngineConfig.isClient() && gameScene.playedTime >= gameScene.serverTime) {
+      return false;
+    }
     actionController.updatableInterface.update(timeDelta);
+    gameScene.playedTime += timeDelta;
+    return true;
   };
 }
 

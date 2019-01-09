@@ -1,7 +1,8 @@
 import { initializeMuddle } from 'common/Muddle';
 
 import ActionController from 'common/Controllers/ActionController';
-import GameState from 'common/Models/GameState';
+import GameScene from 'common/Models/GameScene';
+import BroadcastedActionsQueue from 'common/Models/BroadcastedActionsQueue';
 
 import ServerNetworkController from './Controllers/ServerNetworkController';
 
@@ -10,7 +11,12 @@ import ServerNetworkController from './Controllers/ServerNetworkController';
  */
 const ServerMuddle = initializeMuddle((common, pourService) => {
   // Controllers.
-  pourService(ServerNetworkController, common[ActionController], common[GameState]);
+  pourService(
+    ServerNetworkController,
+    common[ActionController],
+    common[GameScene],
+    common[BroadcastedActionsQueue],
+  );
 });
 
 /**

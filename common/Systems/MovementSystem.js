@@ -4,13 +4,15 @@ import SystemInterface from '../Interfaces/SystemInterface';
 import PlayerSetMovingAction from '../Actions/PlayerSetMovingAction';
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
 import { replaying } from '../Utils/SystemHelpers';
+import EngineConfig from '../EngineConfig';
 
 /**
  * @param {GameScene} gameScene
  * @param {PlayerModel} playerModel
+ * @param {BroadcastedActionsQueue} broadcastedActionsQueue
  * @constructor
  */
-function MovementSystem(gameScene, playerModel) {
+function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
   const actionProcessors = new Map([
     [PlayerSetMovingAction, playerSetMoving],
   ]);
@@ -39,8 +41,20 @@ function MovementSystem(gameScene, playerModel) {
 
     const player = gameScene.getPlayer(action.getPlayerHashId());
     if (player) {
-      player.placeableObjectInterface.setPosition(action.getPosition());
-      player.movementDirection = action.getDirection();
+      let playedAction = action;
+      if (EngineConfig.isServer()) {
+        playedAction = new PlayerSetMovingAction(
+          action.getPlayerHashId(),
+          player.placeableObjectInterface.getPosition(),
+          action.getDirection(),
+          action.actionInterface.timeOccurred,
+          action.actionInterface.senderId,
+        );
+      }
+      broadcastedActionsQueue.addAction(playedAction);
+
+      player.placeableObjectInterface.setPosition(playedAction.getPosition());
+      player.movementDirection = playedAction.getDirection();
     }
   }
 }

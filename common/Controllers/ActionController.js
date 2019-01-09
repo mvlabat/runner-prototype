@@ -1,24 +1,31 @@
-import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
-import BuildableObjectSystem from '../Systems/BuildableObjectSystem';
-import MovementSystem from '../Systems/MovementSystem';
-import PlayerSystem from '../Systems/PlayerSystem';
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
+import EngineConfig from '../EngineConfig';
+import { GAMEPLAY_UPDATE_INTERVAL_SECS } from '../Constants';
 
 /**
  * @param {GameScene} gameScene
- * @param {PlayerModel} playerModel - Is supposed to have null clientId on server.
+ * @param {BuildableObjectSystem} buildableObjectSystem
+ * @param {MovementSystem} movementSystem
+ * @param {PlayerSystem} playerSystem
+ * @param {BroadcastedActionsQueue} broadcastedActionsQueue
  *
  * @constructor
  */
-function ActionController(gameScene, playerModel) {
+function ActionController(
+  gameScene,
+  buildableObjectSystem,
+  movementSystem,
+  playerSystem,
+  broadcastedActionsQueue,
+) {
+  let actionCounter = 0;
   const actionsQueue = [];
-  const broadcastedActionsQueue = [];
   let networkController = null;
 
   const systems = {
-    buildableObjectSystem: new BuildableObjectSystem(gameScene, playerModel),
-    movementSystem: new MovementSystem(gameScene, playerModel),
-    playerSystem: new PlayerSystem(gameScene, playerModel),
+    buildableObjectSystem,
+    movementSystem,
+    playerSystem,
   };
 
   // INTERFACES IMPLEMENTATION.
@@ -36,9 +43,19 @@ function ActionController(gameScene, playerModel) {
 
       systems.movementSystem.updatableInterface.update(timeDelta);
 
-      const broadcastedActions = drainBroadcastedActionsQueue();
-      for (const action of broadcastedActions) {
-        networkController.networkControllerInterface.broadcastAction(action);
+      for (const action of actions) {
+        const isNotBroadcastedYet = action.actionInterface.isBroadcastedAfterExecution()
+          && !action.actionInterface.isAlteredDuringExecution();
+        if (isNotBroadcastedYet) {
+          broadcastedActionsQueue.addAction(action);
+        }
+      }
+
+      if (EngineConfig.isClient()) {
+        for (const action of broadcastedActionsQueue.getActions()) {
+          networkController.networkControllerInterface.broadcastAction(action);
+        }
+        broadcastedActionsQueue.clearActions();
       }
     },
   });
@@ -49,24 +66,54 @@ function ActionController(gameScene, playerModel) {
   };
 
   this.addAction = (action) => {
-    action.actionInterface.setTimeOccurred(0); // TODO: set actual game time.
+    if (action.actionInterface.timeOccurred === null) {
+      action.actionInterface.timeOccurred = gameScene.playedTime;
+    } else if (EngineConfig.isServer()) {
+      console.log(`${gameScene.playedTime}:${action.actionInterface.timeOccurred}:${gameScene.previousServerTime}`);
+      const timeCompensation = action.actionInterface.timeOccurred < gameScene.previousServerTime
+        ? 0
+        : action.actionInterface.timeOccurred - gameScene.previousServerTime;
+      // console.log(timeCompensation);
+      action.actionInterface.timeOccurred = gameScene.serverTime + timeCompensation;
+    }
+    action.actionInterface.id = actionCounter;
+    actionCounter += 1;
+
     actionsQueue.push(action);
-    if (BroadcastedActionInterface.has(action)) {
-      if (!action.broadcastedActionInterface.isBroadcastedAfterExecution()) {
-        networkController.networkControllerInterface.broadcastAction(action);
-      } else {
-        broadcastedActionsQueue.push(action);
-      }
+
+    if (!action.actionInterface.isBroadcastedAfterExecution()) {
+      networkController.networkControllerInterface.broadcastAction(action);
+    } else if (!action.actionInterface.isAlteredDuringExecution()) {
+      broadcastedActionsQueue.addAction(action);
     }
   };
 
   function drainActions() {
-    return actionsQueue.splice(0, actionsQueue.length);
+    actionsQueue.sort(actionCompare);
+    const actionsCount = actionsQueue.findIndex((action) => {
+      const nextTickTime = gameScene.playedTime + GAMEPLAY_UPDATE_INTERVAL_SECS;
+      return action.actionInterface.timeOccurred > nextTickTime;
+    });
+    return actionsQueue.splice(0, actionsCount === -1 ? actionsQueue.length : actionsCount);
+  }
+}
+
+function actionCompare(actionA, actionB) {
+  const timeOccurredA = actionA.actionInterface.timeOccurred;
+  const timeOccurredB = actionB.actionInterface.timeOccurred;
+  const timeD = timeOccurredA - timeOccurredB;
+  if (timeD !== 0) {
+    return timeD;
   }
 
-  function drainBroadcastedActionsQueue() {
-    return broadcastedActionsQueue.splice(0, broadcastedActionsQueue.length);
+  const idA = actionA.actionInterface.id;
+  const idB = actionB.actionInterface.id;
+  const d = idA - idB;
+  if (d !== 0) {
+    return d;
   }
+
+  return 0;
 }
 
 export default ActionController;

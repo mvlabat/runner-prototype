@@ -1,37 +1,26 @@
 import ActionInterface from '../Interfaces/ActionInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
 import { setDebugProperty } from '../Utils/Debug';
-import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 
 /**
  * @param {string} buildableObjectHashId
- * @param timeOccurred
+ * @param {number|null} timeOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function RemoveBuildableObjectAction(buildableObjectHashId, timeOccurred = 0, senderId = null) {
-  const parameters = {};
-
+function RemoveBuildableObjectAction(buildableObjectHashId, timeOccurred = null, senderId = null) {
   // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
-    getTimeOccurred: () => parameters.timeOccurred,
-
-    setTimeOccurred: (newTimeOccurred) => {
-      parameters.timeOccurred = newTimeOccurred;
-      setDebugProperty(this, 'timeOccurred', newTimeOccurred);
-      return this;
-    },
+    isBroadcastedAfterExecution: () => true,
   });
-
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
 
   // CLASS IMPLEMENTATION.
   this.getBuildableObjectHashId = () => buildableObjectHashId;
   setDebugProperty(this, 'buildableObjectHashId', buildableObjectHashId);
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.actionInterface.setTimeOccurred(timeOccurred);
-  this.broadcastedActionInterface.setSenderId(senderId);
+  this.actionInterface.timeOccurred = timeOccurred;
+  this.actionInterface.senderId = senderId;
 }
 
 RemoveBuildableObjectAction.serializableInterface =
@@ -41,13 +30,13 @@ RemoveBuildableObjectAction.serializableInterface =
      */
     serialize: action => ({
       buildableObjectHashId: () => action.getBuildableObjectHashId(),
-      timeOccurred: () => action.actionInterface.getTimeOccurred(),
-      senderId: () => action.broadcastedActionInterface.getSenderId(),
+      timeOccurred: () => action.actionInterface.timeOccurred,
+      senderId: () => action.actionInterface.senderId,
     }),
 
     deserialize: object => new RemoveBuildableObjectAction(
       object.buildableObjectHashId,
-      new Date(object.timeOccurred),
+      object.timeOccurred,
       object.senderId,
     ),
   });

@@ -5,6 +5,9 @@
  * @constructor
  */
 function GameState(gameScene) {
+  this.getPlayedTime = () => gameScene.playedTime;
+  this.getServerTime = () => gameScene.serverTime;
+
   this.getAllObjects = () => gameScene.getAllObjects();
   this.getObject = hashId => gameScene.getObject(hashId);
   this.hasObject = hashId => gameScene.hasObject(hashId);

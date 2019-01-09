@@ -35,7 +35,7 @@ function PlayerSystem(gameScene, playerModel) {
     }
 
     if (EngineConfig.isServer() && !action.getClientId()) {
-      action.setClientId(action.broadcastedActionInterface.getSenderId());
+      action.setClientId(action.actionInterface.senderId);
     }
     gameScene.addPlayer(action.getClientId(), action.getPlayer());
     RustCommon.addPlayer(action.getPlayer());

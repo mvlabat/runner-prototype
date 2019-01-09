@@ -1,37 +1,26 @@
 import ActionInterface from '../Interfaces/ActionInterface';
 import SerializableInterface from '../Interfaces/SerializableInterface';
-import BroadcastedActionInterface from '../Interfaces/BroadcastedActionInterface';
 import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {string} playerHashId
- * @param timeOccurred
+ * @param {number|null} timeOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function DespawnPlayerAction(playerHashId, timeOccurred = 0, senderId = null) {
-  const parameters = {};
-
+function DespawnPlayerAction(playerHashId, timeOccurred = null, senderId = null) {
   // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
-    getTimeOccurred: () => parameters.timeOccurred,
-
-    setTimeOccurred: (newTimeOccurred) => {
-      parameters.timeOccurred = newTimeOccurred;
-      setDebugProperty(this, 'timeOccurred', newTimeOccurred);
-      return this;
-    },
+    isBroadcastedAfterExecution: () => true,
   });
-
-  this.broadcastedActionInterface = new BroadcastedActionInterface(this, {});
 
   // CLASS IMPLEMENTATION.
   this.getPlayerHashId = () => playerHashId;
   setDebugProperty(this, 'playerHashId', playerHashId);
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.actionInterface.setTimeOccurred(timeOccurred);
-  this.broadcastedActionInterface.setSenderId(senderId);
+  this.actionInterface.timeOccurred = timeOccurred;
+  this.actionInterface.senderId = senderId;
 }
 
 DespawnPlayerAction.serializableInterface =
@@ -41,13 +30,13 @@ DespawnPlayerAction.serializableInterface =
      */
     serialize: action => ({
       playerHashId: () => action.getPlayerHashId(),
-      timeOccurred: () => action.actionInterface.getTimeOccurred(),
-      senderId: () => action.broadcastedActionInterface.getSenderId(),
+      timeOccurred: () => action.actionInterface.timeOccurred,
+      senderId: () => action.actionInterface.senderId,
     }),
 
     deserialize: object => new DespawnPlayerAction(
       object.playerHashId,
-      new Date(object.timeOccurred),
+      object.timeOccurred,
       object.senderId,
     ),
   });

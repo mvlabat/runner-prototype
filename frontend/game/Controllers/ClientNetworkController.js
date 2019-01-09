@@ -24,7 +24,7 @@ function ClientNetworkController(clientNetworkMessageSystem, actionController) {
 
   this.networkControllerInterface = new NetworkControllerInterface(this, {
     broadcastAction: (action) => {
-      if (action.broadcastedActionInterface.getSenderId() === null) {
+      if (action.actionInterface.senderId === null) {
         this.send(new BroadcastActionMessage(action));
       }
     },

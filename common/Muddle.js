@@ -7,6 +7,7 @@ import PlayerModel from './Models/PlayerModel';
 import MovementSystem from './Systems/MovementSystem';
 import PlayerSystem from './Systems/PlayerSystem';
 import GameState from './Models/GameState';
+import BroadcastedActionsQueue from './Models/BroadcastedActionsQueue';
 
 const bottle = new Bottle();
 
@@ -22,9 +23,7 @@ const bottle = new Bottle();
  */
 function createPourService(prefix = '') {
   return (serviceConstructor, ...dependencies) => {
-    // eslint-disable-next-line no-param-reassign
     serviceConstructor.toString = () => serviceConstructor.name; // DEUS VULT!
-    // eslint-disable-next-line no-param-reassign
     serviceConstructor.serviceName = prefix + serviceConstructor.name;
 
     bottle.service(
@@ -46,15 +45,24 @@ const pourCommonService = createPourService('common.');
 pourCommonService(GameScene);
 pourCommonService(GameState, GameScene);
 pourCommonService(PlayerModel);
+pourCommonService(BroadcastedActionsQueue);
 
+// Systems as Controllers dependencies.
+pourCommonService(BuildableObjectSystem, GameScene, PlayerModel);
+pourCommonService(MovementSystem, GameScene, PlayerModel, BroadcastedActionsQueue);
+pourCommonService(PlayerSystem, GameScene, PlayerModel);
 // Controllers.
-pourCommonService(ActionController, GameScene, PlayerModel);
+pourCommonService(
+  ActionController,
+  GameScene,
+  BuildableObjectSystem,
+  MovementSystem,
+  PlayerSystem,
+  BroadcastedActionsQueue,
+);
 
 // Systems.
-pourCommonService(BuildableObjectSystem, GameScene, PlayerModel);
-pourCommonService(MovementSystem, GameScene, PlayerModel);
 pourCommonService(NetworkMessageSystem, ActionController);
-pourCommonService(PlayerSystem, GameScene, PlayerModel);
 
 
 const { common } = bottle.container;
