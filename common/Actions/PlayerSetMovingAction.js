@@ -6,7 +6,7 @@ import { setDebugProperty } from '../Utils/Debug';
  * @param {string} playerHashId
  * @param {Vector2} position
  * @param {Vector2} direction
- * @param {number|null} timeOccurred
+ * @param {number|null} tickOccurred
  * @param {number|null} senderId
  * @constructor
  */
@@ -14,7 +14,7 @@ function PlayerSetMovingAction(
   playerHashId,
   position,
   direction,
-  timeOccurred = null,
+  tickOccurred = null,
   senderId = null,
 ) {
   // INTERFACES IMPLEMENTATION.
@@ -32,7 +32,7 @@ function PlayerSetMovingAction(
   setDebugProperty(this, 'direction', direction);
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.actionInterface.timeOccurred = timeOccurred;
+  this.actionInterface.tickOccurred = tickOccurred;
   this.actionInterface.senderId = senderId;
 }
 
@@ -45,7 +45,7 @@ PlayerSetMovingAction.serializableInterface =
       playerHashId: () => action.getPlayerHashId(),
       position: () => action.getPosition(),
       direction: () => action.getDirection(),
-      timeOccurred: () => action.actionInterface.timeOccurred,
+      tickOccurred: () => action.actionInterface.tickOccurred,
       senderId: () => action.actionInterface.senderId,
     }),
 
@@ -53,7 +53,7 @@ PlayerSetMovingAction.serializableInterface =
       object.playerHashId,
       object.position,
       object.direction,
-      object.timeOccurred,
+      object.tickOccurred,
       object.senderId,
     ),
   });

@@ -19,7 +19,7 @@ function ClientNetworkController(clientNetworkMessageSystem, actionController) {
   const messageQueue = [];
 
   this.updatableInterface = new UpdatableInterface(this, {
-    update: (_timeDelta) => {},
+    update: () => {},
   });
 
   this.networkControllerInterface = new NetworkControllerInterface(this, {

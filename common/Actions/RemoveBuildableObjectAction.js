@@ -4,11 +4,11 @@ import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {string} buildableObjectHashId
- * @param {number|null} timeOccurred
+ * @param {number|null} tickOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function RemoveBuildableObjectAction(buildableObjectHashId, timeOccurred = null, senderId = null) {
+function RemoveBuildableObjectAction(buildableObjectHashId, tickOccurred = null, senderId = null) {
   // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
     isBroadcastedAfterExecution: () => true,
@@ -19,7 +19,7 @@ function RemoveBuildableObjectAction(buildableObjectHashId, timeOccurred = null,
   setDebugProperty(this, 'buildableObjectHashId', buildableObjectHashId);
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.actionInterface.timeOccurred = timeOccurred;
+  this.actionInterface.tickOccurred = tickOccurred;
   this.actionInterface.senderId = senderId;
 }
 
@@ -30,13 +30,13 @@ RemoveBuildableObjectAction.serializableInterface =
      */
     serialize: action => ({
       buildableObjectHashId: () => action.getBuildableObjectHashId(),
-      timeOccurred: () => action.actionInterface.timeOccurred,
+      tickOccurred: () => action.actionInterface.tickOccurred,
       senderId: () => action.actionInterface.senderId,
     }),
 
     deserialize: object => new RemoveBuildableObjectAction(
       object.buildableObjectHashId,
-      object.timeOccurred,
+      object.tickOccurred,
       object.senderId,
     ),
   });

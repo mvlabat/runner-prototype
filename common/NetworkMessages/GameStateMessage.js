@@ -37,7 +37,7 @@ GameStateMessage.serializableInterface = new SerializableInterface(GameStateMess
     object.playerObjects,
     object.buildableObjects,
     object.actions,
-    object.serverTime,
+    object.serverTick,
   ),
 });
 

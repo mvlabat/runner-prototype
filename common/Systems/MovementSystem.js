@@ -24,10 +24,10 @@ function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
   });
 
   this.updatableInterface = new UpdatableInterface(this, {
-    update: (timeDelta) => {
+    update: () => {
       const players = gameScene.getAllPlayers();
       const objects = gameScene.getAllBuildableObjects();
-      RustCommon.processPlayersMovement(timeDelta, players, objects);
+      RustCommon.processPlayersMovement(players, objects);
     },
   });
 
@@ -47,7 +47,7 @@ function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
           action.getPlayerHashId(),
           player.placeableObjectInterface.getPosition(),
           action.getDirection(),
-          action.actionInterface.timeOccurred,
+          action.actionInterface.tickOccurred,
           action.actionInterface.senderId,
         );
       }

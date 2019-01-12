@@ -77,7 +77,7 @@ function ServerNetworkMessageSystem(actionController, gameScene, broadcastedActi
     /**
      * Send ping messages and close sockets that do not respond.
      */
-    update: (_timeDelta) => {
+    update: () => {
       broadcastGameStateUpdate();
       ping();
     },
@@ -97,10 +97,10 @@ function ServerNetworkMessageSystem(actionController, gameScene, broadcastedActi
     broadcastedActionsQueue.clearActions();
     preservedActionsQueue = actions;
 
-    const gameStateMessage = new GameStateUpdateMessage(actions, gameScene.serverTime);
+    const gameStateMessage = new GameStateUpdateMessage(actions, gameScene.serverTick);
     broadcastToEveryone(gameStateMessage);
-    gameScene.previousServerTime = gameScene.serverTime;
-    gameScene.serverTime = gameScene.playedTime;
+    gameScene.previousServerTick = gameScene.serverTick;
+    gameScene.serverTick = gameScene.currentTick;
   }
 
   function ping() {
@@ -163,7 +163,7 @@ function ServerNetworkMessageSystem(actionController, gameScene, broadcastedActi
         playerObjects,
         gameScene.getAllBuildableObjects(),
         preservedActionsQueue,
-        gameScene.serverTime,
+        gameScene.serverTick,
 
       );
       send(currentPlayerSocket, gameStateMessage);

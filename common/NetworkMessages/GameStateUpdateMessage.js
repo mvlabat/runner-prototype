@@ -22,7 +22,7 @@ GameStateUpdateMessage.serializableInterface = new SerializableInterface(GameSta
 
   deserialize: object => new GameStateUpdateMessage(
     object.actions,
-    object.serverTime,
+    object.serverTick,
   ),
 });
 

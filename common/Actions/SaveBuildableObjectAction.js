@@ -4,11 +4,11 @@ import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {object} buildableObject
- * @param {number|null} timeOccurred
+ * @param {number|null} tickOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function SaveBuildableObjectAction(buildableObject, timeOccurred = null, senderId = null) {
+function SaveBuildableObjectAction(buildableObject, tickOccurred = null, senderId = null) {
   // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
     isBroadcastedAfterExecution: () => true,
@@ -19,7 +19,7 @@ function SaveBuildableObjectAction(buildableObject, timeOccurred = null, senderI
   setDebugProperty(this, 'buildableObject', buildableObject);
 
   // INITIALIZE DEFAULT PARAMETERS.
-  this.actionInterface.timeOccurred = timeOccurred;
+  this.actionInterface.tickOccurred = tickOccurred;
   this.actionInterface.senderId = senderId;
 }
 
@@ -30,13 +30,13 @@ SaveBuildableObjectAction.serializableInterface =
      */
     serialize: action => ({
       buildableObject: () => action.getBuildableObject(),
-      timeOccurred: () => action.actionInterface.timeOccurred,
+      tickOccurred: () => action.actionInterface.tickOccurred,
       senderId: () => action.actionInterface.senderId,
     }),
 
     deserialize: object => new SaveBuildableObjectAction(
       object.buildableObject,
-      object.timeOccurred,
+      object.tickOccurred,
       object.senderId,
     ),
   });

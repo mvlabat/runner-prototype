@@ -1,6 +1,5 @@
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
 import EngineConfig from '../EngineConfig';
-import { GAMEPLAY_UPDATE_INTERVAL_SECS } from '../Constants';
 
 /**
  * @param {GameScene} gameScene
@@ -30,7 +29,7 @@ function ActionController(
 
   // INTERFACES IMPLEMENTATION.
   this.updatableInterface = new UpdatableInterface(this, {
-    update: (timeDelta) => {
+    update: () => {
       const actions = drainActions();
       for (const action of actions) {
         for (const systemKey of Object.keys(systems)) {
@@ -41,7 +40,7 @@ function ActionController(
         }
       }
 
-      systems.movementSystem.updatableInterface.update(timeDelta);
+      systems.movementSystem.updatableInterface.update();
 
       for (const action of actions) {
         const isNotBroadcastedYet = action.actionInterface.isBroadcastedAfterExecution()
@@ -66,15 +65,13 @@ function ActionController(
   };
 
   this.addAction = (action) => {
-    if (action.actionInterface.timeOccurred === null) {
-      action.actionInterface.timeOccurred = gameScene.playedTime;
+    if (action.actionInterface.tickOccurred === null) {
+      action.actionInterface.tickOccurred = gameScene.currentTick;
     } else if (EngineConfig.isServer()) {
-      console.log(`${gameScene.playedTime}:${action.actionInterface.timeOccurred}:${gameScene.previousServerTime}`);
-      const timeCompensation = action.actionInterface.timeOccurred < gameScene.previousServerTime
+      const timeCompensation = action.actionInterface.tickOccurred < gameScene.previousServerTick
         ? 0
-        : action.actionInterface.timeOccurred - gameScene.previousServerTime;
-      // console.log(timeCompensation);
-      action.actionInterface.timeOccurred = gameScene.serverTime + timeCompensation;
+        : action.actionInterface.tickOccurred - gameScene.previousServerTick;
+      action.actionInterface.tickOccurred = gameScene.serverTick + timeCompensation;
     }
     action.actionInterface.id = actionCounter;
     actionCounter += 1;
@@ -91,19 +88,19 @@ function ActionController(
   function drainActions() {
     actionsQueue.sort(actionCompare);
     const actionsCount = actionsQueue.findIndex((action) => {
-      const nextTickTime = gameScene.playedTime + GAMEPLAY_UPDATE_INTERVAL_SECS;
-      return action.actionInterface.timeOccurred > nextTickTime;
+      const nextTick = gameScene.currentTick + 1;
+      return action.actionInterface.tickOccurred > nextTick;
     });
     return actionsQueue.splice(0, actionsCount === -1 ? actionsQueue.length : actionsCount);
   }
 }
 
 function actionCompare(actionA, actionB) {
-  const timeOccurredA = actionA.actionInterface.timeOccurred;
-  const timeOccurredB = actionB.actionInterface.timeOccurred;
-  const timeD = timeOccurredA - timeOccurredB;
-  if (timeD !== 0) {
-    return timeD;
+  const tickOccurredA = actionA.actionInterface.tickOccurred;
+  const tickOccurredB = actionB.actionInterface.tickOccurred;
+  const tickD = tickOccurredA - tickOccurredB;
+  if (tickD !== 0) {
+    return tickD;
   }
 
   const idA = actionA.actionInterface.id;

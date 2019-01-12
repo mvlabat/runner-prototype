@@ -52,22 +52,21 @@ function Game() {
     const gameplayTimeDelta = now - lastGameplayUpdate;
     const networkTimeDelta = now - lastNetworkUpdate;
 
-    const timeBeforeNetworkUpdate = gameState.getServerTime() - GAMEPLAY_UPDATE_INTERVAL_SECS;
-    const clientLagsBehind = gameState.getPlayedTime() < timeBeforeNetworkUpdate;
+    const timeBeforeNetworkUpdate = gameState.getServerTick() - GAMEPLAY_UPDATE_INTERVAL_SECS;
+    const clientLagsBehind = gameState.getCurrentTick() < timeBeforeNetworkUpdate;
 
     if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL || clientLagsBehind) {
       const waitingForNetwork = !engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
       if (!waitingForNetwork) {
         lastGameplayUpdate = now;
-        mainUiController.updatableInterface.update(GAMEPLAY_UPDATE_INTERVAL);
+        mainUiController.updatableInterface.update();
       }
       // TODO: skip frames if lagging to much.
       renderer.render();
     }
     if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
       lastNetworkUpdate = now;
-      const networkTimeDeltaSecs = networkTimeDelta / 1000;
-      networkController.updatableInterface.update(networkTimeDeltaSecs);
+      networkController.updatableInterface.update();
     }
 
     requestAnimationFrame(tick);

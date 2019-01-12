@@ -35,8 +35,8 @@ function ServerNetworkController(actionController, gameScene, broadcastedActions
   const networkMessageSystem = new NetworkMessageSystem(actionController);
 
   this.updatableInterface = new UpdatableInterface(this, {
-    update: (timeDelta) => {
-      serverNetworkMessageSystem.updatableInterface.update(timeDelta);
+    update: () => {
+      serverNetworkMessageSystem.updatableInterface.update();
     },
   });
 

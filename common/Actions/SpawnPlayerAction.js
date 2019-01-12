@@ -5,11 +5,11 @@ import { setDebugProperty } from '../Utils/Debug';
 /**
  * @param {Player} player
  * @param {number|null} clientId
- * @param {number|null} timeOccurred
+ * @param {number|null} tickOccurred
  * @param {number|null} senderId
  * @constructor
  */
-function SpawnPlayerAction(player, clientId = null, timeOccurred = null, senderId = null) {
+function SpawnPlayerAction(player, clientId = null, tickOccurred = null, senderId = null) {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -29,7 +29,7 @@ function SpawnPlayerAction(player, clientId = null, timeOccurred = null, senderI
 
   // INITIALIZE DEFAULT PARAMETERS.
   this.setClientId(clientId);
-  this.actionInterface.timeOccurred = timeOccurred;
+  this.actionInterface.tickOccurred = tickOccurred;
   this.actionInterface.senderId = senderId;
 }
 
@@ -41,14 +41,14 @@ SpawnPlayerAction.serializableInterface =
     serialize: action => ({
       player: () => action.getPlayer(),
       clientId: () => action.getClientId(),
-      timeOccurred: () => action.actionInterface.timeOccurred,
+      tickOccurred: () => action.actionInterface.tickOccurred,
       senderId: () => action.actionInterface.senderId,
     }),
 
     deserialize: object => new SpawnPlayerAction(
       object.player,
       object.clientId,
-      object.timeOccurred,
+      object.tickOccurred,
       object.senderId,
     ),
   });

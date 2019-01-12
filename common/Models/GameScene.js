@@ -11,15 +11,15 @@ function GameScene() {
   /**
    * @type {number}
    */
-  this.playedTime = 0;
+  this.currentTick = 0;
   /**
    * @type {number}
    */
-  this.serverTime = 0;
+  this.serverTick = 0;
   /**
    * @type {number}
    */
-  this.previousServerTime = 0;
+  this.previousServerTick = 0;
 
   const objects = new Map();
   this.getAllObjects = () => objects.values();

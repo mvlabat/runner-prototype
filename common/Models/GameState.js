@@ -5,8 +5,8 @@
  * @constructor
  */
 function GameState(gameScene) {
-  this.getPlayedTime = () => gameScene.playedTime;
-  this.getServerTime = () => gameScene.serverTime;
+  this.getCurrentTick = () => gameScene.currentTick;
+  this.getServerTick = () => gameScene.serverTick;
 
   this.getAllObjects = () => gameScene.getAllObjects();
   this.getObject = hashId => gameScene.getObject(hashId);

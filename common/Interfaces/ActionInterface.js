@@ -21,7 +21,7 @@ function ActionInterface(action, interfaceImplementation) {
 
   this.senderId = null;
 
-  this.timeOccurred = null;
+  this.tickOccurred = null;
 
   this.id = 0;
 

@@ -38,8 +38,7 @@ function Server() {
       }
 
       lastNetworkUpdate = now;
-      const networkTimeDeltaSecs = networkTimeDelta / 1000;
-      networkController.updatableInterface.update(networkTimeDeltaSecs);
+      networkController.updatableInterface.update();
     }
 
     const networkTimeDeltaAfter = now - lastNetworkUpdate;

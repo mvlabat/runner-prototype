@@ -27,12 +27,12 @@ function Engine(isServer) {
    */
   const gameScene = CommonMuddle[GameScene];
 
-  this.tick = (timeDelta) => {
-    if (EngineConfig.isClient() && gameScene.playedTime >= gameScene.serverTime) {
+  this.tick = () => {
+    if (EngineConfig.isClient() && gameScene.currentTick >= gameScene.serverTick) {
       return false;
     }
-    actionController.updatableInterface.update(timeDelta);
-    gameScene.playedTime += timeDelta;
+    actionController.updatableInterface.update();
+    gameScene.currentTick += 1;
     return true;
   };
 }

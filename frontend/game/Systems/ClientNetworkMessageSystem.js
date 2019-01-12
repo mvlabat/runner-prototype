@@ -79,8 +79,8 @@ function ClientNetworkMessageSystem(
    * @param {GameStateMessage} message
    */
   function processGameStateMessage(message) {
-    gameScene.serverTime = message.getServerTime();
-    gameScene.playedTime = gameScene.serverTime;
+    gameScene.serverTick = message.getServerTime();
+    gameScene.currentTick = gameScene.serverTick;
     for (const player of message.getActivePlayers()) {
       ActivePlayersRegistry.registerPlayer(player);
       vuexStore.commit('players/addPlayer', player);
@@ -98,7 +98,7 @@ function ClientNetworkMessageSystem(
       actionController.addAction(action);
     }
 
-    log(`Processed GameStateMessage. Server time: ${gameScene.serverTime}`);
+    log(`Processed GameStateMessage. Server time: ${gameScene.serverTick}`);
     uiManager.activatePlayerMode();
   }
 
@@ -109,7 +109,7 @@ function ClientNetworkMessageSystem(
     for (const action of message.getActions()) {
       actionController.addAction(action);
     }
-    gameScene.serverTime = message.getServerTime();
+    gameScene.serverTick = message.getServerTime();
   }
 
   /**
