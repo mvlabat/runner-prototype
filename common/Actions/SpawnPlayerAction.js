@@ -4,12 +4,19 @@ import { setDebugProperty } from '../Utils/Debug';
 
 /**
  * @param {Player} player
- * @param {number|null} clientId
+ * @param {number} clientId
  * @param {number|null} tickOccurred
  * @param {number|null} senderId
+ * @param {number|null} clientActionId
  * @constructor
  */
-function SpawnPlayerAction(player, clientId = null, tickOccurred = null, senderId = null) {
+function SpawnPlayerAction(
+  player,
+  clientId,
+  tickOccurred = null,
+  senderId = null,
+  clientActionId = null,
+) {
   const parameters = {};
 
   // INTERFACES IMPLEMENTATION.
@@ -31,6 +38,7 @@ function SpawnPlayerAction(player, clientId = null, tickOccurred = null, senderI
   this.setClientId(clientId);
   this.actionInterface.tickOccurred = tickOccurred;
   this.actionInterface.senderId = senderId;
+  this.actionInterface.clientActionId = clientActionId;
 }
 
 SpawnPlayerAction.serializableInterface =
@@ -43,6 +51,7 @@ SpawnPlayerAction.serializableInterface =
       clientId: () => action.getClientId(),
       tickOccurred: () => action.actionInterface.tickOccurred,
       senderId: () => action.actionInterface.senderId,
+      clientActionId: () => action.actionInterface.clientActionId,
     }),
 
     deserialize: object => new SpawnPlayerAction(
@@ -50,6 +59,7 @@ SpawnPlayerAction.serializableInterface =
       object.clientId,
       object.tickOccurred,
       object.senderId,
+      object.clientActionId,
     ),
   });
 

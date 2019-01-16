@@ -5,6 +5,7 @@ function BroadcastedActionsQueue() {
   const queue = [];
 
   this.addAction = (action) => {
+    action.actionInterface.hasBeenBroadcasted = true;
     queue.push(action);
   };
 

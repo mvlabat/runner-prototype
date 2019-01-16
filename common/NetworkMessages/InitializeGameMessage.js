@@ -5,10 +5,16 @@ import SerializableInterface from '../Interfaces/SerializableInterface';
  * @param {Object} playerObjects - Key is Client ID, value is Player.
  * @param {Iterable<*>} buildableObjects
  * @param {Iterable<*>} actions
- * @param {number} serverTime
+ * @param {number} serverTick
  * @constructor
  */
-function GameStateMessage(activePlayers, playerObjects, buildableObjects, actions, serverTime) {
+function InitializeGameMessage(
+  activePlayers,
+  playerObjects,
+  buildableObjects,
+  actions,
+  serverTick,
+) {
   this.getActivePlayers = () => activePlayers;
 
   this.getPlayerObjects = () => playerObjects;
@@ -17,22 +23,22 @@ function GameStateMessage(activePlayers, playerObjects, buildableObjects, action
 
   this.getActions = () => actions;
 
-  this.getServerTime = () => serverTime;
+  this.getServerTick = () => serverTick;
 }
 
-GameStateMessage.serializableInterface = new SerializableInterface(GameStateMessage, {
+InitializeGameMessage.serializableInterface = new SerializableInterface(InitializeGameMessage, {
   /**
-   * @param {GameStateMessage} message
+   * @param {InitializeGameMessage} message
    */
   serialize: message => ({
     activePlayers: () => message.getActivePlayers(),
     playerObjects: () => message.getPlayerObjects(),
     buildableObjects: () => message.getBuildableObjects(),
     actions: () => message.getActions(),
-    serverTime: () => message.getServerTime(),
+    serverTick: () => message.getServerTick(),
   }),
 
-  deserialize: object => new GameStateMessage(
+  deserialize: object => new InitializeGameMessage(
     object.activePlayers,
     object.playerObjects,
     object.buildableObjects,
@@ -41,4 +47,4 @@ GameStateMessage.serializableInterface = new SerializableInterface(GameStateMess
   ),
 });
 
-export default GameStateMessage;
+export default InitializeGameMessage;

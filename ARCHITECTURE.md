@@ -77,7 +77,7 @@ same folder), and integrational ones (as well as other types) are placed inside
 
 ## Backend
 Separately implemented gameloop, its own network controller and system - that's basically all
-what makes backed. Everything important that relates to game logic is implemented in Common
+what makes backend. Everything important that relates to game logic is implemented in Common
 module, so the only thing that is left for backend to do is to maintain connection with client
 and send/receive messages. In future it will be also important to work with database in order to
 handle registration, saving game data etc. Maybe that'll be a task for separate microservices.

@@ -7,12 +7,15 @@ import { replaying } from '../Utils/SystemHelpers';
 import EngineConfig from '../EngineConfig';
 
 /**
- * @param {GameScene} gameScene
+ * @param {GameSceneSnapshots} gameSceneSnapshots
  * @param {PlayerModel} playerModel
  * @param {BroadcastedActionsQueue} broadcastedActionsQueue
  * @constructor
  */
-function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
+function MovementSystem(gameSceneSnapshots, playerModel, broadcastedActionsQueue) {
+  const actionPreprocessors = new Map([
+    [PlayerSetMovingAction, preprocessPlayerSetMoving],
+  ]);
   const actionProcessors = new Map([
     [PlayerSetMovingAction, playerSetMoving],
   ]);
@@ -20,11 +23,14 @@ function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
   this.systemInterface = new SystemInterface(this, {
     canProcess: action => actionProcessors.has(action.constructor),
 
+    lagCompensate: action => actionPreprocessors.get(action.constructor)(action),
+
     process: action => actionProcessors.get(action.constructor)(action),
   });
 
   this.updatableInterface = new UpdatableInterface(this, {
     update: () => {
+      const gameScene = gameSceneSnapshots.getCurrent();
       const players = gameScene.getAllPlayers();
       const objects = gameScene.getAllBuildableObjects();
       RustCommon.processPlayersMovement(players, objects);
@@ -34,11 +40,14 @@ function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
   /**
    * @param {PlayerSetMovingAction} action
    */
-  function playerSetMoving(action) {
-    if (replaying(action, playerModel)) {
-      return;
-    }
+  function preprocessPlayerSetMoving(action) {
+  }
 
+  /**
+   * @param {PlayerSetMovingAction} action
+   */
+  function playerSetMoving(action) {
+    const gameScene = gameSceneSnapshots.getCurrent();
     const player = gameScene.getPlayer(action.getPlayerHashId());
     if (player) {
       let playedAction = action;
@@ -49,11 +58,15 @@ function MovementSystem(gameScene, playerModel, broadcastedActionsQueue) {
           action.getDirection(),
           action.actionInterface.tickOccurred,
           action.actionInterface.senderId,
+          action.actionInterface.clientActionId,
         );
       }
       broadcastedActionsQueue.addAction(playedAction);
 
-      player.placeableObjectInterface.setPosition(playedAction.getPosition());
+      if (EngineConfig.isClient()) {
+        // console.log('erm');
+        player.placeableObjectInterface.setPosition(playedAction.getPosition());
+      }
       player.movementDirection = playedAction.getDirection();
     }
   }

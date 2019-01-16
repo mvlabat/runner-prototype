@@ -2,12 +2,13 @@ import Bottle from 'bottlejs';
 import ActionController from './Controllers/ActionController';
 import NetworkMessageSystem from './Systems/NetworkMessageSystem';
 import BuildableObjectSystem from './Systems/BuildableObjectSystem';
-import GameScene from './Models/GameScene';
 import PlayerModel from './Models/PlayerModel';
 import MovementSystem from './Systems/MovementSystem';
 import PlayerSystem from './Systems/PlayerSystem';
-import GameState from './Models/GameState';
 import BroadcastedActionsQueue from './Models/BroadcastedActionsQueue';
+import GameSceneSnapshots from './Models/GameSceneSnapshots';
+import GameState from './Models/GameState';
+import GameStateReadOnly from './Models/GameStateReadOnly';
 
 const bottle = new Bottle();
 
@@ -42,23 +43,26 @@ function createPourService(prefix = '') {
 const pourCommonService = createPourService('common.');
 
 // Models.
-pourCommonService(GameScene);
-pourCommonService(GameState, GameScene);
+pourCommonService(GameSceneSnapshots);
+pourCommonService(GameState);
+pourCommonService(GameStateReadOnly, GameState);
 pourCommonService(PlayerModel);
 pourCommonService(BroadcastedActionsQueue);
 
 // Systems as Controllers dependencies.
-pourCommonService(BuildableObjectSystem, GameScene, PlayerModel);
-pourCommonService(MovementSystem, GameScene, PlayerModel, BroadcastedActionsQueue);
-pourCommonService(PlayerSystem, GameScene, PlayerModel);
+pourCommonService(BuildableObjectSystem, GameSceneSnapshots, PlayerModel);
+pourCommonService(MovementSystem, GameSceneSnapshots, PlayerModel, BroadcastedActionsQueue);
+pourCommonService(PlayerSystem, GameSceneSnapshots, PlayerModel);
 // Controllers.
 pourCommonService(
   ActionController,
-  GameScene,
+  GameState,
+  GameSceneSnapshots,
   BuildableObjectSystem,
   MovementSystem,
   PlayerSystem,
   BroadcastedActionsQueue,
+  PlayerModel,
 );
 
 // Systems.

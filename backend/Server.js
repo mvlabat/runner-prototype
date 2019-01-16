@@ -5,6 +5,11 @@ import {
   NETWORK_UPDATE_INTERVAL,
   GAMEPLAY_UPDATE_INTERVAL_SECS,
 } from 'common/Constants';
+import CommonMuddle from 'common/Muddle';
+import GameScene from 'common/Models/GameScene';
+import GameSceneSnapshots from 'common/Models/GameSceneSnapshots';
+import GameStateReadOnly from 'common/Models/GameStateReadOnly';
+
 import ServerMuddle from './ServerMuddle';
 import ServerNetworkController from './Controllers/ServerNetworkController';
 
@@ -17,6 +22,19 @@ function Server() {
    * @type ServerNetworkController
    */
   const networkController = ServerMuddle[ServerNetworkController];
+
+  /**
+   * @type GameStateReadOnly
+   */
+  const gameState = ServerMuddle.common[GameStateReadOnly];
+
+  /**
+   * @type GameSceneSnapshots
+   */
+  const gameSceneSnapshots = CommonMuddle[GameSceneSnapshots];
+  const gameScene = new GameScene();
+  gameSceneSnapshots.setCurrent(gameScene);
+  gameSceneSnapshots.addSnapshot(0, gameScene);
 
   // Gameloop.
   const initNow = new Date();
@@ -35,6 +53,9 @@ function Server() {
       while (lastGameplayUpdate < now - GAMEPLAY_UPDATE_INTERVAL) {
         lastGameplayUpdate += GAMEPLAY_UPDATE_INTERVAL;
         engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
+        while (gameState.getLagCompensatedTick() < gameState.getCurrentTick()) {
+          engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
+        }
       }
 
       lastNetworkUpdate = now;
@@ -44,13 +65,6 @@ function Server() {
     const networkTimeDeltaAfter = now - lastNetworkUpdate;
 
     const closestTickInterval = NETWORK_UPDATE_INTERVAL - networkTimeDeltaAfter - 1;
-    if (closestTickInterval > 1000) {
-      console.log('Network anomaly:');
-      console.log(now);
-      console.log(lastNetworkUpdate);
-      console.log(networkTimeDeltaAfter);
-      console.log(closestTickInterval);
-    }
     if (closestTickInterval > 1) {
       setTimeout(tick, closestTickInterval);
     } else {

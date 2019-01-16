@@ -23,7 +23,11 @@ function ActionInterface(action, interfaceImplementation) {
 
   this.tickOccurred = null;
 
-  this.id = 0;
+  this.internalActionId = 0;
+
+  this.clientActionId = 0;
+
+  this.hasBeenBroadcasted = false;
 
   /**
    * If this function returns true, the action will be executed during a game tick, otherwise it'll
@@ -36,13 +40,16 @@ function ActionInterface(action, interfaceImplementation) {
   );
 
   /**
+   * If this function returns true, the action will not be lag compensated by ActionController.
+   * This logic has to be implemented in a system that processes the action.
+   *
    * If both this function and isBroadcastedAfterExecution return true, the action will not be added
    * to BroadcastedActionsQueue automatically, thus it's important to do it manually in systems.
    *
    * @return {boolean}
    */
-  this.isAlteredDuringExecution = () => (
-    implementation.callMethodOr(false, 'isAlteredDuringExecution')
+  this.isManagedBySystem = () => (
+    implementation.callMethodOr(false, 'isManagedBySystem')
   );
 }
 

@@ -16,11 +16,17 @@ import { broadcastToEveryone } from '../Utils/ServerNetworkUtils';
 
 /**
  * @param {ActionController} actionController
- * @param {GameScene} gameScene
+ * @param {GameState} gameState
+ * @param {GameSceneSnapshots} gameSceneSnapshots
  * @param {BroadcastedActionsQueue} broadcastedActionsQueue
  * @constructor
  */
-function ServerNetworkController(actionController, gameScene, broadcastedActionsQueue) {
+function ServerNetworkController(
+  actionController,
+  gameState,
+  gameSceneSnapshots,
+  broadcastedActionsQueue,
+) {
   let clientIdCount = 0;
 
   const wss = new WebSocket.Server({
@@ -29,7 +35,8 @@ function ServerNetworkController(actionController, gameScene, broadcastedActions
   });
   const serverNetworkMessageSystem = new ServerNetworkMessageSystem(
     actionController,
-    gameScene,
+    gameState,
+    gameSceneSnapshots,
     broadcastedActionsQueue,
   );
   const networkMessageSystem = new NetworkMessageSystem(actionController);

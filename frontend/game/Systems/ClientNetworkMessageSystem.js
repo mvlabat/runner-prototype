@@ -1,6 +1,6 @@
 import SystemInterface from 'common/Interfaces/SystemInterface';
 import AuthenticationResponseMessage from 'common/NetworkMessages/AuthenticationResponseMessage';
-import GameStateMessage from 'common/NetworkMessages/GameStateMessage';
+import InitializeGameMessage from 'common/NetworkMessages/InitializeGameMessage';
 import SpawnPlayerAction from 'common/Actions/SpawnPlayerAction';
 import SaveBuildableObjectAction from 'common/Actions/SaveBuildableObjectAction';
 import PingMessage from 'common/NetworkMessages/PingMessage';
@@ -11,14 +11,16 @@ import PlayerLoggedInMessage from 'common/NetworkMessages/PlayerLoggedInMessage'
 import PlayerLoggedOutMessage from 'common/NetworkMessages/PlayerLoggedOutMessage';
 import ActivePlayersRegistry from 'common/Registries/ActivePlayersRegistry';
 import { SERVER_SENDER_ID } from 'common/Constants';
-import GameStateUpdateMessage from 'common/NetworkMessages/GameStateUpdateMessage';
+import GameUpdateMessage from 'common/NetworkMessages/GameUpdateMessage';
+import GameScene from 'common/Models/GameScene';
 import { log } from 'common/Utils/Debug';
 
 /**
  * @param {UiManager} uiManager
  * @param {ActionController} actionController
  * @param {PlayerModel} playerModel
- * @param {GameScene} gameScene
+ * @param {GameState} gameState
+ * @param {GameSceneSnapshots} gameSceneSnapshots
  * @param {Store} vuexStore
  * @constructor
  */
@@ -26,7 +28,8 @@ function ClientNetworkMessageSystem(
   uiManager,
   actionController,
   playerModel,
-  gameScene,
+  gameState,
+  gameSceneSnapshots,
   vuexStore,
 ) {
   let ws;
@@ -35,8 +38,8 @@ function ClientNetworkMessageSystem(
   const messageProcessors = new Map([
     [AuthenticationResponseMessage, processAuthenticationResponse],
     [BroadcastPlayersLatencyMessage, processBroadcastPlayersLatencyMessage],
-    [GameStateMessage, processGameStateMessage],
-    [GameStateUpdateMessage, processGameStateUpdateMessage],
+    [InitializeGameMessage, processInitializeMessage],
+    [GameUpdateMessage, processGameUpdateMessage],
     [PingMessage, processPingMessage],
     [PlayerLoggedInMessage, processPlayerLoggedInMessage],
     [PlayerLoggedOutMessage, processPlayerLoggedOutMessage],
@@ -76,11 +79,14 @@ function ClientNetworkMessageSystem(
   }
 
   /**
-   * @param {GameStateMessage} message
+   * @param {InitializeGameMessage} message
    */
-  function processGameStateMessage(message) {
-    gameScene.serverTick = message.getServerTime();
-    gameScene.currentTick = gameScene.serverTick;
+  function processInitializeMessage(message) {
+    const gameScene = new GameScene();
+    gameState.serverTick = message.getServerTick();
+    gameState.lagCompensatedTick = gameState.serverTick;
+    gameState.currentTick = gameState.serverTick;
+    gameScene.currentTick = gameState.serverTick;
     for (const player of message.getActivePlayers()) {
       ActivePlayersRegistry.registerPlayer(player);
       vuexStore.commit('players/addPlayer', player);
@@ -97,19 +103,23 @@ function ClientNetworkMessageSystem(
     for (const action of message.getActions()) {
       actionController.addAction(action);
     }
-
-    log(`Processed GameStateMessage. Server time: ${gameScene.serverTick}`);
     uiManager.activatePlayerMode();
+
+    gameSceneSnapshots.setCurrent(gameScene);
+    gameSceneSnapshots.addSnapshot(gameScene.currentTick, gameScene);
+
+    log(`Processed InitializeGameMessage. Server tick: ${gameState.serverTick}`);
   }
 
   /**
-   * @param {GameStateUpdateMessage} message
+   * @param {GameUpdateMessage} message
    */
-  function processGameStateUpdateMessage(message) {
+  function processGameUpdateMessage(message) {
     for (const action of message.getActions()) {
       actionController.addAction(action);
     }
-    gameScene.serverTick = message.getServerTime();
+    gameState.previousServerTick = message.getPreviousServerTick();
+    gameState.serverTick = message.getServerTick();
   }
 
   /**

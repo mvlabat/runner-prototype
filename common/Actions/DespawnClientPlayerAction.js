@@ -10,9 +10,15 @@ import { setDebugProperty } from '../Utils/Debug';
  * @param {number} clientId
  * @param {number|null} tickOccurred
  * @param {number|null} senderId
+ * @param {number|null} clientActionId
  * @constructor
  */
-function DespawnClientPlayerAction(clientId, tickOccurred = null, senderId = null) {
+function DespawnClientPlayerAction(
+  clientId,
+  tickOccurred = null,
+  senderId = null,
+  clientActionId = null,
+) {
   // INTERFACES IMPLEMENTATION.
   this.actionInterface = new ActionInterface(this, {
     isBroadcastedAfterExecution: () => true,
@@ -28,6 +34,7 @@ function DespawnClientPlayerAction(clientId, tickOccurred = null, senderId = nul
   // INITIALIZE DEFAULT PARAMETERS.
   this.actionInterface.tickOccurred = tickOccurred;
   this.actionInterface.senderId = senderId;
+  this.actionInterface.clientActionId = clientActionId;
 }
 
 DespawnClientPlayerAction.serializableInterface =
@@ -39,12 +46,14 @@ DespawnClientPlayerAction.serializableInterface =
       clientId: () => action.getClientId(),
       tickOccurred: () => action.actionInterface.tickOccurred,
       senderId: () => action.actionInterface.senderId,
+      clientActionId: () => action.actionInterface.clientActionId,
     }),
 
     deserialize: object => new DespawnClientPlayerAction(
       object.clientId,
       object.tickOccurred,
       object.senderId,
+      object.clientActionId,
     ),
   });
 

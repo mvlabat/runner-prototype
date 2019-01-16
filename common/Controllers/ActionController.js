@@ -1,21 +1,28 @@
 import UpdatableInterface from '../Interfaces/UpdatableInterface';
 import EngineConfig from '../EngineConfig';
+import { GAMEPLAY_UPDATE_INTERVAL, LAG_COMPENSATION_THRESHOLD } from '../Constants';
+import { replaying } from '../Utils/SystemHelpers';
+import { copy } from '../Utils/CopyableHelpers';
 
 /**
- * @param {GameScene} gameScene
+ * @param {GameState} gameState
+ * @param {GameSceneSnapshots} gameSceneSnapshots
  * @param {BuildableObjectSystem} buildableObjectSystem
  * @param {MovementSystem} movementSystem
  * @param {PlayerSystem} playerSystem
  * @param {BroadcastedActionsQueue} broadcastedActionsQueue
+ * @param {PlayerModel} playerModel
  *
  * @constructor
  */
 function ActionController(
-  gameScene,
+  gameState,
+  gameSceneSnapshots,
   buildableObjectSystem,
   movementSystem,
   playerSystem,
   broadcastedActionsQueue,
+  playerModel,
 ) {
   let actionCounter = 0;
   const actionsQueue = [];
@@ -30,7 +37,19 @@ function ActionController(
   // INTERFACES IMPLEMENTATION.
   this.updatableInterface = new UpdatableInterface(this, {
     update: () => {
-      const actions = drainActions();
+      if (!gameSceneSnapshots.getCurrent()) {
+        return;
+      }
+
+      if (gameState.lagCompensatedTick < gameSceneSnapshots.getCurrent().currentTick) {
+        const snapshot = gameSceneSnapshots.getSnapshot(gameState.lagCompensatedTick)
+          || gameSceneSnapshots.getSnapshot(gameState.currentTick);
+        gameSceneSnapshots.setCurrent(copy(snapshot));
+      }
+
+      const gameScene = gameSceneSnapshots.getCurrent();
+
+      const actions = getCurrentTickActions();
       for (const action of actions) {
         for (const systemKey of Object.keys(systems)) {
           const system = systems[systemKey];
@@ -44,8 +63,8 @@ function ActionController(
 
       for (const action of actions) {
         const isNotBroadcastedYet = action.actionInterface.isBroadcastedAfterExecution()
-          && !action.actionInterface.isAlteredDuringExecution();
-        if (isNotBroadcastedYet) {
+          && !action.actionInterface.isManagedBySystem();
+        if (isNotBroadcastedYet && !action.actionInterface.hasBeenBroadcasted) {
           broadcastedActionsQueue.addAction(action);
         }
       }
@@ -56,6 +75,16 @@ function ActionController(
         }
         broadcastedActionsQueue.clearActions();
       }
+
+      // Clear old data.
+      gameSceneSnapshots.removeSnapshotsOlder(Math.min(
+        gameState.lagCompensatedTick,
+        gameState.previousServerTick,
+      ));
+      dropOldActions();
+
+      gameScene.currentTick += 1;
+      gameSceneSnapshots.addSnapshot(gameState.lagCompensatedTick + 1, gameScene);
     },
   });
 
@@ -66,32 +95,72 @@ function ActionController(
 
   this.addAction = (action) => {
     if (action.actionInterface.tickOccurred === null) {
-      action.actionInterface.tickOccurred = gameScene.currentTick;
-    } else if (EngineConfig.isServer()) {
-      const timeCompensation = action.actionInterface.tickOccurred < gameScene.previousServerTick
-        ? 0
-        : action.actionInterface.tickOccurred - gameScene.previousServerTick;
-      action.actionInterface.tickOccurred = gameScene.serverTick + timeCompensation;
+      action.actionInterface.tickOccurred = gameState.currentTick;
+      if (EngineConfig.isClient()) {
+        action.actionInterface.clientActionId = actionCounter;
+      }
     }
-    action.actionInterface.id = actionCounter;
+    lagCompensate(action);
+    action.actionInterface.internalActionId = actionCounter;
     actionCounter += 1;
 
     actionsQueue.push(action);
 
+    if (action.actionInterface.hasBeenBroadcasted) {
+      return;
+    }
+
     if (!action.actionInterface.isBroadcastedAfterExecution()) {
       networkController.networkControllerInterface.broadcastAction(action);
-    } else if (!action.actionInterface.isAlteredDuringExecution()) {
-      broadcastedActionsQueue.addAction(action);
+    } else if (!action.actionInterface.isManagedBySystem()) {
+      const clientReplaying = EngineConfig.isClient() && replaying(action, playerModel);
+      if (!clientReplaying) {
+        broadcastedActionsQueue.addAction(action);
+      }
     }
   };
 
-  function drainActions() {
+  function getCurrentTickActions() {
     actionsQueue.sort(actionCompare);
-    const actionsCount = actionsQueue.findIndex((action) => {
-      const nextTick = gameScene.currentTick + 1;
-      return action.actionInterface.tickOccurred > nextTick;
-    });
-    return actionsQueue.splice(0, actionsCount === -1 ? actionsQueue.length : actionsCount);
+    const currentTick = gameState.lagCompensatedTick;
+
+    const start = actionsQueue.findIndex(
+      action => action.actionInterface.tickOccurred === currentTick,
+    );
+    if (start === -1) {
+      return [];
+    }
+
+    const end = actionsQueue.findIndex(
+      action => action.actionInterface.tickOccurred > currentTick,
+    );
+    return actionsQueue.slice(start, end === -1 ? actionsQueue.length : end);
+  }
+
+  function dropOldActions() {
+    actionsQueue.sort(actionCompare);
+    const actionsToRemove = actionsQueue.findIndex(action => (
+      action.actionInterface.tickOccurred > gameState.previousServerTick &&
+        action.actionInterface.tickOccurred < gameState.lagCompensatedTick
+    ));
+    actionsQueue.splice(0, actionsToRemove === -1 ? 0 : actionsToRemove);
+  }
+
+  function lagCompensate(action) {
+    if (EngineConfig.isServer()) {
+      const tdiff = new Date() - gameState.lastServerUpdateTime;
+      const tleft = LAG_COMPENSATION_THRESHOLD - tdiff;
+      const tickLate = gameState.serverTick - action.actionInterface.tickOccurred;
+      if (tickLate * GAMEPLAY_UPDATE_INTERVAL > tleft) {
+        const ticksAfter = Math.ceil(tleft / GAMEPLAY_UPDATE_INTERVAL);
+        action.actionInterface.tickOccurred = gameState.previousServerTick + ticksAfter;
+      }
+    }
+
+    const actionTickOccurred = action.actionInterface.tickOccurred;
+    if (action.actionInterface.tickOccurred < gameState.lagCompensatedTick) {
+      gameState.lagCompensatedTick = actionTickOccurred;
+    }
   }
 }
 
@@ -103,8 +172,8 @@ function actionCompare(actionA, actionB) {
     return tickD;
   }
 
-  const idA = actionA.actionInterface.id;
-  const idB = actionB.actionInterface.id;
+  const idA = actionA.actionInterface.internalActionId;
+  const idB = actionB.actionInterface.internalActionId;
   const d = idA - idB;
   if (d !== 0) {
     return d;

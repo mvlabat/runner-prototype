@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import Engine from 'common';
 import EngineConfig from 'common/EngineConfig';
 import ActionController from 'common/Controllers/ActionController';
-import GameState from 'common/Models/GameState';
+import GameStateReadOnly from 'common/Models/GameStateReadOnly';
 import {
   GAMEPLAY_UPDATE_INTERVAL,
   NETWORK_UPDATE_INTERVAL,
@@ -36,9 +36,9 @@ function Game() {
   const networkController = ClientMuddle[ClientNetworkController];
 
   /**
-   * @type GameState
+   * @type GameStateReadOnly
    */
-  const gameState = ClientMuddle.common[GameState];
+  const gameState = ClientMuddle.common[GameStateReadOnly];
 
   if (EngineConfig.debugIsEnabled()) {
     window.THREE = THREE;
@@ -52,24 +52,33 @@ function Game() {
     const gameplayTimeDelta = now - lastGameplayUpdate;
     const networkTimeDelta = now - lastNetworkUpdate;
 
-    const timeBeforeNetworkUpdate = gameState.getServerTick() - GAMEPLAY_UPDATE_INTERVAL_SECS;
-    const clientLagsBehind = gameState.getCurrentTick() < timeBeforeNetworkUpdate;
+    const clientLagsBehind = gameState.getCurrentTick() < gameState.getServerTick();
 
     if (gameplayTimeDelta >= GAMEPLAY_UPDATE_INTERVAL || clientLagsBehind) {
-      const waitingForNetwork = !engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
-      if (!waitingForNetwork) {
+      let notWaitingForNetwork = engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
+      while (gameState.getLagCompensatedTick() < gameState.getCurrentTick()) {
+        notWaitingForNetwork = engine.tick(GAMEPLAY_UPDATE_INTERVAL_SECS);
+      }
+
+      if (notWaitingForNetwork) {
         lastGameplayUpdate = now;
         mainUiController.updatableInterface.update();
       }
-      // TODO: skip frames if lagging to much.
-      renderer.render();
+      if (gameState.getCurrentTick() > gameState.getPreviousServerTick()) {
+        renderer.render();
+      }
     }
     if (networkTimeDelta >= NETWORK_UPDATE_INTERVAL) {
       lastNetworkUpdate = now;
       networkController.updatableInterface.update();
     }
 
-    requestAnimationFrame(tick);
+
+    if (gameState.getCurrentTick() > gameState.getPreviousServerTick()) {
+      requestAnimationFrame(tick);
+    } else {
+      setTimeout(tick, 0);
+    }
   }
 
   this.startGameLoop = () => {
