@@ -765,10 +765,10 @@ eslint-config-airbnb-base@^13.1.0:
     object.assign "^4.1.0"
     object.entries "^1.0.4"
 
-eslint-import-resolver-babel-module@^5.0.0-0:
-  version "5.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/eslint-import-resolver-babel-module/-/eslint-import-resolver-babel-module-5.0.0-beta.1.tgz#3f7899c14039aab1b1ffa2f0e53463a6152ef121"
-  integrity sha512-7JsYYiule20Pn0oM87rLTFuqfaZoi7AkLz4efHb1pxmiKPYAHBzPIL59TvAW6px2XrRPZUF+x8yQb7GKtceXyQ==
+eslint-import-resolver-babel-module@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/eslint-import-resolver-babel-module/-/eslint-import-resolver-babel-module-5.0.0.tgz#c976c524a5e5d01dd85fcdaca0c6be6035cbe2b9"
+  integrity sha512-SIdPGAEybpb/xMylMWZHKpWtHlFQfI/v7SI0L5fyDv2No/JU2L5A0y6ZpvxK48w26dTH0x01m9LTXYuG+UCfkg==
   dependencies:
     pkg-up "^2.0.0"
     resolve "^1.8.1"
