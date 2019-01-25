@@ -19,7 +19,7 @@
     "@babel/preset-env": "^7.2.3",
     "babel-core": "^7.0.0-bridge",
     "babel-jest": "^23.6.0",
-    "jest": "^23.6.0",
+    "jest": "^24.0.0",
     "jest-plugin-set": "^2.9.0"
   }
 }
