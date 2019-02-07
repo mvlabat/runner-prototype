@@ -1033,10 +1033,10 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bottlejs@^1.7.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/bottlejs/-/bottlejs-1.7.1.tgz#f2673c42feb2ba092d94b8add390e66b3f7d948f"
-  integrity sha512-OUex4/uBgIyanzPpMzie5NfMfjJ23Z1mUy8ZC6omFBPwExMeoSrwyndlaZW0tci0unMH2LVfNn+jwDPRQLPncw==
+bottlejs@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/bottlejs/-/bottlejs-1.7.2.tgz#a9a29c937cda3c4b4dcbcfc71c473c7f79108ca6"
+  integrity sha512-voMPQ+g8/4GBiDE5lp43fgfoBn7Q5fZI7k3ye8ErrPoHzuuRS0Gff9lZYeyalh86uz5P304iZ14wNAM+3TZguQ==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
