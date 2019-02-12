@@ -13,7 +13,7 @@
     "autoprefixer": "^9.4.5",
     "muddle-common": "file:../common",
     "three": "^0.100.0",
-    "vue": "^2.5.22",
+    "vue": "^2.6.6",
     "vue-resizesensor": "^0.2.1",
     "vuelidate": "^0.7.4",
     "vuex": "^3.0.1",
@@ -30,6 +30,6 @@
     "parcel-bundler": "^1.11.0",
     "parcel-plugin-wasm.rs": "^1.2.8",
     "sass": "^1.16.0",
-    "vue-template-compiler": "^2.5.22"
+    "vue-template-compiler": "^2.6.6"
   }
 }
