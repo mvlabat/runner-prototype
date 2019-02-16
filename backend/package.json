@@ -10,7 +10,7 @@
   "dependencies": {
     "express": "^4.16.4",
     "muddle-common": "file:../common",
-    "ws": "^6.1.2",
+    "ws": "^6.1.4",
     "wu": "^2.1.0"
   },
   "devDependencies": {
